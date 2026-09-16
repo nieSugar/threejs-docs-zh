@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>GLSLNodeBuilder - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="NodeBuilder.html">NodeBuilder</a> → </p>
+	<h1 translate="no">GLSLNodeBuilder</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>针对 GLSL 的节点生成器.</p>
+<p>此模块生成 GLSL 着色器来自节点材料的代码以及
+生成相应的绑定和顶点缓冲区定义。这些
+渲染器稍后使用数据来创建渲染和计算管道
+用于渲染对象。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="GLSLNodeBuilder" translate="no">new <a href="#GLSLNodeBuilder">GLSLNodeBuilder</a><span class="signature">( object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的 GLSL 节点生成器渲染器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>3D对象.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="builtins" translate="no">.<a href="#builtins">builtins</a><span class="type-signature"> : Object.&lt;string, Array.&lt;string>></span> </h3>
+					<div class="description">
+						<p>为每个着色器阶段保存一个已用内置函数数组的字典。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="extensions" translate="no">.<a href="#extensions">extensions</a><span class="type-signature"> : Object.&lt;string, Map.&lt;string, Object>></span> </h3>
+					<div class="description">
+						<p>为每个着色器阶段保存一个已用映射的字典扩展.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="transforms" translate="no">.<a href="#transforms">transforms</a><span class="type-signature"> : Array.&lt;Object.&lt;string, (<a href="AttributeNode.html">AttributeNode</a>|string)>></span> </h3>
+					<div class="description">
+						<p>一个数组，用于保存定义变量和属性数据的对象
+变换反馈的上下文.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="uniformGroups" translate="no">.<a href="#uniformGroups">uniformGroups</a><span class="type-signature"> : Object.&lt;string, Object.&lt;string, <a href="NodeUniformsGroup.html">NodeUniformsGroup</a>>></span> </h3>
+					<div class="description">
+						<p>每个着色器阶段都有一个字典（'顶点'，'片段'，'计算'）
+另一个管理每组 UBO（“渲染”、“帧”、“对象”）的字典。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="buildCode" translate="no">.<a href="#buildCode">buildCode</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>控制着色器阶段的代码构建。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#buildCode">NodeBuilder#buildCode</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="buildFunctionCode" translate="no">.<a href="#buildFunctionCode">buildFunctionCode</a><span class="signature">( shaderNode : <span class="param-type">ShaderNodeInternal</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构建给定着色器节点.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderNode</strong>
+									</td>
+									<td class="description last">
+										<p>着色器节点.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#buildFunctionCode">NodeBuilder#buildFunctionCode</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 函数代码.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="enableExtension" translate="no">.<a href="#enableExtension">enableExtension</a><span class="signature">( name : <span class="param-type">string</span>, behavior : <span class="param-type">string</span>, shaderStage : <span class="param-type">string</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>启用给定的扩展.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>扩展名称.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">behavior</strong>
+									</td>
+									<td class="description last">
+										<p>扩展行为.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+										<p>默认为<code>this.shaderStage</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="enableHardwareClipping" translate="no">.<a href="#enableHardwareClipping">enableHardwareClipping</a><span class="signature">( planeCount : <span class="param-type">string</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>启用硬件裁剪。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">planeCount</strong>
+									</td>
+									<td class="description last">
+										<p>裁剪平面计数。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="enableMultiview" translate="no">.<a href="#enableMultiview">enableMultiview</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>启用多视图。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="generatePBO" translate="no">.<a href="#generatePBO">generatePBO</a><span class="signature">( storageArrayElementNode : <span class="param-type"><a href="StorageArrayElementNode.html">StorageArrayElementNode</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置像素缓冲区对象 (PBO)给定存储
+缓冲区节点.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">storageArrayElementNode</strong>
+									</td>
+									<td class="description last">
+										<p>存储数组元素节点.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>属性名称.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTexture" translate="no">.<a href="#generateTexture">generateTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成用于采样/加载给定纹理的GLSL片段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的从 0 开始的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#generateTexture">NodeBuilder#generateTexture</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureBias" translate="no">.<a href="#generateTextureBias">generateTextureBias</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, biasSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 在对 mip 进行偏置采样时生成 GLSL 片段level.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">biasSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示采样前应用于 mip 级别的偏差。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的基于 0 的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureCompare" translate="no">.<a href="#generateTextureCompare">generateTextureCompare</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, compareSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span>, shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成用于采样深度纹理并比较采样的深度值的 GLSL 片段
+对照参考值。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">compareSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A 表示参考值的 GLSL 片段。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的基于 0 的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>生成此代码片段的着色器阶段。</p>
+										<p>默认为<code>this.shaderStage</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureGather" translate="no">.<a href="#generateTextureGather">generateTextureGather</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, gatherSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span>, flipYSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成用于从给定纹理收集四个纹理像素的 GLSL 片段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">gatherSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A表示要读取的通道索引的 GLSL 片段。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的基于 0 的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">flipYSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>表示 y 翻转的 GLSL 片段。仅用于 WebGL。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureGatherCompare" translate="no">.<a href="#generateTextureGatherCompare">generateTextureGatherCompare</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, compareSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span>, flipYSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成 GLSL 片段，用于对给定深度纹理中的四个纹素执行深度比较。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">compareSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A 表示参考值的 GLSL 片段。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的基于 0 的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">flipYSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>表示 y 翻转的 GLSL 片段。仅用于 WebGL。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureGrad" translate="no">.<a href="#generateTextureGrad">generateTextureGrad</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, gradSnippet : <span class="param-type">Array.&lt;string></span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成 GLSL 片段，用于使用显式梯度采样/加载给定纹理。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">gradSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>保存梯度 GLSL 的数组snippets.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的基于 0 的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureLevel" translate="no">.<a href="#generateTextureLevel">generateTextureLevel</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvSnippet : <span class="param-type">string</span>, levelSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在使用显式 mip 级别采样纹理时生成 GLSL 片段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">levelSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>表示 mip 级别的 GLSL 片段，级别 0 包含纹理的完整大小版本。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的基于 0 的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureLoad" translate="no">.<a href="#generateTextureLoad">generateTextureLoad</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, uvIndexSnippet : <span class="param-type">string</span>, levelSnippet : <span class="param-type">string</span>, depthSnippet : <span class="param-type">string</span>, offsetSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成从纹理读取单个纹素的 GLSL 片段，无需采样或过滤.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">uvIndexSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示用于采样的纹理坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">levelSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>表示 mip 级别的 GLSL 片段，级别 0 包含纹理的完整大小版本。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示要采样的从 0 开始的纹理数组索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offsetSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>A GLSL 片段，表示在采样之前将应用于非标准化纹理坐标的偏移量texture.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateTextureSize" translate="no">.<a href="#generateTextureSize">generateTextureSize</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, textureProperty : <span class="param-type">string</span>, levelSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成解析给定纹理尺寸的GLSL片段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureProperty</strong>
+									</td>
+									<td class="description last">
+										<p>纹理均匀的名称着色器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">levelSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>表示mip级别的GLSL片段。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#generateTextureSize">NodeBuilder#generateTextureSize</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> GLSL 片段.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getAttributes" translate="no">.<a href="#getAttributes">getAttributes</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串形式返回给定着色器阶段的着色器属性。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getAttributes">NodeBuilder#getAttributes</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 定义着色器属性的 GLSL 代码段。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getBitcastMethod" translate="no">.<a href="#getBitcastMethod">getBitcastMethod</a><span class="signature">( type : <span class="param-type">string</span>, inputType : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定输入和输出类型的位播方法名称。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">type</strong>
+									</td>
+									<td class="description last">
+										<p>要位播的输出类型to.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">inputType</strong>
+									</td>
+									<td class="description last">
+										<p>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 已解析的 GLSL 位播调用的输入类型。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getClipDistance" translate="no">.<a href="#getClipDistance">getClipDistance</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回内置剪辑距离。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 剪辑内置距离。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getDrawIndex" translate="no">.<a href="#getDrawIndex">getDrawIndex</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回内置绘制索引。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getDrawIndex">NodeBuilder#getDrawIndex</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>drawIndex 着色器字符串。如果设备不支持 <code>WEBGL_multi_draw</code>，则返回 <code>null</code>。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getExtensions" translate="no">.<a href="#getExtensions">getExtensions</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串的形式返回给定着色器阶段的已启用扩展。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>定义启用的扩展。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFloatPackingMethod" translate="no">.<a href="#getFloatPackingMethod">getFloatPackingMethod</a><span class="signature">( encoding : <span class="param-type">string</span>, layout : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定数字编码的浮点打包方法名称。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">encoding</strong>
+									</td>
+									<td class="description last">
+										<p>描述浮点值如何映射到整数范围的数字编码。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">layout</strong>
+									</td>
+									<td class="description last">
+										<p>打包整数的组件布局。</p>
+										<p>默认为<code>'2x16'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 已解析的 GLSL 浮点打包方法名称。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFloatUnpackingMethod" translate="no">.<a href="#getFloatUnpackingMethod">getFloatUnpackingMethod</a><span class="signature">( encoding : <span class="param-type">string</span>, layout : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定数字编码的浮点解包方法名称。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">encoding</strong>
+									</td>
+									<td class="description last">
+										<p>描述整数值如何映射到浮点范围.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">layout</strong>
+									</td>
+									<td class="description last">
+										<p>打包整数的组件布局。</p>
+										<p>默认为<code>'2x16'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>解析的GLSL浮点解包方法名称。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFragCoord" translate="no">.<a href="#getFragCoord">getFragCoord</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回内置的碎片坐标。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getFragCoord">NodeBuilder#getFragCoord</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 内置碎片坐标。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFragDepth" translate="no">.<a href="#getFragDepth">getFragDepth</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回内置碎片深度。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 碎片深度内置.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFrontFacing" translate="no">.<a href="#getFrontFacing">getFrontFacing</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回正面内置.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getFrontFacing">NodeBuilder#getFrontFacing</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>正面builtin.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getInstanceIndex" translate="no">.<a href="#getInstanceIndex">getInstanceIndex</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>上下文返回内置的顶点阶段实例索引
+或工作组网格内计算调用的线性化索引。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getInstanceIndex">NodeBuilder#getInstanceIndex</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 实例索引。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getInvocationLocalIndex" translate="no">.<a href="#getInvocationLocalIndex">getInvocationLocalIndex</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个内置表示其工作组中调用的索引。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 调用本地索引。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getInvocationSubgroupIndex" translate="no">.<a href="#getInvocationSubgroupIndex">getInvocationSubgroupIndex</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回表示其子组中调用索引的内置函数。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="getMethod" translate="no">.<a href="#getMethod">getMethod</a><span class="signature">( method : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定泛型的本机着色器方法名称name.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">method</strong>
+									</td>
+									<td class="description last">
+										<p>要解析的方法名称.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getMethod">NodeBuilder#getMethod</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>解析的GLSL方法name.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getOutputStructName" translate="no">.<a href="#getOutputStructName">getOutputStructName</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回输出结构体名称。与 GLSL 无关。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getOutputStructName">NodeBuilder#getOutputStructName</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getPropertyName" translate="no">.<a href="#getPropertyName">getPropertyName</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回表示给定节点的属性名称的 GLSL 代码段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">node</strong>
+									</td>
+									<td class="description last">
+										<p>The node.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>生成此代码片段的着色器阶段。</p>
+										<p>默认为<code>this.shaderStage</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getPropertyName">NodeBuilder#getPropertyName</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>属性名称.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getStructMembers" translate="no">.<a href="#getStructMembers">getStructMembers</a><span class="signature">( struct : <span class="param-type"><a href="StructTypeNode.html">StructTypeNode</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串形式返回给定结构类型节点的成员。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">struct</strong>
+									</td>
+									<td class="description last">
+										<p>结构类型node.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 定义结构体成员的 GLSL 代码段。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getStructs" translate="no">.<a href="#getStructs">getStructs</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串的形式返回给定着色器阶段的结构体。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 定义结构体成员的 GLSL 代码段structs.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getSubgroupIndex" translate="no">.<a href="#getSubgroupIndex">getSubgroupIndex</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个内置函数，表示当前调用子组在其工作组中的索引。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="getSubgroupSize" translate="no">.<a href="#getSubgroupSize">getSubgroupSize</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个内置函数，表示当前着色器中子组的大小。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="getTernary" translate="no">.<a href="#getTernary">getTernary</a><span class="signature">( condSnippet : <span class="param-type">string</span>, ifSnippet : <span class="param-type">string</span>, elseSnippet : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回三元组的本机片段操作.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">condSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>决定解析哪个表达式的条件。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">ifSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>条件为真时解析为的表达式。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">elseSnippet</strong>
+									</td>
+									<td class="description last">
+										<p>条件为假时解析为的表达式.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getTernary">NodeBuilder#getTernary</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 已解析的方法名称。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTransforms" translate="no">.<a href="#getTransforms">getTransforms</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串的形式返回给定着色器阶段的变换。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>定义变换。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTypeFromAttribute" translate="no">.<a href="#getTypeFromAttribute">getTypeFromAttribute</a><span class="signature">( attribute : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定缓冲区属性的类型。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">attribute</strong>
+									</td>
+									<td class="description last">
+										<p>缓冲区属性。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getTypeFromAttribute">NodeBuilder#getTypeFromAttribute</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 类型。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getUniformFromNode" translate="no">.<a href="#getUniformFromNode">getUniformFromNode</a><span class="signature">( node : <span class="param-type"><a href="UniformNode.html">UniformNode</a></span>, type : <span class="param-type">string</span>, shaderStage : <span class="param-type">string</span>, name : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="NodeUniform.html">NodeUniform</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法是最重要的方法之一，因为它负责
+用于为给定的统一节点生成匹配的绑定实例。</p>
+<p>这些绑定稍后在渲染器中用于创建绑定组
+和布局.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">node</strong>
+									</td>
+									<td class="description last">
+										<p>统一节点.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">type</strong>
+									</td>
+									<td class="description last">
+										<p>节点数据类型.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>可选统一名称.</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getUniformFromNode">NodeBuilder#getUniformFromNode</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 节点统一对象。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getUniforms" translate="no">.<a href="#getUniforms">getUniforms</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串形式返回给定着色器阶段的制服。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getUniforms">NodeBuilder#getUniforms</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 定义</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getVaryings" translate="no">.<a href="#getVaryings">getVaryings</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 GLSL 字符串的形式返回给定着色器阶段的变量。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">shaderStage</strong>
+									</td>
+									<td class="description last">
+										<p>着色器阶段.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getVaryings">NodeBuilder#getVaryings</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 定义Variables.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getVertexIndex" translate="no">.<a href="#getVertexIndex">getVertexIndex</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回内置顶点索引。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#getVertexIndex">NodeBuilder#getVertexIndex</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 顶点index.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="isAvailable" translate="no">.<a href="#isAvailable">isAvailable</a><span class="signature">( name : <span class="param-type">string</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>请求的功能是否可用.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>请求的功能.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#isAvailable">NodeBuilder#isAvailable</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>是否支持请求的功能。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="isFlipY" translate="no">.<a href="#isFlipY">isFlipY</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>是否沿垂直轴翻转纹理数据。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#isFlipY">NodeBuilder#isFlipY</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 在 GLSL 上下文中始终返回 <code>true</code>。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="isReservedKeyword" translate="no">.<a href="#isReservedKeyword">isReservedKeyword</a><span class="signature">( name : <span class="param-type">string</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定名称是否是 的保留关键字GLSL.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>要测试的名称.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#isReservedKeyword">NodeBuilder#isReservedKeyword</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 该名称是否是保留关键字或不是.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="needsToWorkingColorSpace" translate="no">.<a href="#needsToWorkingColorSpace">needsToWorkingColorSpace</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检查给定纹理是否需要手动转换到工作色彩空间。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>要检查的纹理.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeBuilder.html#needsToWorkingColorSpace">NodeBuilder#needsToWorkingColorSpace</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>给定的纹理是否需要转换为工作颜色空间。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="registerTransform" translate="no">.<a href="#registerTransform">registerTransform</a><span class="signature">( varyingName : <span class="param-type">string</span>, attributeNode : <span class="param-type"><a href="AttributeNode.html">AttributeNode</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在变换反馈的上下文中注册变换。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">varyingName</strong>
+									</td>
+									<td class="description last">
+										<p>变化的名称.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">attributeNode</strong>
+									</td>
+									<td class="description last">
+										<p>属性节点.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setupPBO" translate="no">.<a href="#setupPBO">setupPBO</a><span class="signature">( storageBufferNode : <span class="param-type"><a href="StorageBufferNode.html">StorageBufferNode</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置像素缓冲区对象 (PBO)给定存储
+缓冲区节点.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">storageBufferNode</strong>
+									</td>
+									<td class="description last">
+										<p>存储缓冲区节点.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.js" translate="no" target="_blank" rel="noopener"> src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

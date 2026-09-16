@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>MeshBasicNodeMaterial - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Material.html">Material</a> → <a href="NodeMaterial.html">NodeMaterial</a> → </p>
+	<h1 translate="no">MeshBasicNodeMaterial</h1>
+		<section>
+			<header>
+				<div class="class-description"><p><a href="MeshBasicMaterial.html">MeshBasicMaterial</a>的节点材质版本__.</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="MeshBasicNodeMaterial" translate="no">new <a href="#MeshBasicNodeMaterial">MeshBasicNodeMaterial</a><span class="signature">( parameters : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的网格基本节点材质.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>配置参数.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isMeshBasicNodeMaterial" translate="no">.<a href="#isMeshBasicNodeMaterial">isMeshBasicNodeMaterial</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lights" translate="no">.<a href="#lights">lights</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>虽然基本材质根据定义是不发光的，但我们设置
+由于我们使用光照模型来计算，因此将此属性设置为 <code>true</code>
+片段着色器的出射光。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeMaterial.html#lights">NodeMaterial#lights</a></dt>
+						</dl>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="setupEnvironment" translate="no">.<a href="#setupEnvironment">setupEnvironment</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="BasicEnvironmentNode.html">BasicEnvironmentNode</a>.&lt;vec3></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>覆盖，因为此类材质使用 <a href="BasicEnvironmentNode.html">BasicEnvironmentNode</a>
+实现默认环境映射。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeMaterial.html#setupEnvironment">NodeMaterial#setupEnvironment</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 环境节点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setupLightMap" translate="no">.<a href="#setupLightMap">setupLightMap</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="BasicLightMapNode.html">BasicLightMapNode</a>.&lt;vec3></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>由于评估光照贴图，因此必须覆盖此方法
+使用基本材质的特殊比例因子。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeMaterial.html#setupLightMap">NodeMaterial#setupLightMap</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 光照贴图节点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setupLightingModel" translate="no">.<a href="#setupLightingModel">setupLightingModel</a><span class="signature">()</span><span class="type-signature"> : <a href="BasicLightingModel.html">BasicLightingModel</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置光照model.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeMaterial.html#setupLightingModel">NodeMaterial#setupLightingModel</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 光照模型.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setupNormal" translate="no">.<a href="#setupNormal">setupNormal</a><span class="signature">()</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>基本材质不受法线贴图和凹凸贴图影响，因此我们
+默认返回 <a href="TSL.html#normalViewGeometry">normalViewGeometry</a>.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeMaterial.html#setupNormal">NodeMaterial#setupNormal</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 普通节点.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setupOutgoingLight" translate="no">.<a href="#setupOutgoingLight">setupOutgoingLight</a><span class="signature">()</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>材质覆盖此方法，因为 <code>lights</code> 设置为 <code>true</code> 但
+我们仍然想返回漫反射颜色作为出射光。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="NodeMaterial.html#setupOutgoingLight">NodeMaterial#setupOutgoingLight</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>出射光节点。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p> <a href="https://github.com/mrdoob/three.js/blob/master/src/materials/nodes/MeshBasicNodeMaterial.js" translate="no" target="_blank" rel="noopener"> src/materials/nodes/MeshBasicNodeMaterial.js</a> </p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

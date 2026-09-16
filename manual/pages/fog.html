@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>Fog</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Fog">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>Fog</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>本文是有关 Three.js 的系列文章的一部分。的
+第一篇文章是<a href="fundamentals.html">three.js 基础知识</a>。如果
+您还没有读过，并且您是 Three.js 的新手，您可能想读一下
+考虑从那里开始。如果您还没有读过有关相机的内容，您可能会
+想从<a href="cameras.html">这篇文章</a>开始。</p>
+<p>3D引擎中的雾通常是淡入特定颜色的一种方式
+基于距相机的距离。在 Three.js 中添加雾
+创建 <a href="/threejs-docs-zh/docs/#api/en/scenes/Fog"><code class="notranslate" translate="no">Fog</code></a> 或 <a href="/threejs-docs-zh/docs/#api/en/scenes/FogExp2"><code class="notranslate" translate="no">FogExp2</code></a> 对象并将其设置在场景的
+<a href="/threejs-docs-zh/docs/#api/en/scenes/Scene#fog"><code class="notranslate" translate="no">fog</code></a> 属性.</p>
+<p><a href="/threejs-docs-zh/docs/#api/en/scenes/Fog"><code class="notranslate" translate="no">Fog</code></a> 让您选择<code class="notranslate" translate="no">near</code> 和 <code class="notranslate" translate="no">far</code> 设置为距离
+从相机。任何比 <code class="notranslate" translate="no">near</code> 更近的物体都不会受到雾的影响。
+任何超过 <code class="notranslate" translate="no">far</code> 的颜色都完全是雾色。之间的零件
+<code class="notranslate" translate="no">near</code> 和 <code class="notranslate" translate="no">far</code> 从材质颜色淡入雾色。</p>
+<p>还有 <a href="/threejs-docs-zh/docs/#api/en/scenes/FogExp2"><code class="notranslate" translate="no">FogExp2</code></a> 随着距相机.</p>
+<p>要使用任一类型的雾，您可以创建一个并将其分配给场景，如</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const scene = new THREE.Scene();
+{
+  const color = 0xFFFFFF;  // white
+  const near = 10;
+  const far = 100;
+  scene.fog = new THREE.Fog(color, near, far);
+}
+</pre>
+<p>或对于<a href="/threejs-docs-zh/docs/#api/en/scenes/FogExp2"><code class="notranslate" translate="no">FogExp2</code></a>，它将是</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const scene = new THREE.Scene();
+{
+  const color = 0xFFFFFF;
+  const density = 0.1;
+  scene.fog = new THREE.FogExp2(color, density);
+}
+</pre>
+<p><a href="/threejs-docs-zh/docs/#api/en/scenes/FogExp2"><code class="notranslate" translate="no">FogExp2</code></a> 更接近现实，但使用了 <a href="/threejs-docs-zh/docs/#api/en/scenes/Fog"><code class="notranslate" translate="no">Fog</code></a>
+更常见，因为它可以让您选择申请地点
+雾，以便您可以决定显示清晰的场景
+达到一定距离然后淡出某种颜色
+超过该距离。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="fog" style="height: 300px;"></div>
+    <div class="code">THREE.Fog</div>
+  </div>
+  <div>
+    <div data-diagram="fogExp2" style="height: 300px;"></div>
+    <div class="code">THREE.FogExp2</div>
+  </div>
+</div>
+
+<p>重要的是要注意，雾会应用于<em>渲染的事物</em>。
+它是计算对象颜色的每个像素的一部分。
+这意味着如果您希望场景褪色为某种颜色，您可以
+需要将雾<strong>和</strong>背景颜色设置为相同的颜色。
+背景颜色使用设置
+<a href="/threejs-docs-zh/docs/#api/en/scenes/Scene#background"><code class="notranslate" translate="no">scene.background</code></a>
+财产。要选择背景颜色，请附加 <a href="/threejs-docs-zh/docs/#api/en/math/Color"><code class="notranslate" translate="no">THREE.Color</code></a> 。例如</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">scene.background = new THREE.Color('#F00');  // red
+</pre>
+<div class="spread">
+  <div>
+    <div data-diagram="fogBlueBackgroundRed" style="height: 300px;" class="border"></div>
+    <div class="code">fog blue, background red</div>
+  </div>
+  <div>
+    <div data-diagram="fogBlueBackgroundBlue" style="height: 300px;" class="border"></div>
+    <div class="code">fog blue, background blue</div>
+  </div>
+</div>
+
+<p>这是我们之前添加雾的示例之一。唯一的补充
+就在设置场景之后，我们添加雾并设置场景的
+背景颜色</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const scene = new THREE.Scene();
+
++{
++  const near = 1;
++  const far = 2;
++  const color = 'lightblue';
++  scene.fog = new THREE.Fog(color, near, far);
++  scene.background = new THREE.Color(color);
++}
+</pre>
+<p>在下面的示例中，相机的<code class="notranslate" translate="no">near</code>为0.1，其<code class="notranslate" translate="no">far</code>为5。
+相机位于<code class="notranslate" translate="no">z = 2</code>。立方体大小为 1 个单位且 Z = 0。
+这意味着立方体的雾设置为 <code class="notranslate" translate="no">near = 1</code> 和 <code class="notranslate" translate="no">far = 2</code>
+将在其中心周围淡出。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/fog.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/fog.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>让我们添加一个界面，以便我们可以调整雾。我们将再次使用
+<a href="https://github.com/georgealways/lil-gui">lil-gui</a>。小吉需要
+一个对象和一个属性并自动创建一个接口
+对于该类型的财产。我们可以简单地让它操纵
+雾的 <code class="notranslate" translate="no">near</code> 和 <code class="notranslate" translate="no">far</code> 属性，但拥有它是无效的
+<code class="notranslate" translate="no">near</code> 大于 <code class="notranslate" translate="no">far</code> 所以让我们做一个 helper so lil-gui
+可以操作 <code class="notranslate" translate="no">near</code> 和 <code class="notranslate" translate="no">far</code> 属性，但我们将确保 <code class="notranslate" translate="no">near</code>
+小于或等于 <code class="notranslate" translate="no">far</code> 并且 <code class="notranslate" translate="no">far</code> 大于或等于 <code class="notranslate" translate="no">near</code>.</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">// We use this class to pass to lil-gui
+// so when it manipulates near or far
+// near is never &gt; far and far is never &lt; near
+class FogGUIHelper {
+  constructor(fog) {
+    this.fog = fog;
+  }
+  get near() {
+    return this.fog.near;
+  }
+  set near(v) {
+    this.fog.near = v;
+    this.fog.far = Math.max(this.fog.far, v);
+  }
+  get far() {
+    return this.fog.far;
+  }
+  set far(v) {
+    this.fog.far = v;
+    this.fog.near = Math.min(this.fog.near, v);
+  }
+}
+</pre>
+<p>我们可以这样添加</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">{
+  const near = 1;
+  const far = 2;
+  const color = 'lightblue';
+  scene.fog = new THREE.Fog(color, near, far);
+  scene.background = new THREE.Color(color);
++
++  const fogGUIHelper = new FogGUIHelper(scene.fog);
++  gui.add(fogGUIHelper, 'near', near, far).listen();
++  gui.add(fogGUIHelper, 'far', near, far).listen();
+}
+</pre>
+<p>The <code class="notranslate" translate="no">near</code> 和 <code class="notranslate" translate="no">far</code> 参数设置最小值和最大值
+用于调节雾气。它们是在我们设置相机时设置的。</p>
+<p>最后两行末尾的 <code class="notranslate" translate="no">.listen()</code> 告诉 lil-gui <em>听</em>
+进行更改。这样，当我们因为对 <code class="notranslate" translate="no">near</code> 的编辑而更改 <code class="notranslate" translate="no">far</code> 时
+或者我们更改 <code class="notranslate" translate="no">far</code> 以响应对 <code class="notranslate" translate="no">near</code> 的编辑 lil-gui 将更新
+另一个属性的 UI 对我们来说.</p>
+<p>能够更改雾的颜色也可能很好，但就像是
+上面提到我们需要保留雾的颜色和背景
+颜色同步。因此，让我们向助手添加另一个<em>虚拟</em>属性
+当 lil-gui 操作它时，这将设置两种颜色。</p>
+<p>lil-gui 可以通过 4 种方式操作颜色，作为 CSS 6 位十六进制字符串（例如：<code class="notranslate" translate="no">#112233</code>）。作为色调、饱和度、值、对象（例如：<code class="notranslate" translate="no">{h: 60, s: 1, v: }</code>）。
+作为 RGB 数组（例如：<code class="notranslate" translate="no">[255, 128, 64]</code>）。或者，作为 RGBA 数组（例如：<code class="notranslate" translate="no">[127, 200, 75, 0.3]</code>）.</p>
+<p>对于我们的目的来说，使用十六进制字符串版本是最简单的，因为这样
+lil-gui 仅操作单个值。幸运的是<a href="/threejs-docs-zh/docs/#api/en/math/Color"><code class="notranslate" translate="no">THREE.Color</code></a>
+作为 <a href="/threejs-docs-zh/docs/#api/en/math/Color#getHexString"><code class="notranslate" translate="no">getHexString</code></a> 方法
+我们习惯于轻松获得这样的字符串，我们只需在前面添加一个“#”即可。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">// We use this class to pass to lil-gui
+// so when it manipulates near or far
+// near is never &gt; far and far is never &lt; near
++// Also when lil-gui manipulates color we'll
++// update both the fog and background colors.
+class FogGUIHelper {
+*  constructor(fog, backgroundColor) {
+    this.fog = fog;
++    this.backgroundColor = backgroundColor;
+  }
+  get near() {
+    return this.fog.near;
+  }
+  set near(v) {
+    this.fog.near = v;
+    this.fog.far = Math.max(this.fog.far, v);
+  }
+  get far() {
+    return this.fog.far;
+  }
+  set far(v) {
+    this.fog.far = v;
+    this.fog.near = Math.min(this.fog.near, v);
+  }
++  get color() {
++    return `#${this.fog.color.getHexString()}`;
++  }
++  set color(hexString) {
++    this.fog.color.set(hexString);
++    this.backgroundColor.set(hexString);
++  }
+}
+</pre>
+<p>然后调用<code class="notranslate" translate="no">gui.addColor</code>为我们的助手的虚拟属性添加颜色UI。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">{
+  const near = 1;
+  const far = 2;
+  const color = 'lightblue';
+  scene.fog = new THREE.Fog(color, near, far);
+  scene.background = new THREE.Color(color);
+
+*  const fogGUIHelper = new FogGUIHelper(scene.fog, scene.background);
+  gui.add(fogGUIHelper, 'near', near, far).listen();
+  gui.add(fogGUIHelper, 'far', near, far).listen();
++  gui.addColor(fogGUIHelper, 'color');
+}
+</pre>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/fog-gui.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/fog-gui.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>您可以看到将<code class="notranslate" translate="no">near</code>设置为喜欢1.9 和 <code class="notranslate" translate="no">far</code> 到 2.0 给出
+未雾化和完全雾化之间的过渡非常明显。
+其中 <code class="notranslate" translate="no">near</code> = 1.1 和 <code class="notranslate" translate="no">far</code> = 2.9 应该是
+考虑到我们的立方体旋转距离相机 2 个单位，最平滑。</p>
+<p>最后一件事，有一个布尔值 <a href="/threejs-docs-zh/docs/#api/en/materials/Material#fog"><code class="notranslate" translate="no">fog</code></a>
+材质上的属性，用于确定对象是否渲染
+该材质会受到雾的影响。默认为 <code class="notranslate" translate="no">true</code>
+对于大多数材料。作为您可能想要的示例
+要关闭雾气，想象一下您正在制作一辆 3D 车辆
+模拟器，可从驾驶员座椅或驾驶舱查看。
+您可能希望在以下情况下关闭车内所有物品的雾气：
+从车内看。</p>
+<p>更好的例子可能是房子
+屋外还有浓浓的雾气。假设雾即将开始
+2 米远（近 = 2），4 米（远 = 4）处完全雾化。
+房间长超过2米，房子可能更长
+超过4米所以需要设置里面的材质
+站在屋内时，请勿使用雾气
+从房间远端的墙外看，房子会看起来像
+就像在雾中一样。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="fogHouseAll" style="height: 300px;" class="border"></div>
+    <div class="code">fog: true, all</div>
+  </div>
+</div>
+
+<p>注意房间远端的墙壁和天花板正在雾化。
+通过关闭房屋材料上的雾，我们可以解决这个问题。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="fogHouseInsideNoFog" style="height: 300px;" class="border"></div>
+    <div class="code">fog: true, only outside materials</div>
+  </div>
+</div>
+
+<p><canvas id="c"></canvas></p>
+<script type="module" src="../resources/threejs-fog.js"></script>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

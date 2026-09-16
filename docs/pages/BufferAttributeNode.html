@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>BufferAttributeNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="InputNode.html">InputNode</a> → </p>
+	<h1 translate="no">BufferAttributeNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>在早期的<code>three.js</code>版本中只能定义属性数据
+在几何层面上。使用<code>BufferAttributeNode</code>，也可以这样做
+在节点级别上。</p>
+<pre><code class="language-js">const geometry = new THREE.PlaneGeometry();
+const positionAttribute = geometry.getAttribute( 'position' );
+const colors = [];
+for ( let i = 0; i &lt; position.count; i ++ ) {
+	colors.push( 1, 0, 0 );
+}
+material.colorNode = bufferAttribute( new THREE.Float32BufferAttribute( colors, 3 ) );
+</code></pre>
+<p>当几何数据通过以下方式生成时，这种新方法特别有趣
+计算着色器。下面这行将存储缓冲区转换为属性节点。</p>
+<pre><code class="language-js">material.positionNode = positionBuffer.toAttribute();
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="BufferAttributeNode" translate="no">new <a href="#BufferAttributeNode">BufferAttributeNode</a><span class="signature">( value : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a> | <a href="InterleavedBuffer.html">InterleavedBuffer</a> | TypedArray</span>, bufferType : <span class="param-type">string</span>, bufferStride : <span class="param-type">number</span>, bufferOffset : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的缓冲区属性节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>属性数据。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">bufferType</strong>
+									</td>
+									<td class="description last">
+										<p>缓冲区类型（例如<code>'vec3'</code>).</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">bufferStride</strong>
+									</td>
+									<td class="description last">
+										<p>缓冲区步幅.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">bufferOffset</strong>
+									</td>
+									<td class="description last">
+										<p>缓冲区偏移量.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="attribute" translate="no">.<a href="#attribute">attribute</a><span class="type-signature"> : <a href="BufferAttribute.html">BufferAttribute</a></span> </h3>
+					<div class="description">
+						<p>对缓冲区的引用attribute.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bufferOffset" translate="no">.<a href="#bufferOffset">bufferOffset</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>缓冲区偏移量.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bufferStride" translate="no">.<a href="#bufferStride">bufferStride</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>缓冲区步幅.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bufferType" translate="no">.<a href="#bufferType">bufferType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>缓冲区类型（例如<code>'vec3'</code>).</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="global" translate="no">.<a href="#global">global</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p><code>BufferAttributeNode</code> 默认情况下将此属性设置为 <code>true</code>。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="InputNode.html#global">InputNode#global</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="instanced" translate="no">.<a href="#instanced">instanced</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>属性是否实例化。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isBufferNode" translate="no">.<a href="#isBufferNode">isBufferNode</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="usage" translate="no">.<a href="#usage">usage</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>用法属性。通过 <code>.setUsage()</code> 将其设置为 <code>THREE.DynamicDrawUsage</code>，
+如果您计划更新每帧的属性数据。</p>
+						<p>默认为 <code>StaticDrawUsage</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="generate" translate="no">.<a href="#generate">generate</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成缓冲区属性节点的代码片段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="InputNode.html#generate">InputNode#generate</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>生成的代码snippet.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="generateNodeType" translate="no">.<a href="#generateNodeType">generateNodeType</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>该方法被覆盖，因为节点类型是从
+缓冲区属性。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="InputNode.html#generateNodeType">InputNode#generateNodeType</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 节点类型。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getHash" translate="no">.<a href="#getHash">getHash</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>由于属性数据可能共享，因此该方法被覆盖
+因此哈希值也应该共享。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="InputNode.html#getHash">InputNode#getHash</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 哈希值.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getInputType" translate="no">.<a href="#getInputType">getInputType</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>覆盖默认实现以返回固定值<code>'bufferAttribute'</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="InputNode.html#getInputType">InputNode#getInputType</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 输入类型.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setInstanced" translate="no">.<a href="#setInstanced">setInstanced</a><span class="signature">( value : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="BufferAttributeNode.html">BufferAttributeNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将 <code>instanced</code> 属性设置为给定值value.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>要设置的值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此节点的引用.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setUsage" translate="no">.<a href="#setUsage">setUsage</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="BufferAttributeNode.html">BufferAttributeNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将 <code>usage</code> 属性设置为给定值。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>设置的用法.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此节点的引用.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据传递给节点的值，<code>setup()</code> 的行为
+不同。如果没有传递 <code>BufferAttribute</code> 的实例，则该方法
+创建一个内部属性并分别配置它。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="InputNode.html#setup">InputNode#setup</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/nodes/accessors/BufferAttributeNode.js" translate="no" target="_blank" rel="noopener"> src/nodes/accessors/BufferAttributeNode.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

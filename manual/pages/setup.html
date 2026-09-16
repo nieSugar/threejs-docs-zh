@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>设置</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Setup">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>设置</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>本文是关于 three.js 系列文章中的一篇。第一篇文章是 <a href="fundamentals.html">关于 three.js 基础知识</a>。如果你还没有阅读，建议你从那里开始。</p>
+<p>在继续之前，我们需要讨论如何将你的计算机设置为开发环境。特别是出于安全原因，WebGL 不能直接使用硬盘上的图像。这意味着为了进行开发，你需要使用一个 web 服务器。幸运的是，开发用的 web 服务器非常容易设置和使用。</p>
+<p>首先，如果你愿意，可以从 <a href="https://github.com/gfxfundamentals/threejsfundamentals/archive/gh-pages.zip">此链接</a> 下载整个网站。下载后双击 zip 文件以解压文件。</p>
+<p>接下来下载其中一个简单的网页服务器。</p>
+<p>如果你更喜欢带有用户界面的网页服务器，可以使用 <a href="https://greggman.github.io/servez" target="_blank">Servez</a>。</p>
+<p></p><div class="threejs_image border">
+  <img class="" src="../resources/servez.gif">
+</div>
+
+<p></p>
+<p>只需将其指向你解压文件的文件夹，点击“Start”，然后在浏览器中访问 <a href="http://localhost:8080/"><code class="notranslate" translate="no">http://localhost:8080/</code></a>，如果你想浏览示例，请访问 <a href="http://localhost:8080/threejs"><code class="notranslate" translate="no">http://localhost:8080/threejs</code></a>。</p>
+<p>要停止服务，点击停止或退出 Servez。</p>
+<p>如果你更喜欢使用命令行（我也是），另一种方法是使用<a href="https://nodejs.org" target="_blank">node.js</a>。下载它，安装它，然后打开命令提示符 / 控制台 / 终端窗口。如果你使用的是 Windows，安装程序会添加一个特殊的“Node 命令提示符”，所以使用它。</p>
+<p>然后通过输入安装 <a href="https://github.com/greggman/servez-cli"><code class="notranslate" translate="no">servez</code></a></p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">npm -g install servez
+</pre><p>如果你在 OSX 上使用</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">sudo npm -g install servez
+</pre><p>。完成后，键入</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">servez path/to/folder/where/you/unzipped/files
+</pre><p>。或者如果你像我一样，</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">cd path/to/folder/where/you/unzipped/files
+servez
+</pre><p>。它应该会打印类似于</p>
+<p></p><div class="threejs_image ">
+  <img class="" src="../resources/servez-response.png">
+</div>
+
+<p></p>
+<p>的内容。然后在你的浏览器中访问<a href="http://localhost:8080/"><code class="notranslate" translate="no">http://localhost:8080/</code></a>。</p>
+<p>如果你没有指定路径，那么servez将服务当前文件夹。</p>
+<p>如果这些选项中有任何一个不符合你的喜好，<a href="https://stackoverflow.com/questions/12905426/what-is-a-faster-alternative-to-pythons-servez-or-simplehttpserver" target="_blank">还有许多其他简单的服务器可供选择</a>。</p>
+<p>现在你已经设置了服务器，我们可以继续学习<a href="textures.html">纹理</a>。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

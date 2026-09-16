@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>ShaderMaterial - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Material.html">Material</a> → </p>
+	<h1 translate="no">ShaderMaterial</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用自定义着色器渲染的材质。着色器是用 GLSL 编写的小程序。
+在 GPU 上运行。如果您需要实现一个，您可能需要使用自定义着色器
+任何内置材质都不包含该效果。</p>
+<p>使用 <code>ShaderMaterial</code> 时要记住以下注意事项：</p>
+<ul>
+<li><code>ShaderMaterial</code>只能与<a href="WebGLRenderer.html">WebGLRenderer</a>一起使用。</li>
+<li>内置属性和统一变量会随着您的代码一起传递给着色器。如果您不想要这样，请改用 <a href="RawShaderMaterial.html">RawShaderMaterial</a>。</li>
+<li>可以使用 <code>#pragma unroll_loop_start</code> 和 <code>#pragma unroll_loop_end</code> 指令，
+让着色器预处理器展开 GLSL 中的 <code>for</code> 循环。指令必须紧挨着放在循环上方，
+并且循环格式必须符合以下规范。
+<ul>
+<li>循环必须是<a href="https://en.wikipedia.org/wiki/Normalized_loop" target="_blank" rel="noopener">规范化循环</a>。</li>
+<li>循环变量必须是 <em>i</em>。</li>
+<li>在给定的迭代中，值 <code>UNROLLED_LOOP_INDEX</code> 将被显式地替换为 <em>i</em> 的值，并且可以在预处理器语句中使用。</li>
+</ul>
+</li>
+</ul></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const material = new THREE.ShaderMaterial( {
+	uniforms: {
+		time: { value: 1.0 },
+		resolution: { value: new THREE.Vector2() }
+	},
+	vertexShader: document.getElementById( 'vertexShader' ).textContent,
+	fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+} );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="ShaderMaterial" translate="no">new <a href="#ShaderMaterial">ShaderMaterial</a><span class="signature">( parameters : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新的着色器材质。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>具有一个或多个属性的对象
+定义材料的外观。材料的任何属性
+（包括继承材料的任何财产）可以通过
+在这里。颜色值可以传递任何接受的类型的值
+by <a href="Color.html#set">Color#set</a>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="clipping" translate="no">.<a href="#clipping">clipping</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>定义此材质是否支持裁剪； <code>true</code> 让渲染器
+传递clippingPlanesuniform.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="defaultAttributeValues" translate="no">.<a href="#defaultAttributeValues">defaultAttributeValues</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>当渲染的几何体不包含这些属性但包含
+材质执行此操作后，这些默认值将传递给着色器。这个
+避免缓冲区数据丢失时出现错误。</p>
+<ul>
+<li>颜色: [ 1, 1, 1 ]</li>
+<li>uv: [ 0, 0 ]</li>
+<li>uv1: [ 0, 0 ]</li>
+</ul>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="defines" translate="no">.<a href="#defines">defines</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>在 GLSL 代码中使用 <code>#define</code> 指令定义自定义常量
+对于顶点着色器和片段着色器；每个键/值对
+产生另一个指令。</p>
+<pre><code class="language-js">defines: {
+	FOO: 15,
+	BAR: true
+}
+</code></pre>
+<p>产生以下行：</p>
+<pre class="prettyprint source"><code>#define FOO 15
+#define BAR true
+</code></pre>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="extensions" translate="no">.<a href="#extensions">extensions</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>此对象允许启用某些 WebGL 2 扩展。</p>
+<ul>
+<li>clipCullDistance：设置为 <code>true</code> 以使用顶点着色器裁剪</li>
+<li>multiDraw：设置为 <code>true</code> 以使用顶点着色器 multi_draw / 启用 gl_DrawID</li>
+</ul>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="fog" translate="no">.<a href="#fog">fog</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>定义材质颜色是否受全局雾设置影响；<code>true</code>以将雾的 uniform 参数传递给着色器。</p>
+<p>将此属性设置为 <code>true</code> 需要定义雾制服。它是
+建议使用 <code>UniformsUtils.merge()</code> 来组合自定义着色器制服
+具有预定义的雾制服。</p>
+<pre><code class="language-js">const material = new ShaderMaterial( {
+    uniforms: UniformsUtils.merge( [ UniformsLib[ 'fog' ], shaderUniforms ] );
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    fog: true
+} );
+</code></pre>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="forceSinglePass" translate="no">.<a href="#forceSinglePass">forceSinglePass</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>默认覆盖并设置为 <code>true</code>。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Material.html#forceSinglePass">Material#forceSinglePass</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="fragmentShader" translate="no">.<a href="#fragmentShader">fragmentShader</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>片段着色器 GLSL代码。这是着色器的实际代码。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="glslVersion" translate="no">.<a href="#glslVersion">glslVersion</a><span class="type-signature"> : <a href="global.html#GLSL1">GLSL1</a> | <a href="global.html#GLSL3">GLSL3</a></span> </h3>
+					<div class="description">
+						<p>定义自定义着色器代码的 GLSL 版本。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="index0AttributeName" translate="no">.<a href="#index0AttributeName">index0AttributeName</a><span class="type-signature"> : string | undefined</span> </h3>
+					<div class="description">
+						<p>如果设置，则调用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindAttribLocation" target="_blank" rel="noopener">gl.bindAttribLocation</a>
+将通用顶点索引绑定到属性变量。</p>
+						<p>默认为<code>undefined</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isShaderMaterial" translate="no">.<a href="#isShaderMaterial">isShaderMaterial</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lights" translate="no">.<a href="#lights">lights</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>定义此材质是否使用照明； <code>true</code> 传递统一数据
+与此着色器的光照相关。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="linewidth" translate="no">.<a href="#linewidth">linewidth</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>控制线条粗细或行.</p>
+<p>WebGL 和 WebGPU 忽略此设置并始终使用
+一个像素的宽度。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="uniforms" translate="no">.<a href="#uniforms">uniforms</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>以下形式的对象：</p>
+<pre><code class="language-js">{
+	&quot;uniform1&quot;: { value: 1.0 },
+	&quot;uniform2&quot;: { value: 2 }
+}
+</code></pre>
+<p>指定要传递给着色器代码的制服；按键是统一的
+名称、值的定义形式为</p>
+<pre class="prettyprint source"><code>{
+	value: 1.0
+}
+</code></pre>
+<p>，其中<code>value</code> 是制服的值。姓名必须与姓名相符
+GLSL 代码中定义的统一。请注意，制服已刷新
+在每一帧上，因此更新制服的值将立即
+更新 GLSL 代码可用的值。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="uniformsGroups" translate="no">.<a href="#uniformsGroups">uniformsGroups</a><span class="type-signature"> : Array.&lt;<a href="UniformsGroup.html">UniformsGroup</a>></span> </h3>
+					<div class="description">
+						<p>保存用于配置 UBO 的制服组的数组。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="uniformsNeedUpdate" translate="no">.<a href="#uniformsNeedUpdate">uniformsNeedUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>可用于在更改制服时强制进行统一更新
+<a href="Object3D.html#onBeforeRender">Object3D#onBeforeRender</a>.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="vertexShader" translate="no">.<a href="#vertexShader">vertexShader</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>顶点着色器GLSL代码。这是着色器的实际代码。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="wireframe" translate="no">.<a href="#wireframe">wireframe</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>将几何体渲染为线框。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="wireframeLinewidth" translate="no">.<a href="#wireframeLinewidth">wireframeLinewidth</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>控制厚度线框的.</p>
+<p>WebGL 和 WebGPU 忽略此属性并始终渲染
+1 像素宽线.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="fromJSON" translate="no">.<a href="#fromJSON">fromJSON</a><span class="signature">( json : <span class="param-type">Object</span>, textures : <span class="param-type">Object.&lt;string, <a href="Texture.html">Texture</a>></span> )</span><span class="type-signature"> : <a href="ShaderMaterial.html">ShaderMaterial</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从以下位置反序列化材质给定的 JSON.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">json</strong>
+									</td>
+									<td class="description last">
+										<p> 保存序列化材质的 JSON。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textures</strong>
+									</td>
+									<td class="description last">
+										<p> 保存材质引用的纹理的字典。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Material.html#fromJSON">Material#fromJSON</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对此材质的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">类型定义</h2>
+				<div class="member">
+					<h3 class="name" id="~Shader" translate="no">.<a href="#~Shader">Shader</a> </h3>
+					<div class="description">
+						<p>此类型表示存储和运行着色器代码所需的字段。</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>name</strong>
+						<br>
+<span class="param-type">string</span>
+				</td>
+			<td class="description last">
+				<p>着色器的名称着色器.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>uniforms</strong>
+						<br>
+<span class="param-type">Object.&lt;string, <a href="Uniform.html">Uniform</a>></span>
+				</td>
+			<td class="description last">
+				<p>着色器的制服.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>defines</strong>
+						<br>
+<span class="param-type">Object.&lt;string, <a href="TSL.html#any">any</a>></span>
+				</td>
+			<td class="description last">
+				<p>着色器的定义.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>vertexShader</strong>
+						<br>
+<span class="param-type">string</span>
+				</td>
+			<td class="description last">
+				<p>顶点着色器代码.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>fragmentShader</strong>
+						<br>
+<span class="param-type">string</span>
+				</td>
+			<td class="description last">
+				<p>片段着色器代码.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/src/materials/ShaderMaterial.js" translate="no" target="_blank" rel="noopener"> src/materials/ShaderMaterial.js</a></p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

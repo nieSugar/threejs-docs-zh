@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>SoftParticles - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">SoftParticles</h1>
+		<section>
+			<header>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">SoftParticles</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { softParticles } from 'three/addons/tsl/utils/SoftParticles.js';</code></pre>
+				<div class="container-overview">
+				</div>
+				<h2 class="subsection-title">静态方法</h2>
+					<h3 class="name name-method" id=".softParticles" translate="no">.<a href="#.softParticles">softParticles</a><span class="signature">( parameters : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>基于“软粒子”白色计算软粒子的不透明度节点
+论文（NVIDIA、Tristan Lorach）.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>配置参数.</p>
+										<p>默认为 <code>{}</code>.</p>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">opacity</strong>
+									</td>
+									<td class="description last">
+										<p>精灵的基础不透明度，与软淡入淡出相乘。</p>
+										<p>默认为<code>float(1)</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">distance</strong>
+									</td>
+									<td class="description last">
+										<p>精灵在场景中淡出的世界空间距离。</p>
+										<p>默认为<code>1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">contrast</strong>
+									</td>
+									<td class="description last">
+										<p>淡入淡出曲线的对比度。 <code>1</code> 是线性的，较高的值会锐化过渡。</p>
+										<p>默认为<code>2</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">viewportDepth</strong>
+									</td>
+									<td class="description last">
+										<p>粒子淡入淡出的不透明场景深度。</p>
+										<p>默认为<code>viewportDepthTexture()</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>要分配给 <code>material.opacityNode</code>.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/utils/SoftParticles.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/utils/SoftParticles.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

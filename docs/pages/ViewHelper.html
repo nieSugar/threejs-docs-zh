@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>ViewHelper - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → </p>
+	<h1 translate="no">ViewHelper</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>一种特殊类型的帮助器，可可视化相机的变换
+在小视口区域中作为轴助手。经常需要这样的帮手
+在 3D 建模工具或场景编辑器中，例如 <a href="https://threejs.org/editor" target="_blank" rel="noopener"> Three.js 编辑器</a>.</p>
+<p>帮助器允许单击 X、Y 和 Z 轴来为相机设置动画
+所以它看起来沿着选定的轴。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">ViewHelper</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { ViewHelper } from 'three/addons/helpers/ViewHelper.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="ViewHelper" translate="no">new <a href="#ViewHelper">ViewHelper</a><span class="signature">( camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, domElement : <span class="param-type">HTMLElement</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的视图助手。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>应可视化变换的相机。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">domElement</strong>
+									</td>
+									<td class="description last">
+										<p>用于渲染视图的 DOM 元素。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="animating" translate="no">.<a href="#animating">animating</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>助手当前是否处于动画状态。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
+					<div class="description">
+						<p>可视化变换的相机。可以在以下位置重新分配
+随时将助手重新绑定到不同的摄像机。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="center" translate="no">.<a href="#center">center</a><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<div class="description">
+						<p>助手的中心点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isViewHelper" translate="no">.<a href="#isViewHelper">isViewHelper</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="location" translate="no">.<a href="#location">location</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>控制助手在视口中的位置。
+使用 <code>top</code>/<code>bottom</code> 进行垂直定位，使用 <code>left</code>/<code>right</code> 进行水平定位。
+如果 <code>left</code> 是 <code>null</code>，则使用 <code>right</code>。如果<code>top</code>为<code>null</code>，则使用<code>bottom</code>。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放分配的GPU相关资源通过这个例子。打电话给这个
+每当您的应用程序中不再使用此实例时，方法。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Object3D.html#dispose">Object3D#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="handleClick" translate="no">.<a href="#handleClick">handleClick</a><span class="signature">( event : <span class="param-type">PointerEvent</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>当点击或指针事件时应调用此方法
+应用程序中已发生。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">event</strong>
+									</td>
+									<td class="description last">
+										<p>要处理的事件。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>是否已检测到与帮助器的交叉点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="render" translate="no">.<a href="#render">render</a><span class="signature">( renderer : <span class="param-type"><a href="WebGLRenderer.html">WebGLRenderer</a> | <a href="WebGPURenderer.html">WebGPURenderer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在视口中的单独视图中渲染帮助器。
+位置由 <code>location</code> 属性控制。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setLabelStyle" translate="no">.<a href="#setLabelStyle">setLabelStyle</a><span class="signature">( font : <span class="param-type">string</span>, color : <span class="param-type">string</span>, radius : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 设置标签样式。当轴未标记时无效。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">font</strong>
+									</td>
+									<td class="description last">
+										<p>标签字体.</p>
+										<p>默认为<code>'24px Arial'</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">color</strong>
+									</td>
+									<td class="description last">
+										<p>标签颜色.</p>
+										<p>默认为<code>'#000000'</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">radius</strong>
+									</td>
+									<td class="description last">
+										<p>标签半径.</p>
+										<p>默认为<code>14</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setLabels" translate="no">.<a href="#setLabels">setLabels</a><span class="signature">( labelX : <span class="param-type">string | undefined</span>, labelY : <span class="param-type">string | undefined</span>, labelZ : <span class="param-type">string | undefined</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>为每个轴设置标签。默认情况下，它们是未标记的。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">labelX</strong>
+									</td>
+									<td class="description last">
+										<p>x 轴的标签。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">labelY</strong>
+									</td>
+									<td class="description last">
+										<p>y 轴的标签。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">labelZ</strong>
+									</td>
+									<td class="description last">
+										<p>z 轴的标签。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">( delta : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>更新帮助器。应在应用程序的动画中调用此方法
+循环.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">delta</strong>
+									</td>
+									<td class="description last">
+										<p>以秒为单位的增量时间。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/helpers/ViewHelper.js" translate="no" target="_blank" rel="noopener"> examples/jsm/helpers/ViewHelper.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

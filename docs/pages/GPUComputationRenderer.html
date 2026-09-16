@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>GPUComputationRenderer - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">GPUComputationRenderer</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>GPUComputationRenderer，基于@zz85 的SimulationRenderer。</p>
+<p>GPUComputationRenderer 使用变量的概念。这些变量是 RGBA 浮点纹理，可容纳 4 个浮点
+对于每个计算元素（纹素）。</p>
+<p>每个变量都有一个片段着色器，用于定义为获取相关变量而进行的计算。
+您可以使用所需数量的变量，并建立依赖关系，以便可以在着色器中使用其他变量的纹理
+（采样器制服是自动添加的）大多数变量都需要它们自己作为依赖项。</p>
+<p>渲染器实际上每个变量有两个渲染目标，以进行乒乓球。使用当前帧的纹理
+作为渲染下一帧纹理的输入。</p>
+<p>变量的渲染目标可用作可视化着色器的输入纹理。</p>
+<p>变量名称应该是有效的标识符，并且不应与三个 GLSL 使用的标识符冲突。
+一种常见的方法是在变量名称前使用“texture”前缀；即texturePosition、textureVelocity...</p>
+<p>计算的大小（sizeX * sizeY）在着色器中自动定义为“分辨率”。例如：</p>
+<pre class="prettyprint source"><code>#DEFINE resolution vec2( 1024.0, 1024.0 )
+</code></pre>
+<p>基本使用：</p>
+<pre><code class="language-js">// Initialization...
+// Create computation renderer
+const gpuCompute = new GPUComputationRenderer( 1024, 1024, renderer );
+// Create initial state float textures
+const pos0 = gpuCompute.createTexture();
+const vel0 = gpuCompute.createTexture();
+// and fill in here the texture data...
+// Add texture variables
+const velVar = gpuCompute.addVariable( &quot;textureVelocity&quot;, fragmentShaderVel, vel0 );
+const posVar = gpuCompute.addVariable( &quot;texturePosition&quot;, fragmentShaderPos, pos0 );
+// Add variable dependencies
+gpuCompute.setVariableDependencies( velVar, [ velVar, posVar ] );
+gpuCompute.setVariableDependencies( posVar, [ velVar, posVar ] );
+// Add custom uniforms
+velVar.material.uniforms.time = { value: 0.0 };
+// Check for completeness
+const error = gpuCompute.init();
+if ( error !== null ) {
+		console.error( error );
+}
+// In each frame...
+// Compute!
+gpuCompute.compute();
+// Update texture uniforms in your visualization materials with the gpu renderer output
+myMaterial.uniforms.myTexture.value = gpuCompute.getCurrentRenderTarget( posVar ).texture;
+// Do your rendering
+renderer.render( myScene, myCamera );
+</code></pre>
+<p>此外，还可以使用实用函数来创建ShaderMaterial并执行计算（纹理之间的渲染）
+请注意，着色器可以有多个输入纹理。</p>
+<pre><code class="language-js">const myFilter1 = gpuCompute.createShaderMaterial( myFilterFragmentShader1, { theTexture: { value: null } } );
+const myFilter2 = gpuCompute.createShaderMaterial( myFilterFragmentShader2, { theTexture: { value: null } } );
+const inputTexture = gpuCompute.createTexture();
+// Fill in here inputTexture...
+myFilter1.uniforms.theTexture.value = inputTexture;
+const myRenderTarget = gpuCompute.createRenderTarget();
+myFilter2.uniforms.theTexture.value = myRenderTarget.texture;
+const outputRenderTarget = gpuCompute.createRenderTarget();
+// Now use the output texture where you want:
+myMaterial.uniforms.map.value = outputRenderTarget.texture;
+// And compute each frame, before rendering to screen:
+gpuCompute.doRenderTarget( myFilter1, myRenderTarget );
+gpuCompute.doRenderTarget( myFilter2, outputRenderTarget );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">GPUComputationRenderer</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="GPUComputationRenderer" translate="no">new <a href="#GPUComputationRenderer">GPUComputationRenderer</a><span class="signature">( sizeX : <span class="param-type">number</span>, sizeY : <span class="param-type">number</span>, renderer : <span class="param-type"><a href="WebGLRenderer.html">WebGLRenderer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的GPU计算渲染器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sizeX</strong>
+									</td>
+									<td class="description last">
+										<p>计算问题大小始终为2d：sizeX * sizeY元素。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">sizeY</strong>
+									</td>
+									<td class="description last">
+										<p>计算问题大小始终为2d：sizeX * sizeY元素。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="addResolutionDefine" translate="no">.<a href="#addResolutionDefine">addResolutionDefine</a> </h3>
+					<div class="description">
+						<p>添加为给定材质定义的分辨率着色器.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="addVariable" translate="no">.<a href="#addVariable">addVariable</a><span class="signature">( variableName : <span class="param-type">string</span>, computeFragmentShader : <span class="param-type">string</span>, initialValueTexture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>向渲染器添加计算变量.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">variableName</strong>
+									</td>
+									<td class="description last">
+										<p>变量名称.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">computeFragmentShader</strong>
+									</td>
+									<td class="description last">
+										<p>计算（片段）着色器源.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">initialValueTexture</strong>
+									</td>
+									<td class="description last">
+										<p>初始值纹理.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 计算变量.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="compute" translate="no">.<a href="#compute">compute</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>执行计算。此方法通常在动画循环中调用。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="createRenderTarget" translate="no">.<a href="#createRenderTarget">createRenderTarget</a><span class="signature">( sizeXTexture : <span class="param-type">number</span>, sizeYTexture : <span class="param-type">number</span>, wrapS : <span class="param-type">number</span>, wrapT : <span class="param-type">number</span>, minFilter : <span class="param-type">number</span>, magFilter : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据给定参数创建新的渲染目标。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sizeXTexture</strong>
+									</td>
+									<td class="description last">
+										<p>渲染目标的宽度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">sizeYTexture</strong>
+									</td>
+									<td class="description last">
+										<p>渲染目标的高度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">wrapS</strong>
+									</td>
+									<td class="description last">
+										<p>wrapS 值.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">wrapT</strong>
+									</td>
+									<td class="description last">
+										<p>wrapS 值.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">minFilter</strong>
+									</td>
+									<td class="description last">
+										<p>minFilter 值。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">magFilter</strong>
+									</td>
+									<td class="description last">
+										<p>magFilter 值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 新的渲染目标。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="createTexture" translate="no">.<a href="#createTexture">createTexture</a><span class="signature">()</span><span class="type-signature"> : <a href="DataTexture.html">DataTexture</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建新的数据纹理。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 新数据texture.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放所有内部资源。如果不需要则调用此方法
+渲染器不再.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="doRenderTarget" translate="no">.<a href="#doRenderTarget">doRenderTarget</a><span class="signature">( material : <span class="param-type"><a href="Material.html">Material</a></span>, output : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定材质渲染到给定渲染目标中
+全屏传递.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">material</strong>
+									</td>
+									<td class="description last">
+										<p>材质.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">output</strong>
+									</td>
+									<td class="description last">
+										<p>输出.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="getAlternateRenderTarget" translate="no">.<a href="#getAlternateRenderTarget">getAlternateRenderTarget</a><span class="signature">( variable : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定计算变量的备用渲染目标.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">variable</strong>
+									</td>
+									<td class="description last">
+										<p>计算变量.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>备用渲染目标。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getCurrentRenderTarget" translate="no">.<a href="#getCurrentRenderTarget">getCurrentRenderTarget</a><span class="signature">( variable : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定计算变量的当前渲染目标。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">variable</strong>
+									</td>
+									<td class="description last">
+										<p>计算变量.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>当前渲染目标。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="init" translate="no">.<a href="#init">init</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>初始化renderer.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 如果未检测到错误，则返回 <code>null</code>。否则返回错误消息。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="renderTexture" translate="no">.<a href="#renderTexture">renderTexture</a><span class="signature">( input : <span class="param-type"><a href="Texture.html">Texture</a></span>, output : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定纹理渲染到给定渲染目标中。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">input</strong>
+									</td>
+									<td class="description last">
+										<p>输入。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">output</strong>
+									</td>
+									<td class="description last">
+										<p>输出.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setDataType" translate="no">.<a href="#setDataType">setDataType</a><span class="signature">( type : <span class="param-type"><a href="global.html#FloatType">FloatType</a> | <a href="global.html#HalfFloatType">HalfFloatType</a></span> )</span><span class="type-signature"> : <a href="GPUComputationRenderer.html">GPUComputationRenderer</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置内部纹理的数据类型。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">type</strong>
+									</td>
+									<td class="description last">
+										<p>类型为set.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对此渲染器的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setVariableDependencies" translate="no">.<a href="#setVariableDependencies">setVariableDependencies</a><span class="signature">( variable : <span class="param-type">Object</span>, dependencies : <span class="param-type">Array.&lt;Object></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置变量依赖项。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">variable</strong>
+									</td>
+									<td class="description last">
+										<p>计算变量.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">dependencies</strong>
+									</td>
+									<td class="description last">
+										<p>表示依赖项的其他计算变量。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/misc/GPUComputationRenderer.js" translate="no" target="_blank" rel="noopener"> examples/jsm/misc/GPUComputationRenderer.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

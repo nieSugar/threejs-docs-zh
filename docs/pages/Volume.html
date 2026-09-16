@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Volume - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Volume</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>编写此类是为了处理 <a href="NRRDLoader.html">NRRDLoader</a> 的输出。
+它包含大量数据和相关信息。目前它仅处理 3 维数据。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">Volume</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { Volume } from 'three/addons/misc/Volume.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Volume" translate="no">new <a href="#Volume">Volume</a><span class="signature">( xLength : <span class="param-type">number</span>, yLength : <span class="param-type">number</span>, zLength : <span class="param-type">number</span>, type : <span class="param-type">string</span>, arrayBuffer : <span class="param-type">ArrayBuffer</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新卷.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">xLength</strong>
+									</td>
+									<td class="description last">
+										<p>卷的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">yLength</strong>
+									</td>
+									<td class="description last">
+										<p>卷的长度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">zLength</strong>
+									</td>
+									<td class="description last">
+										<p>卷的深度卷.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">type</strong>
+									</td>
+									<td class="description last">
+										<p>数据类型 (uint8, uint16, ...).</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">arrayBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>包含卷数据的缓冲区.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="RASDimensions" translate="no">.<a href="#RASDimensions">RASDimensions</a><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="description">
+						<p>该数组保存 RAS 空间中卷的维度</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="axisOrder" translate="no">.<a href="#axisOrder">axisOrder</a><span class="type-signature"> : Array.&lt;string></span> </h3>
+					<div class="description">
+						<p>由NRRD header</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="data" translate="no">.<a href="#data">data</a><span class="type-signature"> : TypedArray</span> </h3>
+					<div class="description">
+						<p>体积的数据.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="inverseMatrix" translate="no">.<a href="#inverseMatrix">inverseMatrix</a><span class="type-signature"> : Martrix3</span> </h3>
+					<div class="description">
+						<p>RAS到IJK矩阵.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lowerThreshold" translate="no">.<a href="#lowerThreshold">lowerThreshold</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>值低于此阈值的体素不会出现在切片中。
+如果更改，则与该卷关联的所有切片上的geometryNeedsUpdate会自动设置为true。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="matrix" translate="no">.<a href="#matrix">matrix</a><span class="type-signature"> : Martrix3</span> </h3>
+					<div class="description">
+						<p>IJK到RAS矩阵。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="offset" translate="no">.<a href="#offset">offset</a><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="description">
+						<p>卷在RAS坐标系中的偏移</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="segmentation" translate="no">.<a href="#segmentation">segmentation</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否使用分段模式。
+它可以正确加载 16 位 nrrd。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sliceList" translate="no">.<a href="#sliceList">sliceList</a><span class="type-signature"> : Array.&lt;<a href="VolumeSlice.html">VolumeSlice</a>></span> </h3>
+					<div class="description">
+						<p>与此卷关联的所有切片的列表</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="spacing" translate="no">.<a href="#spacing">spacing</a><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="description">
+						<p>应用于从 IJK 到 RAS 坐标系的卷的间距</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="upperThreshold" translate="no">.<a href="#upperThreshold">upperThreshold</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>值超过此阈值的体素不会出现在切片中。
+如果更改，则与该体积关联的所有切片上的geometryNeedsUpdate会自动设置为true</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="xLength" translate="no">.<a href="#xLength">xLength</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>IJK坐标系中体积的宽度。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="yLength" translate="no">.<a href="#yLength">yLength</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>IJK坐标系中体积的高度。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="zLength" translate="no">.<a href="#zLength">zLength</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>IJK坐标系中体积的深度system.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="access" translate="no">.<a href="#access">access</a><span class="signature">( i : <span class="param-type">number</span>, j : <span class="param-type">number</span>, k : <span class="param-type">number</span> )</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算IJK系统中给定坐标对应的数据数组中的索引。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">i</strong>
+									</td>
+									<td class="description last">
+										<p>第一个坐标.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">j</strong>
+									</td>
+									<td class="description last">
+										<p>第二个坐标.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">k</strong>
+									</td>
+									<td class="description last">
+										<p>第三个坐标坐标.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 索引.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="computeMinMax" translate="no">.<a href="#computeMinMax">computeMinMax</a><span class="signature">()</span><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算卷中数据的最小值和最大值。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 最小/最大数据为<code>[min,max]</code>.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="extractPerpendicularPlane" translate="no">.<a href="#extractPerpendicularPlane">extractPerpendicularPlane</a><span class="signature">( axis : <span class="param-type">'x' | 'y' | 'z'</span>, RASIndex : <span class="param-type">number</span> )</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算切片的方向并返回与几何相关的所有信息，例如sliceAccess、
+平面矩阵（RAS 坐标中的方向和位置）以及两个坐标系中平面的尺寸。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">axis</strong>
+									</td>
+									<td class="description last">
+										<p>切片的法线轴。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">RASIndex</strong>
+									</td>
+									<td class="description last">
+										<p>切片的索引。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 包含有关切片几何形状的所有有用信息的对象slice.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="extractSlice" translate="no">.<a href="#extractSlice">extractSlice</a><span class="signature">( axis : <span class="param-type">'x' | 'y' | 'z'</span>, index : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="VolumeSlice.html">VolumeSlice</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回与给定轴和索引对应的切片。
+坐标以右前上坐标格式给出。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">axis</strong>
+									</td>
+									<td class="description last">
+										<p>切片的法线轴。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">index</strong>
+									</td>
+									<td class="description last">
+										<p>切片的索引。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 提取的切片。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getData" translate="no">.<a href="#getData">getData</a><span class="signature">( i : <span class="param-type">number</span>, j : <span class="param-type">number</span>, k : <span class="param-type">number</span> )</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>数据[access(i,j,k)]的快捷方式。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">i</strong>
+									</td>
+									<td class="description last">
+										<p>第一个坐标.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">j</strong>
+									</td>
+									<td class="description last">
+										<p>第二个坐标.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">k</strong>
+									</td>
+									<td class="description last">
+										<p>第三个坐标坐标.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>数据中的值array.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="map" translate="no">.<a href="#map">map</a><span class="signature">( functionToMap : <span class="param-type">function</span>, context : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Volume.html">Volume</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>对所有体素应用一个函数，小心，该值将被替换。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">functionToMap</strong>
+									</td>
+									<td class="description last">
+										<p>对每个体素应用一个函数，将使用以下参数调用：
+体素的值、体素的索引、数据（TypedArray）。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">context</strong>
+									</td>
+									<td class="description last">
+										<p>您可以指定调用该函数的上下文，默认情况下是此卷。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="repaintAllSlices" translate="no">.<a href="#repaintAllSlices">repaintAllSlices</a><span class="signature">()</span><span class="type-signature"> : <a href="Volume.html">Volume</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>对从此卷中提取的所有切片调用重绘。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-see">参见：</dt>
+							<dd class="tag-see">
+								<ul>
+									<li><a href="VolumeSlice.html#repaint">VolumeSlice#repaint</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此卷的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="reverseAccess" translate="no">.<a href="#reverseAccess">reverseAccess</a><span class="signature">( index : <span class="param-type">number</span> )</span><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检索中给定索引对应的体素的 IJK 坐标data.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">index</strong>
+									</td>
+									<td class="description last">
+										<p>体素索引.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> IJK坐标为<code>[x,y,z]</code>.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/misc/Volume.js" translate="no" target="_blank" rel="noopener"> examples/jsm/misc/Volume.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

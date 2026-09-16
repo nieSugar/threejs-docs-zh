@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Mesh - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → </p>
+	<h1 translate="no">Mesh</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>表示基于三角形多边形网格的对象的类。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Mesh" translate="no">new <a href="#Mesh">Mesh</a><span class="signature">( geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, material : <span class="param-type"><a href="Material.html">Material</a> | Array.&lt;<a href="Material.html">Material</a>></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新网格。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">geometry</strong>
+									</td>
+									<td class="description last">
+										<p>网格体几何形状。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">material</strong>
+									</td>
+									<td class="description last">
+										<p>网格材质。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="count" translate="no">.<a href="#count">count</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>此网格的实例数。
+只能与 <a href="WebGPURenderer.html">WebGPURenderer</a> 一起使用。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="geometry" translate="no">.<a href="#geometry">geometry</a><span class="type-signature"> : <a href="BufferGeometry.html">BufferGeometry</a></span> </h3>
+					<div class="description">
+						<p>网格体几何形状。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isMesh" translate="no">.<a href="#isMesh">isMesh</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="material" translate="no">.<a href="#material">material</a><span class="type-signature"> : <a href="Material.html">Material</a> | Array.&lt;<a href="Material.html">Material</a>></span> </h3>
+					<div class="description">
+						<p>网格材质。</p>
+						<p>默认为 <code>MeshBasicMaterial</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="morphTargetDictionary" translate="no">.<a href="#morphTargetDictionary">morphTargetDictionary</a><span class="type-signature"> : Object.&lt;string, number> | undefined</span> </h3>
+					<div class="description">
+						<p>表示几何体中变形目标的字典。关键是
+morph 目标名称，其属性索引值。该成员是<code>undefined</code>
+默认情况下，仅在几何体中检测到变形目标时设置。</p>
+						<p>默认为<code>undefined</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="morphTargetInfluences" translate="no">.<a href="#morphTargetInfluences">morphTargetInfluences</a><span class="type-signature"> : Array.&lt;number> | undefined</span> </h3>
+					<div class="description">
+						<p>通常在 <code>[0,1]</code> 范围内的权重数组，指定变形量
+被应用。该成员默认为 <code>undefined</code> 并且仅在变形目标为
+在几何体中检测到。</p>
+						<p>默认为<code>undefined</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="getVertexPosition" translate="no">.<a href="#getVertexPosition">getVertexPosition</a><span class="signature">( index : <span class="param-type">number</span>, target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回给定索引处顶点的局部空间位置，考虑
+考虑变形目标和蒙皮的当前动画状态。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">index</strong>
+									</td>
+									<td class="description last">
+										<p>顶点索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>用于存储方法结果的目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>局部空间中的顶点位置。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="intersectsFrustum" translate="no">.<a href="#intersectsFrustum">intersectsFrustum</a><span class="signature">( frustum : <span class="param-type"><a href="Frustum.html">Frustum</a> | <a href="FrustumArray.html">FrustumArray</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果此网格与给定相交，则返回 <code>true</code> frustum.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frustum</strong>
+									</td>
+									<td class="description last">
+										<p>到的平截头体test.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Object3D.html#intersectsFrustum">Object3D#intersectsFrustum</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 该网格是否与给定的视锥体相交。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="raycast" translate="no">.<a href="#raycast">raycast</a><span class="signature">( raycaster : <span class="param-type"><a href="Raycaster.html">Raycaster</a></span>, intersects : <span class="param-type">Array.&lt;Object></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算投射光线与此线之间的交点line.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">raycaster</strong>
+									</td>
+									<td class="description last">
+										<p>The raycaster.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">intersects</strong>
+									</td>
+									<td class="description last">
+										<p>保存交点的目标数组。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Object3D.html#raycast">Object3D#raycast</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateMorphTargets" translate="no">.<a href="#updateMorphTargets">updateMorphTargets</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置 <a href="Mesh.html#morphTargetDictionary">Mesh#morphTargetDictionary</a> 和 <a href="Mesh.html#morphTargetInfluences">Mesh#morphTargetInfluences</a> 的值
+确保现有的变形目标可以影响此 3D 对象。</p>
+						</div>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p> <a href="https://github.com/mrdoob/three.js/blob/master/src/objects/Mesh.js" translate="no" target="_blank" rel="noopener"> src/objects/Mesh.js</a></p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

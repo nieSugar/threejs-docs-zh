@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Info - Three.js Docs</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Info</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>这个渲染器模块提供了一系列统计信息
+关于 GPU 内存和渲染过程。对于调试很有用
+和监控。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Info" translate="no">new <a href="#Info">Info</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的信息组件。</p>
+						</div>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="autoReset" translate="no">.<a href="#autoReset">autoReset</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>框架相关指标是否应该自动
+是否重置。该属性应设置为 <code>false</code>
+通过管理自己的动画循环的应用程序。他们必须
+然后每帧手动调用一次<code>renderer.info.reset()</code>。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="calls" translate="no">.<a href="#calls">calls</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>自
+应用已启动.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="compute" translate="no">.<a href="#compute">compute</a><span class="type-signature"> : Object</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>计算相关指标.</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>calls</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>自应用启动以来的计算调用次数.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>frameCalls</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧的计算调用次数.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>timestamp</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>使用时帧的时间戳<code>renderer.computeAsync()</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="frame" translate="no">.<a href="#frame">frame</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>当前帧ID。该ID已被管理
+by <code>NodeFrame</code>.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="memory" translate="no">.<a href="#memory">memory</a><span class="type-signature"> : Object</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>内存相关指标.</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>attributes</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动属性的数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>attributesSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动属性的内存大小（以字节为单位）.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>geometries</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动属性的数量geometries.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>indexAttributes</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动索引属性的数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>indexAttributesSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动索引属性的内存大小（以字节为单位）。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>indirectStorageAttributes</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动间接存储属性的数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>indirectStorageAttributesSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动间接存储属性的内存大小（以字节为单位）。字节.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>programs</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动程序的数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>programsSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动程序的内存大小（以字节为单位）.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>readbackBuffers</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动读回缓冲区的数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>readbackBuffersSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动读回缓冲区的内存大小（以字节为单位） bytes.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>renderTargets</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动渲染目标的数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>storageAttributes</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动存储属性的数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>storageAttributesSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动存储属性的内存大小（以字节为单位）.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>textures</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动存储属性的数量纹理.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>texturesSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动纹理的内存大小（以字节为单位）。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>uniformBuffers</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动统一缓冲区的数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>uniformBuffersSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动统一缓冲区的内存大小（以字节为单位）。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>total</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>总内存大小（以字节为单位）。 bytes.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="render" translate="no">.<a href="#render">render</a><span class="type-signature"> : Object</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>渲染相关指标。</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>calls</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>自应用程序启动以来的渲染调用次数。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>frameCalls</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧的渲染调用次数。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>drawCalls</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧的绘制调用次数帧.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>triangles</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧渲染的三角形图元数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>points</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧渲染的点图元数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>lines</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧渲染的线图元数量.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>timestamp</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当前帧的时间戳帧.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="createAttribute" translate="no">.<a href="#createAttribute">createAttribute</a><span class="signature">( attribute : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪常规属性内存.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">attribute</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的属性.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createIndexAttribute" translate="no">.<a href="#createIndexAttribute">createIndexAttribute</a><span class="signature">( attribute : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪索引属性内存.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">attribute</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的索引属性track.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createIndirectStorageAttribute" translate="no">.<a href="#createIndirectStorageAttribute">createIndirectStorageAttribute</a><span class="signature">( attribute : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪间接存储属性内存。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">attribute</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的间接存储属性。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createProgram" translate="no">.<a href="#createProgram">createProgram</a><span class="signature">( program : <span class="param-type"><a href="ProgrammableStage.html">ProgrammableStage</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪程序内存，更新计数和字节跟踪。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">program</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的程序track.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createReadbackBuffer" translate="no">.<a href="#createReadbackBuffer">createReadbackBuffer</a><span class="signature">( readbackBuffer : <span class="param-type"><a href="ReadbackBuffer.html">ReadbackBuffer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪读回缓冲区内存。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">readbackBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的读回缓冲区。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createStorageAttribute" translate="no">.<a href="#createStorageAttribute">createStorageAttribute</a><span class="signature">( attribute : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪存储属性内存。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">attribute</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的存储属性track.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createTexture" translate="no">.<a href="#createTexture">createTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪纹理内存，更新计数和字节跟踪。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="createUniformBuffer" translate="no">.<a href="#createUniformBuffer">createUniformBuffer</a><span class="signature">( uniformBuffer : <span class="param-type"><a href="UniformBuffer.html">UniformBuffer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪统一缓冲区内存。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">uniformBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的统一缓冲区。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="destroyAttribute" translate="no">.<a href="#destroyAttribute">destroyAttribute</a><span class="signature">( attribute : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪属性内存，更新计数和字节跟踪.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">attribute</strong>
+									</td>
+									<td class="description last">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="destroyProgram" translate="no">.<a href="#destroyProgram">destroyProgram</a><span class="signature">( program : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪程序内存，更新计数和字节跟踪。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">program</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的程序track.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="destroyReadbackBuffer" translate="no">.<a href="#destroyReadbackBuffer">destroyReadbackBuffer</a><span class="signature">( readbackBuffer : <span class="param-type"><a href="ReadbackBuffer.html">ReadbackBuffer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪读回缓冲区内存。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">readbackBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的读回缓冲区。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="destroyTexture" translate="no">.<a href="#destroyTexture">destroyTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪纹理内存，更新计数和字节跟踪。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="destroyUniformBuffer" translate="no">.<a href="#destroyUniformBuffer">destroyUniformBuffer</a><span class="signature">( uniformBuffer : <span class="param-type"><a href="UniformBuffer.html">UniformBuffer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>显式跟踪统一缓冲区内存。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">uniformBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>要跟踪的统一缓冲区。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>执行对象的完全重置。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="reset" translate="no">.<a href="#reset">reset</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>重置与帧相关的指标。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">( object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, count : <span class="param-type">number</span>, instanceCount : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>应在每次绘制调用时执行此方法并更新相应的指标。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>将要跟踪的 3D 对象渲染.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">count</strong>
+									</td>
+									<td class="description last">
+										<p>顶点或索引计数.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">instanceCount</strong>
+									</td>
+									<td class="description last">
+										<p>实例计数。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/common/Info.js" translate="no" target="_blank" rel="noopener"> src/renderers/common/Info.js</a>
+	</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

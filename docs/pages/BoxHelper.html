@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>BoxHelper - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → <a href="Line.html">Line</a> → <a href="LineSegments.html">LineSegments</a> → </p>
+	<h1 translate="no">BoxHelper</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Helper 对象以图形方式显示世界轴对齐的边界框
+围绕一个物体。实际的边界框是用 <a href="Box3.html">Box3</a> 处理的，
+这只是一个用于调试的可视化助手。它可以自动
+创建对象时使用 <a href="BoxHelper.html#update">BoxHelper#update</a> 调整大小
+被改造了。请注意，该对象必须具有几何形状才能起作用，
+所以它不适用于精灵。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const sphere = new THREE.SphereGeometry();
+const object = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( 0xff0000 ) );
+const box = new THREE.BoxHelper( object, 0xffff00 );
+scene.add( box );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="BoxHelper" translate="no">new <a href="#BoxHelper">BoxHelper</a><span class="signature">( object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, color : <span class="param-type">number | <a href="Color.html">Color</a> | string</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的盒子助手。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>显示世界轴对齐边界框的3D对象。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">color</strong>
+									</td>
+									<td class="description last">
+										<p>框的颜色.</p>
+										<p>默认为<code>0xffff00</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="object" translate="no">.<a href="#object">object</a><span class="type-signature"> : <a href="Object3D.html">Object3D</a></span> </h3>
+					<div class="description">
+						<p>正在可视化的3D对象。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放分配的GPU相关资源通过这个例子。打电话给这个
+每当您的应用程序中不再使用此实例时，方法。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="LineSegments.html#dispose">LineSegments#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setFromObject" translate="no">.<a href="#setFromObject">setFromObject</a><span class="signature">( object : <span class="param-type"><a href="Object3D.html">Object3D</a></span> )</span><span class="type-signature"> : <a href="BoxHelper.html">BoxHelper</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>更新传递对象的线框。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>要为其创建助手的 3D 对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>更新助手的几何形状以匹配对象的尺寸，
+包括任何儿童.</p>
+						</div>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/helpers/BoxHelper.js" translate="no" target="_blank" rel="noopener"> src/helpers/BoxHelper.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

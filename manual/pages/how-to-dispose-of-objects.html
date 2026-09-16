@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>如何处置对象</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – How to dispose of Objects">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>如何处置对象</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>
+            为了提高应用程序的性能并避免内存泄漏，一个重要方面是处理未使用的库实体。
+            每当您创建 *three.js* 类型的实例时，您都会分配一定量的内存。然而，*three.js* 为特定对象创建
+            例如几何体或材质 WebGL 相关实体，例如渲染所需的缓冲区或着色器程序。重要的是
+            强调这些对象不会自动释放。相反，应用程序必须使用特殊的 API 才能释放此类资源。
+            本指南简要概述了如何使用此 API 以及在此上下文中相关的对象。
+          </p>
+
+          <h2 id="geometries">几何图形</h2>
+
+          <p>几何体通常表示定义为属性集合的顶点信息。 *three.js* 内部创建一个类型的对象 [link:https://developer.mozilla.org/en-US/docs/Web/API/WebGLBuffer WebGLBuffer]
+            对于每个属性。仅当您调用 BufferGeometry.dispose() 时，这些实体才会被删除。如果几何图形在您的应用程序中变得过时，
+            执行该方法以释放所有相关资源。
+          </p>
+
+          <h2 id="materials">材料</h2>
+
+          <p>
+            材质定义了对象的渲染方式。 *three.js* 使用材质定义的信息来构建用于渲染的着色器程序。
+            仅当相应材质被处理后才能删除着色器程序。出于性能原因，*three.js* 尝试重用现有的
+            如果可能的话，着色器程序。因此，只有当所有相关材料都被处理掉后，着色器程序才会被删除。您可以通过以下方式指示材料的处置：
+            执行 `Material.dispose()`。
+          </p>
+
+          <h2 id="textures">纹理</h2>
+
+          <p>材料的处理对纹理没有影响。它们是单独处理的，因为单个纹理可以同时被多种材质使用。
+            每当您创建 `Texture` 的实例时， Three.js 都会在内部创建 [link:https://developer.mozilla.org/en-US/docs/Web/API/WebGLTexture WebGLTexture] 的实例。
+            与缓冲区类似，该对象只能通过调用“Texture.dispose()”来删除。</p>
+
+          <p>如果您使用 ImageBitmap 作为纹理的数据源，则必须在应用程序级别调用 [link:https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap/close ImageBitmap.close]() 来处理所有 CPU 端资源。
+            在 `Texture.dispose()` 中自动调用 `ImageBitmap.close()` 是不可能的，因为图像位图变得不可用，并且引擎无法知道图像位图是否在其他地方使用。</p>
+
+          <h2 id="render-targets">渲染目标</h2>
+
+          <p>`WebGLRenderTarget` 类型的对象不仅分配 [link:https://developer.mozilla.org/en-US/docs/Web/API/WebGLTexture WebGLTexture] 的实例，而且还分配
+            [link:https://developer.mozilla.org/en-US/docs/Web/API/WebGLFramebuffer WebGLFramebuffer] 和 [link:https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderbuffer WebGLRenderbuffer]
+            用于实现自定义渲染目的地。这些对象只能通过执行“WebGLRenderTarget.dispose()”来释放。
+          </p>
+
+          <h2 id="skinned-mesh">蒙皮网格</h2>
+
+          <p>
+            蒙皮网格将其骨骼层次结构表示为骨架。如果您不再需要蒙皮网格体，请考虑在骨架上调用“Skeleton.dispose()”以释放内部资源。
+            请记住，骨架可以在多个蒙皮网格体之间共享，因此仅当骨架未被其他活动蒙皮网格体使用时才调用“dispose()”。
+          </p>
+
+          <h2 id="miscellaneous">其他</h2>
+
+          <p>
+            示例目录中还有其他类，例如控件或后处理过程，它们提供“dispose()”方法以删除内部事件侦听器
+            或渲染目标。一般来说，建议检查类的 API 或文档并注意“dispose()”。如果存在，您应该在清理物品时使用它。
+          </p>
+
+          <h2 id="faq">FAQ</h2>
+
+          <h3 id="why-cant-threejs-dispose-objects-automatically">为什么 *three.js* 不能自动处理对象？</h3>
+
+          <p>社区多次提出这个问题，因此澄清这个问题很重要。事实是 *three.js* 不知道生命周期或范围
+            用户创建的实体（例如几何形状或材料）。这是应用程序的责任。例如，即使材质当前未用于渲染，
+            下一帧可能需要它。因此，如果应用程序决定可以删除某个对象，则必须通过调用相应的对象来通知引擎
+            `dispose()` 方法。
+          </p>
+
+          <h3 id="does-removing-a-mesh-from-the-scene-also-dispose-its-geometry-and-material">从场景中删除网格体也会处理其几何体和材质吗？</h3>
+
+          <p>
+            不，您必须通过 *dispose()* 显式处置几何体和材质。请记住，几何图形和材质可以在网格等 3D 对象之间共享。
+          </p>
+
+          <h3 id="does-threejs-provide-information-about-the-amount-of-cached-objects">*three.js* 是否提供有关缓存对象数量的信息？</h3>
+
+          <p>
+            是的。可以评估“renderer.info”，这是渲染器的一个特殊属性，包含有关显卡内存的一系列统计信息
+            以及渲染过程。除此之外，它还告诉您内部存储了多少纹理、几何图形和着色器程序。如果您发现性能问题
+            在您的应用程序中，最好调试此属性，以便轻松识别内存泄漏。
+          </p>
+
+          <h3 id="what-happens-when-you-call-dispose-on-a-texture-but-the-image-is-not-loaded-yet">当您在纹理上调用“dispose()”但图像尚未加载时会发生什么？</h3>
+
+          <p>
+            仅当图像完全加载时才会分配纹理的内部资源。如果您在加载图像之前处理纹理，
+            什么也没发生。没有分配资源，因此也不需要清理。
+          </p>
+
+          <h3 id="what-happens-when-i-call-dispose-and-then-use-the-respective-object-at-a-later-point">当我调用 `dispose()` 然后稍后使用相应的对象时会发生什么？</h3>
+
+          <p>
+            这要看情况。对于几何图形、材质、纹理、渲染目标和后处理通道，引擎可以再次创建已删除的内部资源。
+            因此，不会发生运行时错误，但您可能会注意到对当前帧的负面性能影响，尤其是在必须编译着色器程序时。
+
+            控件和渲染器是一个例外。调用“dispose()”后，无法使用这些类的实例。在这种情况下，您必须创建新实例。
+          </p>
+
+          <h3 id="how-should-i-manage-threejs-objects-in-my-app">我应该如何管理应用程序中的 *three.js* 对象？我什么时候知道如何处理东西？</h3>
+
+          <p>
+            一般来说，对此没有明确的建议。当调用“dispose()”是否合适时，这在很大程度上取决于具体的用例。重要的是要强调这一点
+            并不总是需要一直处理物体。一个很好的例子是由多个级别组成的游戏。对象处置的一个好地方是
+            切换电平。该应用程序可以遍历旧场景并处理所有过时的材质、几何形状和纹理。正如上一节中提到的，它不
+            如果您处置实际上仍在使用的对象，则会产生运行时错误。可能发生的最糟糕的事情是单帧的性能下降。
+          </p>
+
+          <h3 id="renderer-info-memory-after-dispose">为什么`renderer.info.memory`在遍历场景并处理所有可到达的纹理和几何图形后仍然报告几何图形和纹理？</h3>
+
+          <p>
+            在某些情况下，Three.js 内部使用了一些纹理和几何形状
+            当遍历场景图以进行处理时无法到达的。
+            即使在整个场景清理之后，预计“renderer.info.memory”仍会报告它们。
+            但是，它们不会泄漏，而是在连续的场景清理/重新填充周期中重复使用。
+
+            这些情况可能与使用 `material.envMap`、`scene.background`、`scene.environment`、
+            或其他需要引擎创建纹理或几何图形以供内部使用的上下文。
+          </p>
+
+          <h2 id="dispose-usage-examples">演示dispose()用法的示例</h2>
+
+          <p>
+            [示例：webgl_test_memory WebGL/测试/内存]<br />
+            [示例：webgl_test_memory2 WebGL /测试/内存2]<br />
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

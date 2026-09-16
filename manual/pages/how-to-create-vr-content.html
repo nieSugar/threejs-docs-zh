@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>如何创建 VR 内容</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – How to create VR content">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>如何创建 VR 内容</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>
+            本指南简要概述了基于 Web 的 VR 应用程序的基本组件
+            用three.js 制作。
+          </p>
+
+          <h2 id="workflow">工作流程</h2>
+
+          <p>首先，您必须包含[link:https://github.com/mrdoob/three.js/blob/master/examples/jsm/webxr/VRButton.js VRButton.js]
+            到你的项目中。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+</pre>
+
+          <p>*VRButton.createButton()* 做了两件重要的事情： 它创建一个按钮，指示
+            VR 兼容性。此外，如果用户激活按钮，它还会启动 VR 会话。你唯一拥有的东西
+            要做的是将以下代码行添加到您的应用程序中。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+document.body.appendChild( VRButton.createButton( renderer ) );
+</pre>
+
+          <p>接下来，您必须告诉“WebGLRenderer”实例启用 XR 渲染。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+renderer.xr.enabled = true;
+</pre>
+
+          <p>最后，你必须调整你的动画循环，因为我们不能使用我们众所周知的
+            *window.requestAnimationFrame()* 函数。对于 VR 项目，我们使用 renderer.setAnimationLoop()。
+            最小的代码如下所示：
+          </p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+renderer.setAnimationLoop( function () {
+
+  renderer.render( scene, camera );
+
+} );
+</pre>
+
+          <h2 id="next-steps">后续步骤</h2>
+
+          <p>
+            查看官方 WebVR 示例之一，了解此工作流程的实际效果。<br /><br />
+
+            [示例：webxr_xr_ballshooter WebXR / XR / ballshooter]<br />
+            [示例：webxr_xr_cubes WebXR / XR / 立方体]<br />
+            [示例：webxr_xr_dragging WebXR / XR / 拖动]<br />
+            [示例：webxr_xr_marchingcubes WebXR / XR / 行进立方体]<br />
+            [示例：webxr_xr_paint WebXR / XR / 油漆]<br />
+            [示例：webxr_vr_panorama_depth WebXR / VR / panorama_depth]<br />
+            [示例：webxr_vr_panorama WebXR / VR / 全景]<br />
+            [示例：webxr_vr_rollercoaster WebXR / VR / 过山车]<br />
+            [示例：webxr_vr_sandbox WebXR / VR / 沙箱]<br />
+            [示例：webxr_vr_video WebXR / VR / 视频]
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

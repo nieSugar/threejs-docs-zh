@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>AnaglyphEffect - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">AnaglyphEffect</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用物理正确创建浮雕效果的类
+离轴立体投影.</p>
+<p>此实现使用CameraUtils.frameCorners()来对齐立体
+相机视锥体到虚拟屏幕平面，提供准确的深度
+平面距离处零视差的感知。</p>
+<p>注意，此类只能与 <a href="WebGLRenderer.html">WebGLRenderer</a> 一起使用。
+使用 <a href="WebGPURenderer.html">WebGPURenderer</a> 时，请使用 <a href="AnaglyphPassNode.html">AnaglyphPassNode</a>.</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">AnaglyphEffect</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { AnaglyphEffect } from 'three/addons/effects/AnaglyphEffect.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="AnaglyphEffect" translate="no">new <a href="#AnaglyphEffect">AnaglyphEffect</a><span class="signature">( renderer : <span class="param-type"><a href="WebGLRenderer.html">WebGLRenderer</a></span>, width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新的浮雕效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>物理像素中效果的宽度。</p>
+										<p>默认为<code>512</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>以物理像素为单位的效果高度。</p>
+										<p>默认为<code>512</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="eyeSep" translate="no">.<a href="#eyeSep">eyeSep</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>以世界单位表示的瞳距（眼睛间距）。
+典型的人类 IPD 为 0.064 米（64 毫米）。</p>
+						<p>默认值为 <code>0.064</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="planeDistance" translate="no">.<a href="#planeDistance">planeDistance</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>从观看者到虚拟世界的距离（以世界单位表示）
+出现零视差（屏幕深度）的屏幕平面。
+此距离处的物体出现在屏幕表面。
+较近的物体出现在屏幕前面（负视差）。
+物体进一步出现在屏幕后面（正视差）。</p>
+<p>屏幕尺寸源自相机的视场角和宽高比
+在这个距离，确保立体视图与相机的视野相匹配。</p>
+						<p>默认为<code>0.5</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要效果时。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="render" translate="no">.<a href="#render">render</a><span class="signature">( scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>当使用此效果时，应调用此方法而不是
+默认 <a href="WebGLRenderer.html#render">WebGLRenderer#render</a>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要渲染的场景.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>相机.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>调整效果大小.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>逻辑中效果的宽度像素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>逻辑像素中效果的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+		<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/effects/AnaglyphEffect.js" translate="no" target="_blank" rel="noopener"> examples/jsm/effects/AnaglyphEffect.js</a>
+	</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

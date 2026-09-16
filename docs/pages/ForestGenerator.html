@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>ForestGenerator - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">ForestGenerator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>在单实例绘制调用中用树木覆盖 <a href="TerrainGenerator.html">TerrainGenerator</a>。
+每棵树都是一个扭曲的生态球，具有烘烤的树冠梯度。海拔、坡度
+和密度掩模控制放置；树之间的旋转和比例不同。</p>
+<p>兼容的地形对象公开<code>sampleHeight</code>、<code>sampleSlope</code>、<code>minY</code>、<code>maxY</code>
+和 <code>parameters.size</code>.</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const forest = new ForestGenerator( { count: 500000 } );
+scene.add( forest.build( terrain ) );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="ForestGenerator" translate="no">new <a href="#ForestGenerator">ForestGenerator</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/generators/ForestGenerator.js" translate="no" target="_blank" rel="noopener"> examples/jsm/generators/ForestGenerator.js</a>
+	</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>BundleGroup - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → <a href="Group.html">Group</a> → </p>
+	<h1 translate="no">BundleGroup</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>允许应用程序访问
+WebGPU 的渲染捆绑 API。该组及其所有后代节点
+被视为一个渲染包并按如下方式处理
+渲染器.</p>
+<p>捆绑组中仅允许可渲染的 3D 对象。其他
+不支持灯光等类型，必须将其添加到场景中
+组外。</p>
+<p>此模块仅受具有 WebGPU 后端的 <code>WebGPURenderer</code> 完全支持。
+使用 WebGL 后端，从技术上讲可以渲染该组，但无需
+任何性能改进。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="BundleGroup" translate="no">new <a href="#BundleGroup">BundleGroup</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新的捆绑包组。</p>
+						</div>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isBundleGroup" translate="no">.<a href="#isBundleGroup">isBundleGroup</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>当捆绑包组更改时，将此属性设置为<code>true</code>。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="static" translate="no">.<a href="#static">static</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>捆绑包是否是静态的。当设置为 <code>true</code> 时，结构体
+假设是静态的并且不会改变。例如。没有新对象
+添加到组中。</p>
+<p>如果需要更改，仍然可以通过设置强制更新
+<code>needsUpdate</code> 标志到 <code>true</code>.</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Group.html#static">Group#static</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="type" translate="no">.<a href="#type">type</a><span class="type-signature"> : string</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>此属性仅与检测类型相关
+在序列化/反序列化期间。应该总是
+匹配类名。</p>
+						<p>默认为 <code>'BundleGroup'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Group.html#type">Group#type</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="version" translate="no">.<a href="#version">version</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>捆绑组的版本.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/common/BundleGroup.js" translate="no" target="_blank" rel="noopener"> src/renderers/common/BundleGroup.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

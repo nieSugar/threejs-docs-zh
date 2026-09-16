@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>USDZExporter - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">USDZExporter</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>USDZ 的导出器。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const exporter = new USDZExporter();
+const arraybuffer = await exporter.parseAsync( scene );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">USDZExporter</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="USDZExporter" translate="no">new <a href="#USDZExporter">USDZExporter</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的 USDZ 导出器。</p>
+						</div>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="textureUtils" translate="no">.<a href="#textureUtils">textureUtils</a><span class="type-signature"> : <a href="WebGLTextureUtils.html">WebGLTextureUtils</a> | <a href="WebGPUTextureUtils.html">WebGPUTextureUtils</a></span> </h3>
+					<div class="description">
+						<p>对纹理实用程序模块的引用。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">( scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, onDone : <span class="param-type"><a href="USDZExporter.html#~OnDone">USDZExporter~OnDone</a></span>, onError : <span class="param-type"><a href="USDZExporter.html#~OnError">USDZExporter~OnError</a></span>, options : <span class="param-type"><a href="USDZExporter.html#~Options">USDZExporter~Options</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析给定的 3D 对象并生成 USDZ输出.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要导出的 3D 对象。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onDone</strong>
+									</td>
+									<td class="description last">
+										<p>导出完成时执行的回调函数。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onError</strong>
+									</td>
+									<td class="description last">
+										<p>发生错误时执行的回调函数。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>导出选项.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="parseAsync" translate="no">.<a href="#parseAsync">parseAsync</a><span class="signature">( scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, options : <span class="param-type"><a href="USDZExporter.html#~Options">USDZExporter~Options</a></span> )</span><span class="type-signature"> : Promise.&lt;ArrayBuffer></span> <span class="type-signature">(async) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>异步版本<a href="USDZExporter.html#parse">USDZExporter#parse</a>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要导出的 3D 对象。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>导出选项.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>使用导出的USDZ数据解析的Promise.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setTextureUtils" translate="no">.<a href="#setTextureUtils">setTextureUtils</a><span class="signature">( utils : <span class="param-type"><a href="WebGLTextureUtils.html">WebGLTextureUtils</a> | <a href="WebGPUTextureUtils.html">WebGPUTextureUtils</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>为此导出器设置纹理实用程序。仅在必须导出压缩纹理时相关。</p>
+<p>根据您是否使用 <a href="WebGLRenderer.html">WebGLRenderer</a> 或 <a href="WebGPURenderer.html">WebGPURenderer</a>，您必须注入
+对应的纹理utils <a href="module-WebGLTextureUtils.html">module:WebGLTextureUtils</a>或<a href="module-WebGPUTextureUtils.html">module:WebGPUTextureUtils</a>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">utils</strong>
+									</td>
+									<td class="description last">
+										<p>纹理utils.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">类型定义</h2>
+					<h3 class="name name-method" id="~OnDone" translate="no">.<a href="#~OnDone">OnDone</a><span class="signature">( result : <span class="param-type">ArrayBuffer</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>onDone回调<code>USDZExporter</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">result</strong>
+									</td>
+									<td class="description last">
+										<p>生成的USDZ.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="~OnError" translate="no">.<a href="#~OnError">OnError</a><span class="signature">( error : <span class="param-type">Error</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p><code>USDZExporter</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">error</strong>
+									</td>
+									<td class="description last">
+										<p>错误对象.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<div class="member">
+					<h3 class="name" id="~Options" translate="no">.<a href="#~Options">Options</a> </h3>
+					<div class="description">
+						<p>的导出选项的onError回调<code>USDZExporter</code>.</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>maxTextureSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>要导出的最大纹理大小。</p>
+						<p>默认为<code>1024</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>includeAnchoringProperties</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否包含锚定属性。</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>onlyVisible</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>仅导出可见的3D对象。</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>ar</strong>
+						<br>
+<span class="param-type">Object</span>
+				</td>
+			<td class="description last">
+				<p>如果<code>includeAnchoringProperties</code>设置为<code>true</code>，锚定类型和对齐方式
+可以通过<code>ar.anchoring.type</code>和<code>ar.planeAnchoring.alignment</code>配置.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>quickLookCompatible</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否使导出的USDZ兼容QuickLook
+这意味着资源已被修改以适应错误 FB10036297 和 FB11442287（Apple 反馈）。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>animations</strong>
+						<br>
+<span class="param-type">Array.&lt;<a href="AnimationClip.html">AnimationClip</a>></span>
+				</td>
+			<td class="description last">
+				<p>动画剪辑将烘焙到 <code>xformOp</code> 时间样本中
+目标对象。仅导出 <code>position</code>、<code>quaternion</code> 和 <code>scale</code> 轨道。</p>
+						<p>默认为<code>[]</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>animationFrameRate</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>写入动画样本时每秒使用的时间代码。</p>
+						<p>默认为<code>60</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/exporters/USDZExporter.js" translate="no" target="_blank" rel="noopener"> examples/jsm/exporters/USDZExporter.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

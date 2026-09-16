@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Sprite - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → </p>
+	<h1 translate="no">Sprite</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Sprite 是一个始终面向相机的平面，通常具有
+应用部分透明纹理。</p>
+<p>精灵不会投射阴影，将 <a href="Object3D.html#castShadow">Object3D#castShadow</a> 设置为 <code>true</code> 将
+没有效果。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const map = new THREE.TextureLoader().load( 'sprite.png' );
+const material = new THREE.SpriteMaterial( { map: map } );
+const sprite = new THREE.Sprite( material );
+scene.add( sprite );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Sprite" translate="no">new <a href="#Sprite">Sprite</a><span class="signature">( material : <span class="param-type"><a href="SpriteMaterial.html">SpriteMaterial</a> | <a href="SpriteNodeMaterial.html">SpriteNodeMaterial</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的精灵。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">material</strong>
+									</td>
+									<td class="description last">
+										<p>精灵材质。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="center" translate="no">.<a href="#center">center</a><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
+					<div class="description">
+						<p>精灵的锚点，以及精灵旋转的点。
+<code>(0.5, 0.5)</code> 的值对应于精灵的中点。一个值
+<code>(0, 0)</code> 对应于精灵的左下角。</p>
+						<p>默认为 <code>(0.5,0.5)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="count" translate="no">.<a href="#count">count</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p> 该精灵的实例数。
+只能与 <a href="WebGPURenderer.html">WebGPURenderer</a>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="geometry" translate="no">.<a href="#geometry">geometry</a><span class="type-signature"> : <a href="BufferGeometry.html">BufferGeometry</a></span> </h3>
+					<div class="description">
+						<p> 精灵几何体一起使用。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isSprite" translate="no">.<a href="#isSprite">isSprite</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="material" translate="no">.<a href="#material">material</a><span class="type-signature"> : <a href="SpriteMaterial.html">SpriteMaterial</a> | <a href="SpriteNodeMaterial.html">SpriteNodeMaterial</a></span> </h3>
+					<div class="description">
+						<p>精灵材质。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="intersectsFrustum" translate="no">.<a href="#intersectsFrustum">intersectsFrustum</a><span class="signature">( frustum : <span class="param-type"><a href="Frustum.html">Frustum</a> | <a href="FrustumArray.html">FrustumArray</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果此精灵与给定的相交，则返回 <code>true</code>平截头体.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frustum</strong>
+									</td>
+									<td class="description last">
+										<p>到的平截头体test.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Object3D.html#intersectsFrustum">Object3D#intersectsFrustum</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>此精灵是否与给定的平截头体相交。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="raycast" translate="no">.<a href="#raycast">raycast</a><span class="signature">( raycaster : <span class="param-type"><a href="Raycaster.html">Raycaster</a></span>, intersects : <span class="param-type">Array.&lt;Object></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算投射光线与此精灵之间的交点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">raycaster</strong>
+									</td>
+									<td class="description last">
+										<p>The raycaster.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">intersects</strong>
+									</td>
+									<td class="description last">
+										<p>保存交点的目标数组。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Object3D.html#raycast">Object3D#raycast</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/src/objects/Sprite.js" translate="no" target="_blank" rel="noopener"> src/objects/Sprite.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

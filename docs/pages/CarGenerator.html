@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>CarGenerator - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">CarGenerator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>具有放样车身、圆形轮拱、弯曲的低多边形车队
+挡风玻璃和嵌入式合金轮毂。独立的驾驶室面板定义了
+窗户及其框架。两种车身类型（轿车和SUV）混合
+确定性地穿过车队，出租车颜色有自己的轿车
+屋顶标志，因此停放的一排读作不同的车辆而不是一个模具。</p>
+<p>每个几何体每种类型构建一次并共享；汽车按车身分组
+使用每个实例绘制类型，因此每个组都是一个单实例绘制
+使用烘焙的 <code>partId</code>、面板 UV 和
+规范空间掩模。</p>
+<p>规范模型的轮子位于 <code>y = 0</code> 上，以 X / Z 为中心，面向
+<code>+Z</code>，因此本地 <code>+Z</code> 面向道路的展示位置会将其朝外停放。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const cars = new CarGenerator();
+scene.add( cars.build( placements ) ); // placements: { matrix: Matrix4, color }[]
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="CarGenerator" translate="no">new <a href="#CarGenerator">CarGenerator</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/generators/city/CarGenerator.js" translate="no" target="_blank" rel="noopener"> examples/jsm/generators/city/CarGenerator.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

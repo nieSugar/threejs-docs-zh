@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>GaussianSplatPLYLoader - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="Loader.html">Loader</a> → </p>
+	<h1 translate="no">GaussianSplatPLYLoader</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Gaussian splat PLY 文件的加载器，例如与原件导出的一样
+GraphDECO/INRIA 3D Gaussian Splatting 实现.</p>
+<p>PLY 本身是一种通用格式，因此调用者通常必须知道
+文件的球谐（SH）度提前配置
+<code>PLYLoader</code> 在解析之前具有正确的自定义属性映射。这个
+加载器通过扫描纯文本 PLY 标头中的 <code>f_rest_N</code> 来避免这种情况
+首先是属性，因为 SH 度映射到一个固定的、封闭的表
+<code>f_rest</code> 计数（0/9/24/45 -> 度 0/1/2/3），并配置
+在将结果转换为之前相应地内部 <code>PLYLoader</code>
+高斯splat几何.</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const loader = new GaussianSplatPLYLoader();
+const geometry = await loader.loadAsync( './models/gsplat/point_cloud.ply' );
+scene.add( new GaussianSplat( geometry ) );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">GaussianSplatPLYLoader</span>是一个插件，必须显式导入，请参阅<a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { GaussianSplatPLYLoader } from 'three/addons/loaders/GaussianSplatPLYLoader.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="GaussianSplatPLYLoader" translate="no">new <a href="#GaussianSplatPLYLoader">GaussianSplatPLYLoader</a><span class="signature">( manager : <span class="param-type"><a href="LoadingManager.html">LoadingManager</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的高斯splat PLY加载器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">manager</strong>
+									</td>
+									<td class="description last">
+										<p>加载管理器。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( url : <span class="param-type">string</span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>开始从给定的URL加载并传递加载的高斯splat
+几何到 <code>onLoad()</code> 回调。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">url</strong>
+									</td>
+									<td class="description last">
+										<p>要加载的文件的路径/URL。这也可以是数据 URI。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onLoad</strong>
+									</td>
+									<td class="description last">
+										<p>加载过程完成时执行。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onProgress</strong>
+									</td>
+									<td class="description last">
+										<p>加载正在进行时执行。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onError</strong>
+									</td>
+									<td class="description last">
+										<p>发生错误时执行。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#load">Loader#load</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">( data : <span class="param-type">ArrayBuffer | string</span> )</span><span class="type-signature"> : <a href="BufferGeometry.html">BufferGeometry</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析给定的高斯 splat PLY 数据并返回结果
+高斯splat几何.</p>
+<p>这会扫描PLY标头以获取文件的球谐度，
+因此，与普通的 <code>PLYLoader</code> 不同，不需要事先设置。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">data</strong>
+									</td>
+									<td class="description last">
+										<p>原始 PLY 数据，作为数组缓冲区或字符串。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#parse">Loader#parse</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 解析的高斯分布几何图形。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/loaders/GaussianSplatPLYLoader.js" translate="no" target="_blank" rel="noopener"> examples/jsm/loaders/GaussianSplatPLYLoader.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

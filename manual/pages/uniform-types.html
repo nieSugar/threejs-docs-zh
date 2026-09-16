@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>Uniform 类型</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Uniform Types">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>Uniform 类型</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          
+          <p>每个 uniform 都必须有一个 `value` 属性。其值的类型必须对应于 GLSL 代码中 uniform 变量的类型，如下表中为基本 GLSL 类型所指定的那样。还支持 uniform 结构体和数组。基本类型的 GLSL 数组必须要么被指定为相应的 THREE 对象数组，要么被指定为包含所有对象数据的平面数组。换句话说；数组中的 GLSL 基本类型不能用数组来表示。此规则不具有传递性。长度为五个向量的 `vec2` 数组的数组，必须是数组的数组，要么是五个 `Vector2` 对象的数组，要么是十个 `number` 的数组。 </p>
+      
+          <table>
+            <thead>
+              <tr>
+                <th>GLSL 类型</th>
+                <th>JavaScript 类型</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>整数</td>
+                <td>数字</td>
+              </tr>
+              <tr>
+                <td>无符号整数</td>
+                <td>数字</td>
+              </tr>
+              <tr>
+                <td>浮点数</td>
+                <td>数字</td>
+              </tr>
+              <tr>
+                <td>布尔值</td>
+                <td>布尔对象</td>
+              </tr>
+              <tr>
+                <td>布尔值</td>
+                <td>数字</td>
+              </tr>
+              <tr>
+                <td>二维向量</td>
+                <td>向量2</td>
+              </tr>
+              <tr>
+                <td>二维向量</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>二维向量</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>三维向量</td>
+                <td>向量3</td>
+              </tr>
+              <tr>
+                <td>三维向量</td>
+                <td>颜色</td>
+              </tr>
+              <tr>
+                <td>三维向量</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>三维向量</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>四维向量</td>
+                <td>向量4</td>
+              </tr>
+              <tr>
+                <td>四维向量</td>
+                <td>四元数</td>
+              </tr>
+              <tr>
+                <td>四维向量</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>四维向量</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>2x2 矩阵</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>2x2 矩阵</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>3x3 矩阵</td>
+                <td>Matrix3</td>
+              </tr>
+              <tr>
+                <td>3x3 矩阵</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>3x3 矩阵</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>mat4</td>
+                <td>Matrix4</td>
+              </tr>
+              <tr>
+                <td>mat4</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>mat4</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>ivec2, bvec2</td>
+                <td>浮点32数组 (*)</td>
+              </tr>
+              <tr>
+                <td>ivec2, bvec2</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>ivec3, bvec3</td>
+                <td>Int32Array (*)</td>
+              </tr>
+              <tr>
+                <td>ivec3, bvec3</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>ivec4, bvec4</td>
+                <td>Int32Array (*)</td>
+              </tr>
+              <tr>
+                <td>ivec4, bvec4</td>
+                <td>数组 (*)</td>
+              </tr>
+              <tr>
+                <td>sampler2D</td>
+                <td>Texture</td>
+              </tr>
+              <tr>
+                <td>samplerCube</td>
+                <td>CubeTexture</td>
+              </tr>
+            </tbody>
+          </table>
+      
+          <p>
+            (*) 对相同 GLSL 类型的（最内层）数组（维度）也是如此，
+            包含数组中所有向量或矩阵的分量。
+          </p>
+      
+          <h2 id="structured-uniforms">结构化统一变量</h2>
+      
+          <p>有时候你可能希望在着色器代码中将 uniform 组织为 `structs`。
+必须使用以下样式，`three.js` 才能处理结构化的 uniform 数据。
+</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+uniforms = {
+  data: { 
+    value: {
+      position: new Vector3(), 
+      direction: new Vector3( 0, 0, 1 ) 
+    } 
+  } 
+};
+</pre>
+          This definition can be mapped on the following GLSL code:
+<pre class="prettyprint notranslate lang-js" translate="no">
+struct Data { 
+  vec3 position;
+  vec3 direction;
+};
+uniform Data data;
+</pre>
+      
+          <h2 id="structured-uniforms-with-arrays">带数组的结构化 Uniforms</h2>
+      
+          <p>
+也可以在数组中管理 `structs`。这种用法的语法如下所示：
+</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+const entry1 = {
+  position: new Vector3(),
+  direction: new Vector3( 0, 0, 1 )
+};
+const entry2 = {
+  position: new Vector3( 1, 1, 1 ),
+  direction: new Vector3( 0, 1, 0 )
+};
+
+uniforms = {
+  data: {
+    value: [ entry1, entry2 ]
+  }
+};
+</pre>
+          This definition can be mapped on the following GLSL code:
+<pre class="prettyprint notranslate lang-js" translate="no">
+struct Data { 
+  vec3 position; 
+  vec3 direction; 
+};
+uniform Data data[ 2 ];
+</pre>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

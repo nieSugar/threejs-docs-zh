@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>SelectionHelper - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">SelectionHelper</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>A helper for <a href="SelectionBox.html">SelectionBox</a>.</p>
+<p>它使用 <code>div</code> 容器可视化当前选择框element.</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">SelectionHelper</span> 是一个插件，必须显式导入，请参阅<a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { SelectionHelper } from 'three/addons/interactive/SelectionHelper.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="SelectionHelper" translate="no">new <a href="#SelectionHelper">SelectionHelper</a><span class="signature">( renderer : <span class="param-type"><a href="WebGPURenderer.html">WebGPURenderer</a> | <a href="WebGLRenderer.html">WebGLRenderer</a></span>, cssClassName : <span class="param-type">string</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新选择helper.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">cssClassName</strong>
+									</td>
+									<td class="description last">
+										<p><code>div</code>的CSS类名.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="element" translate="no">.<a href="#element">element</a><span class="type-signature"> : HTMLDivElement</span> </h3>
+					<div class="description">
+						<p>选择框的可视化.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="enabled" translate="no">.<a href="#enabled">enabled</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否启用helper.</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isDown" translate="no">.<a href="#isDown">isDown</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否鼠标或指针按下.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="renderer" translate="no">.<a href="#renderer">renderer</a><span class="type-signature"> : <a href="WebGPURenderer.html">WebGPURenderer</a> | <a href="WebGLRenderer.html">WebGLRenderer</a></span> </h3>
+					<div class="description">
+						<p>对渲染器.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果不再需要使用控件，请调用此方法。它释放了所有内部
+资源并删除所有事件侦听器。</p>
+						</div>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/interactive/SelectionHelper.js" translate="no" target="_blank" rel="noopener"> examples/jsm/interactive/SelectionHelper.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

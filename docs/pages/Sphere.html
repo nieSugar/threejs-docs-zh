@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>球体 - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Sphere</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>由中心和半径定义的分析 3D 球体。这门课主要是
+用作 3D 对象的边界球。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Sphere" translate="no">new <a href="#Sphere">Sphere</a><span class="signature">( center : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, radius : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新球体。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">center</strong>
+									</td>
+									<td class="description last">
+										<p>球体的中心</p>
+										<p>默认为<code>(0,0,0)</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">radius</strong>
+									</td>
+									<td class="description last">
+										<p>球体的半径。</p>
+										<p>默认为 <code>-1</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="center" translate="no">.<a href="#center">center</a><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<div class="description">
+						<p>球体的中心</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isSphere" translate="no">.<a href="#isSphere">isSphere</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="radius" translate="no">.<a href="#radius">radius</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>球体的半径。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="applyMatrix4" translate="no">.<a href="#applyMatrix4">applyMatrix4</a><span class="signature">( matrix : <span class="param-type"><a href="Matrix4.html">Matrix4</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>使用给定的 4x4 变换来变换此球体矩阵.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">matrix</strong>
+									</td>
+									<td class="description last">
+										<p>变换矩阵。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="clampPoint" translate="no">.<a href="#clampPoint">clampPoint</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在球体内夹住一个点。如果该点在球体之外，则
+会将其夹到球体边缘最近的点。积分
+已经位于球体内部的球体不会受到影响。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">point</strong>
+									</td>
+									<td class="description last">
+										<p>要夹紧的平面。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>用于存储方法结果的目标向量.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>夹紧点.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="clone" translate="no">.<a href="#clone">clone</a><span class="signature">()</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个包含来自此实例的复制值的新球体。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>此克隆instance.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="containsPoint" translate="no">.<a href="#containsPoint">containsPoint</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果该球体包含给定点（包括），则返回 <code>true</code>
+球体的表面。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">point</strong>
+									</td>
+									<td class="description last">
+										<p>要检查的点。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 该球体是否包含给定点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="copy" translate="no">.<a href="#copy">copy</a><span class="signature">( sphere : <span class="param-type"><a href="Sphere.html">Sphere</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定球体的值复制到此实例。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sphere</strong>
+									</td>
+									<td class="description last">
+										<p>球体复制.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="distanceToPoint" translate="no">.<a href="#distanceToPoint">distanceToPoint</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回从球体边界到球体边界的最近距离
+给定点。如果球体包含该点，则距离为
+为负数。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">point</strong>
+									</td>
+									<td class="description last">
+										<p>计算到 </p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 到该点的距离。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="equals" translate="no">.<a href="#equals">equals</a><span class="signature">( sphere : <span class="param-type"><a href="Sphere.html">Sphere</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果该球体与给定的球体相等，则返回 <code>true</code>。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sphere</strong>
+									</td>
+									<td class="description last">
+										<p>要测试的球体相等.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>此边界球体是否与给定球体相等。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="expandByPoint" translate="no">.<a href="#expandByPoint">expandByPoint</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>扩展此球体的边界以包含给定点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">point</strong>
+									</td>
+									<td class="description last">
+										<p>要包含的点。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="fromJSON" translate="no">.<a href="#fromJSON">fromJSON</a><span class="signature">( json : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个边界球体的序列化结构。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">json</strong>
+									</td>
+									<td class="description last">
+										<p>用于设置球体的序列化 json.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对此边界球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getBoundingBox" translate="no">.<a href="#getBoundingBox">getBoundingBox</a><span class="signature">( target : <span class="param-type"><a href="Box3.html">Box3</a></span> )</span><span class="type-signature"> : <a href="Box3.html">Box3</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回包围此边界框的边界框球体.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>用于存储方法结果的目标框。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>包围此球体的边界框。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="intersectsBox" translate="no">.<a href="#intersectsBox">intersectsBox</a><span class="signature">( box : <span class="param-type"><a href="Box3.html">Box3</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果此球体相交，则返回 <code>true</code>与给定的框.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">box</strong>
+									</td>
+									<td class="description last">
+										<p>要测试的框。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>该球体是否与给定的盒子相交。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="intersectsPlane" translate="no">.<a href="#intersectsPlane">intersectsPlane</a><span class="signature">( plane : <span class="param-type"><a href="Plane.html">Plane</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果该球体与给定的平面相交，则返回<code>true</code>。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">plane</strong>
+									</td>
+									<td class="description last">
+										<p>要测试的平面.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>该球体是否与给定的平面相交not.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="intersectsSphere" translate="no">.<a href="#intersectsSphere">intersectsSphere</a><span class="signature">( sphere : <span class="param-type"><a href="Sphere.html">Sphere</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 如果此球体与给定球体相交，则返回 <code>true</code>。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sphere</strong>
+									</td>
+									<td class="description last">
+										<p>要测试的球体.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>此球体是否与给定的球体相交。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="isEmpty" translate="no">.<a href="#isEmpty">isEmpty</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回<code>true</code> 如果球体为空（半径设置为负数）。</p>
+<p>半径为 <code>0</code> 的球体仅包含其中心点，不包含中心点
+被认为是空的。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>此球体是否为空。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="makeEmpty" translate="no">.<a href="#makeEmpty">makeEmpty</a><span class="signature">()</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>使此球体为空，这意味着在 3D 中包含零空间。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="set" translate="no">.<a href="#set">set</a><span class="signature">( center : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, radius : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>通过复制给定的值来设置球体的组件值.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">center</strong>
+									</td>
+									<td class="description last">
+										<p>中心.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">radius</strong>
+									</td>
+									<td class="description last">
+										<p>The半径.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setFromPoints" translate="no">.<a href="#setFromPoints">setFromPoints</a><span class="signature">( points : <span class="param-type">Array.&lt;<a href="Vector3.html">Vector3</a>></span>, optionalCenter : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算点列表的最小边界球。
+如果给出了可选的中心点，则将其用作球体的中心点
+中心。否则，轴对齐边界框的中心
+计算包含这些点的点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">points</strong>
+									</td>
+									<td class="description last">
+										<p>3D 空间中的点列表。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">optionalCenter</strong>
+									</td>
+									<td class="description last">
+										<p>球体的中心。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="toJSON" translate="no">.<a href="#toJSON">toJSON</a><span class="signature">()</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个边界球体的序列化结构。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 具有表示对象的字段的序列化结构state.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="translate" translate="no">.<a href="#translate">translate</a><span class="signature">( offset : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>按给定偏移量平移球体的中心。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">offset</strong>
+									</td>
+									<td class="description last">
+										<p>偏移量.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="union" translate="no">.<a href="#union">union</a><span class="signature">( sphere : <span class="param-type"><a href="Sphere.html">Sphere</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>扩展此球体以包围原始球体和给定球体.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sphere</strong>
+									</td>
+									<td class="description last">
+										<p>要包含的球体.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此球体的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/src/math/Sphere.js" translate="no" target="_blank" rel="noopener"> src/math/Sphere.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

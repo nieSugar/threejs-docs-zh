@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>如何使用后处理</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – How to use Post Processing">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>如何使用后处理</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>
+            许多 Three.js 应用程序将其 3D 对象直接渲染到屏幕上。然而，有时您想要应用一个或多个图形
+            景深、光晕、胶片颗粒或各种类型的抗锯齿效果。后处理是一种广泛使用的方法
+            来实现这样的效果。首先，场景被渲染到渲染目标，该目标代表视频卡内存中的缓冲区。
+            在下一步中，一个或多个后处理通道将滤镜和效果应用于图像缓冲区，然后再将其最终渲染到
+            屏幕。</p>
+          <p>Three.js 通过“EffectComposer”提供了完整的后处理解决方案来实现这样的工作流程。</p>
+
+          <h2 id="workflow">工作流程</h2>
+
+          <p>该过程的第一步是从示例目录导入所有必需的文件。该指南假设您使用的是官方
+            Three.js 的[link:https://www.npmjs.com/package/three npm package]。对于本指南中的基本演示，我们需要以下文件。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+</pre>
+
+          <p>成功导入所有文件后，我们可以通过传入“WebGLRenderer”实例来创建我们的作曲家。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+const composer = new EffectComposer( renderer );
+</pre>
+
+          <p>使用作曲家时，有必要更改应用程序的动画循环。而不是调用render方法
+            `WebGLRenderer`，我们现在使用 `EffectComposer` 的对应版本。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+function animate() {
+
+  requestAnimationFrame( animate );
+
+  composer.render();
+
+}
+</pre>
+
+          <p>我们的作曲家现在已准备就绪，因此可以配置后处理通道链。这些通行证负责创建
+            应用程序的最终视觉输出。它们按照添加/插入的顺序进行处理。在我们的示例中，“RenderPass”的实例
+            首先执行“GlitchPass”实例，最后执行“OutputPass”。链中最后启用的通道会自动渲染到屏幕上。
+            通行证的设置如下所示：</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+const renderPass = new RenderPass( scene, camera );
+composer.addPass( renderPass );
+
+const glitchPass = new GlitchPass();
+composer.addPass( glitchPass );
+
+const outputPass = new OutputPass();
+composer.addPass( outputPass );
+</pre>
+
+          <p>“RenderPass”通常放置在链的开头，以便提供渲染场景作为下一个后处理步骤的输入。在我们的例子中，
+            `GlitchPass` 将使用这些图像数据来应用狂野的故障效果。 “OutputPass”通常是执行 sRGB 色彩空间转换和色调映射的链中的最后一个通道。
+            查看此[link:https://threejs.org/examples/webgl_postprocessing_glitch live example]以查看其实际效果。</p>
+
+          <h2 id="built-in-passes">内置通行证</h2>
+
+          <p>您可以使用引擎提供的各种预定义后处理通道。他们位于
+            [link:https://github.com/mrdoob/three.js/tree/dev/examples/jsm/postprocessing postprocessing] 目录。
+          </p>
+
+          <h2 id="custom-passes">自定义通行证</h2>
+
+          <p>有时您想要编写自定义后处理着色器并将其包含到后处理通道链中。对于这种情况，
+            您可以使用“ShaderPass”。导入文件和自定义着色器后，您可以使用以下代码来设置通道。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { LuminosityShader } from 'three/addons/shaders/LuminosityShader.js';
+
+// later in your init routine
+
+const luminosityPass = new ShaderPass( LuminosityShader );
+composer.addPass( luminosityPass );
+</pre>
+
+          <p>存储库提供了一个名为 [link:https://github.com/mrdoob/three.js/blob/master/examples/jsm/shaders/CopyShader.js CopyShader] 的文件，它是
+            您自己的自定义着色器的良好起始代码。 `CopyShader` 只是复制 `EffectComposer` 读取缓冲区的图像内容
+            到其写入缓冲区而不应用任何效果。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

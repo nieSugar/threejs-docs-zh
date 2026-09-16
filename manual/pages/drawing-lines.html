@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>绘制线条</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Drawing Lines">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>绘制线条</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>
+            假设您想绘制一条线或一个圆，而不是线框“网格”。
+            首先，我们需要设置渲染器、场景和相机（请参阅创建场景页面）。
+          </p>
+
+          <p>这是我们将使用的代码：</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+camera.position.set( 0, 0, 100 );
+camera.lookAt( 0, 0, 0 );
+
+const scene = new THREE.Scene();
+</pre>
+          <p>接下来我们要做的是定义材质。对于线条，我们必须使用 `LineBasicMaterial` 或 `LineDashedMaterial`.</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+//create a blue LineBasicMaterial
+const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+</pre>
+
+          <p>
+            在材质之后，我们需要一个带有一些顶点的几何体：
+          </p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+const points = [];
+points.push( new THREE.Vector3( - 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, 10, 0 ) );
+points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+</pre>
+
+          <p>注意，线是在每对连续的顶点之间绘制的，而不是在第一个和最后一个顶点之间绘制的（线未闭合。）</p>
+
+          <p>现在我们有了两条线的点和材质，我们可以将它们放在一起形成一条线。</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+const line = new THREE.Line( geometry, material );
+</pre>
+          <p>剩下的就是将其添加到场景中并调用“renderer.render()”。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+scene.add( line );
+renderer.render( scene, camera );
+</pre>
+
+          <p>您现在应该看到一个由两条蓝线组成的向上箭头。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

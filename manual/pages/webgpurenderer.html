@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>WebGPURenderer</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – WebGPURenderer">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "../../build/three.module.js"
+      }
+    }
+    </script>
+    </head>
+    <body>
+      <div class="container">
+        <div class="lesson-title">
+          <h1>WebGPURenderer</h1>
+        </div>
+        <div class="lesson">
+          <div class="lesson-main">
+            
+            <p>新的 `WebGPURenderer` 是 three.js 的下一代渲染器。本文提供了关于新渲染器的简要概述以及基本使用指南。
+</p>
+
+            <h2 id="overview">概述</h2>
+
+            <p>
+`WebGPURenderer` 被设计为长期使用的 `WebGLRenderer` 的现代替代方案。它的主要目标是使用 WebGPU，这是一种现代的高性能图形和计算 3D API。然而，它被构建为通用渲染器。如果设备/浏览器不支持 WebGPU，渲染器可以自动回退使用 WebGL 2 后端。</p>
+             <p>提供 WebGL 2 后端作为备用是一项关键的设计决策，因为它允许应用程序从 WebGPU 中受益，但不会牺牲对仅支持 WebGL 2 的设备的支持。</p>
+
+             <p>
+             除了 `WebGPURenderer` 可以访问 WebGPU 之外，它还提供了令人兴奋的功能集：
+             </p>
+
+            <ul>
+              <li>`WebGPURenderer` 配备了一个新的基于节点的材质系统，使得开发自定义材质更加灵活且更具鲁棒性。
+</li>
+              <li>
+渲染器支持 TSL，即 three.js 着色语言。使用 TSL，开发者可以以与平台无关的方式使用 JavaScript 编写着色器代码。使用 TSL 编写的着色器代码可以根据可用的后端被转译为 WGSL 或 GLSL。
+</li>
+              <li>
+`WebGPURenderer` 配备了一个新的后处理栈，内置多重渲染目标 (MRT) 支持，并且由于节点材质的使用，实现了自动通道组合。</li>
+            </ul>
+
+            <p>让我们来看看如何在 three.js 应用程序中集成 `WebGPURenderer`。</p>
+
+            <h2 id="usage">使用方法</h2>
+
+             <p>
+             `WebGPURenderer` 有不同的构建文件，因此导入 three.js 的方式有所不同：
+            </p>
+            
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+-  import * as THREE from 'three';
++  import * as THREE from 'three/webgpu';
+</pre>
+
+            <p>如果你正在使用导入映射，建议将其更改为以下内容（路径根据你的设置有所不同）：
+</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+  &lt;script type="importmap"&gt;
+    {
+      "imports": {
+        "three": "../build/three.webgpu.js",
+        "three/webgpu": "../build/three.webgpu.js",
+        "three/tsl": "../build/three.tsl.js",
+        "three/addons/": "./jsm/"
+      }
+    }
+  &lt;/script&gt;
+</pre>
+
+             <p>
+你可以像使用 `WebGLRenderer` 一样创建渲染器的实例：</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+const renderer = new THREE.WebGPURenderer( { antialias: true } );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setAnimationLoop( render );
+document.body.appendChild( renderer.domElement );
+</pre>
+            <p>理解 WebGPU 是以异步方式初始化的是很重要的。因此，建议使用 `setAnimationLoop()` 来定义应用的动画循环，因为这种方法会在渲染第一帧时自动确保渲染器已初始化。如果你更喜欢通过 `window.requestAnimationFrame()` 来管理动画循环，或者在初始化例程中必须使用渲染器，那么在上述代码部分需要增加一行代码。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+const renderer = new THREE.WebGPURenderer( { antialias: true } );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setAnimationLoop( render );
+document.body.appendChild( renderer.domElement );
+
++  await renderer.init();
+</pre>
+            <p>从 `WebGLRenderer` 中已知的最常用方法，比如 `clear()`、`setRenderTarget()` 或 `dispose()`，在 `WebGPURenderer` 中也存在。请查看 <a href="https://threejs.org/docs/#Renderer" target="_blank">API 文档</a>，以获取渲染器公共接口的完整概述。
+</p>
+
+             <p>
+如指南开头部分所述，`WebGPURenderer` 默认使用 WebGPU 后端，并以 WebGL 2 作为回退。如果你想为了测试目的强制使用 WebGL 2，或者出于某些原因想排除 WebGPU 的使用，你可以使用 `forceWebGL` 参数。
+</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+-  const renderer = new THREE.WebGPURenderer( { antialias: true } );
++  const renderer = new THREE.WebGPURenderer( { antialias: true, forceWebGL: true } );
+</pre>
+
+            <h2 id="migration">迁移</h2>
+
+            <p>如果你想尝试 `WebGPURenderer`，你必须注意以下几点。
+</p>
+
+            <ul>
+              <li>
+基于 `ShaderMaterial`、`RawShaderMaterial` 的自定义材质以及通过 `onBeforeCompile()` 修改的内置材质在 `WebGPURenderer` 中不受支持。应用程序的这一部分必须迁移到节点材质和 TSL。</li>
+              <li>`EffectComposer` 及其效果通道不被支持，因为 `WebGPURenderer` 配备了一个更新、更现代的后处理堆栈。与材质类似，后处理效果现在是用 TSL 编写的，效果链以节点组合的形式表示。所有常见的效果已经被移植到 `WebGPURenderer`，并以性能更高的节点类形式存在。我们还为新的渲染器添加了新的效果，如 SSGI、SSS 或更好的景深。请查看 <a href="https://threejs.org/examples/?q=webgpu%20postprocessing" target="_blank">官方示例</a>，了解当前支持的效果概览。</li>
+              <li>渲染器本身仍处于实验阶段，尽管在过去几年中其成熟度已有很大提高。 但是，根据您的应用程序和场景设置，您可能会遇到功能缺失，或者 `WebGLRenderer` 性能更好。 欢迎在 GitHub 上提交问题，以便我们了解未完成的任务。 我们在每次发布中都在改进 `WebGPURenderer`，因此建议尽可能升级到最新版本。
+</li>
+            </ul>
+
+            <h2 id="state-of-webglrenderer">WebGLRenderer 的状态</h2>
+
+            <p>尽管在此期间大量工作发生在 `WebGPURenderer`、节点材质和 TSL 的上下文中，`WebGLRenderer` 仍然得到维护，并且是纯 WebGL 2 应用程序的推荐选择。然而，请记住，当前没有计划向该渲染器添加更大的新功能，因为项目的重点现在是 `WebGPURenderer`，你可以在最新的发布说明中轻松看到这一点。也就是说，我们目前正在研究向 `WebGLRenderer` 添加有限节点材质支持的可能性，以便让某些项目更容易过渡到 `WebGPURenderer`。
+</p>
+
+          </div>
+        </div>
+      </div>
+
+    <script src="../resources/prettify.js"></script>
+    <script src="../resources/lesson.js"></script>
+  </body>
+</html>

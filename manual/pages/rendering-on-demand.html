@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>按需渲染</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Rendering on Demand">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>按需渲染</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>这个话题对很多人来说可能很明显，但以防万一……大多数 Three.js 示例都是连续渲染的。换句话说，它们设置了一个 <code class="notranslate" translate="no">requestAnimationFrame</code> 循环或类似这样的“<em>rAF 循环</em>”</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render() {
+  ...
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</pre>
+<p>对于一些会动画的东西，这很有道理，但对于一些不会动画的东西又如何呢？在这种情况下，持续渲染是对设备电力的浪费，如果用户使用的是便携设备，还会浪费用户的电池。</p>
+<p>解决这个问题最明显的方法是在一开始渲染一次，然后仅在有变化时渲染。变化包括纹理或模型最终加载完成、外部来源的数据到达、用户调整设置或相机，或者提供其他相关输入。</p>
+<p>让我们从<a href="responsive.html">响应性文章</a>中举一个例子，并修改为按需渲染。</p>
+<p>首先我们将添加 <a href="/threejs-docs-zh/docs/#examples/controls/OrbitControls"><code class="notranslate" translate="no">OrbitControls</code></a>，这样会有一些可以改变的东西，并且我们可以渲染以响应。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import * as THREE from 'three';
++import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+</pre>
+<p> 并设置它们 </p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const fov = 75;
+const aspect = 2;  // the canvas default
+const near = 0.1;
+const far = 5;
+const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+camera.position.z = 2;
+
++const controls = new OrbitControls(camera, canvas);
++controls.target.set(0, 0, 0);
++controls.update();
+</pre>
+<p> 由于我们不再对立方体进行动画处理，因此我们不需要再跟踪它们 </p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-const cubes = [
+-  makeInstance(geometry, 0x44aa88,  0),
+-  makeInstance(geometry, 0x8844aa, -2),
+-  makeInstance(geometry, 0xaa8844,  2),
+-];
++makeInstance(geometry, 0x44aa88,  0);
++makeInstance(geometry, 0x8844aa, -2);
++makeInstance(geometry, 0xaa8844,  2);
+</pre>
+<p> 我们可以移除用于动画立方体的代码以及对 <code class="notranslate" translate="no">requestAnimationFrame</code> 的调用 </p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-function render(time) {
+-  time *= 0.001;
++function render() {
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
+
+-  cubes.forEach((cube, ndx) =&gt; {
+-    const speed = 1 + ndx * .1;
+-    const rot = time * speed;
+-    cube.rotation.x = rot;
+-    cube.rotation.y = rot;
+-  });
+
+  renderer.render(scene, camera);
+
+-  requestAnimationFrame(render);
+}
+
+-requestAnimationFrame(render);
+</pre>
+<p> 然后我们需要渲染一次</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">render();
+</pre>
+<p>每当 <a href="/threejs-docs-zh/docs/#examples/controls/OrbitControls"><code class="notranslate" translate="no">OrbitControls</code></a> 更改相机设置时，我们都需要进行渲染。幸运的是，<a href="/threejs-docs-zh/docs/#examples/controls/OrbitControls"><code class="notranslate" translate="no">OrbitControls</code></a> 会在任何事情发生变化时派发 <code class="notranslate" translate="no">change</code> 事件。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">controls.addEventListener('change', render);
+</pre>
+<p> 我们还需要处理用户调整窗口大小的情况。以前由于我们在连续渲染，这一点是自动处理的，但现在由于我们不是连续渲染，因此我们需要在窗口大小改变时进行渲染。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">window.addEventListener('resize', render);
+</pre>
+<p> 就这样，我们得到了按需渲染的效果。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/render-on-demand.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/render-on-demand.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p><a href="/threejs-docs-zh/docs/#examples/controls/OrbitControls"><code class="notranslate" translate="no">OrbitControls</code></a> 有一些选项可以增加一种惯性，使它们感觉不那么生硬。我们可以通过将 <code class="notranslate" translate="no">enableDamping</code> 属性设置为 true 来启用它。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">controls.enableDamping = true;
+</pre>
+<p>在开启 <code class="notranslate" translate="no">enableDamping</code> 时，我们需要在渲染函数中调用 <code class="notranslate" translate="no">controls.update</code>，以便 <a href="/threejs-docs-zh/docs/#examples/controls/OrbitControls"><code class="notranslate" translate="no">OrbitControls</code></a> 能继续为我们提供新的摄像机设置，同时平滑移动。但是，这意味着我们不能直接从 <code class="notranslate" translate="no">render</code> 事件中调用 <code class="notranslate" translate="no">change</code>，因为这样会导致无限循环。控件会向我们发送 <code class="notranslate" translate="no">change</code> 事件并调用 <code class="notranslate" translate="no">render</code>，<code class="notranslate" translate="no">render</code> 会调用 <code class="notranslate" translate="no">controls.update</code>。<code class="notranslate" translate="no">controls.update</code> 会发送另一个 <code class="notranslate" translate="no">change</code> 事件。</p>
+<p>我们可以通过使用 <code class="notranslate" translate="no">requestAnimationFrame</code> 来调用 <code class="notranslate" translate="no">render</code> 来解决这个问题，但我们需要确保只有在尚未请求新帧时才请求新帧，这可以通过维护一个变量来跟踪我们是否已经请求过帧来实现。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">+let renderRequested = false;
+
+function render() {
++  renderRequested = false;
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
+
+  renderer.render(scene, camera);
+}
+render();
+
++function requestRenderIfNotRequested() {
++  if (!renderRequested) {
++    renderRequested = true;
++    requestAnimationFrame(render);
++  }
++}
+
+-controls.addEventListener('change', render);
++controls.addEventListener('change', requestRenderIfNotRequested);
+</pre>
+<p>我们可能也应该使用 <code class="notranslate" translate="no">requestRenderIfNotRequested</code> 来调整大小。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-window.addEventListener('resize', render);
++window.addEventListener('resize', requestRenderIfNotRequested);
+</pre>
+<p>可能很难看出区别。尝试点击下面的示例，使用箭头键移动或拖动旋转。然后点击上面的示例做同样的操作，你应该能够分辨出区别。上面的示例在按箭头键或拖动时会立即跳动，而下面的示例则是滑动效果。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/render-on-demand-w-damping.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/render-on-demand-w-damping.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>我们还可以添加一个简单的 lil-gui GUI，并使其更改按需渲染。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
++import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
+</pre>
+<p>让我们允许设置每个立方体的颜色和 x 轴缩放。为了能够设置颜色，我们将使用我们在<a href="lights.html">灯光文章</a>中创建的 <code class="notranslate" translate="no">ColorGUIHelper</code>。</p>
+<p>首先，我们需要创建一个 GUI</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const gui = new GUI();
+</pre>
+<p>，然后为每个立方体创建一个文件夹，并添加两个控制项，一个用于 <code class="notranslate" translate="no">material.color</code>，另一个用于 <code class="notranslate" translate="no">cube.scale.x</code>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function makeInstance(geometry, color, x) {
+  const material = new THREE.MeshPhongMaterial({color});
+
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+
+  cube.position.x = x;
+
++  const folder = gui.addFolder(`Cube${x}`);
++  folder.addColor(new ColorGUIHelper(material, 'color'), 'value')
++      .name('color')
++      .onChange(requestRenderIfNotRequested);
++  folder.add(cube.scale, 'x', .1, 1.5)
++      .name('scale x')
++      .onChange(requestRenderIfNotRequested);
++  folder.open();
+
+  return cube;
+}
+</pre>
+<p>你可以看到上面的 lil-gui 控件有一个 <code class="notranslate" translate="no">onChange</code> 方法，你可以传入一个回调，当 GUI 改变值时调用它。在我们的例子中，我们只需要它调用 <code class="notranslate" translate="no">requestRenderIfNotRequested</code>。调用 <code class="notranslate" translate="no">folder.open</code> 会让文件夹默认展开。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/render-on-demand-w-gui.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/render-on-demand-w-gui.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>我希望这能让你对如何让 three.js 按需渲染而不是连续渲染有一些了解。按需渲染 three.js 的应用/页面并不常见，因为大多数使用 three.js 的页面要么是游戏，要么是 3D 动画艺术，但一些可能更适合按需渲染的页面示例可能是地图查看器、3D 编辑器、3D 图表生成器、产品目录等等...</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

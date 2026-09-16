@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>物理</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Physics">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+    <script type="importmap">
+			{
+				"imports": {
+					"three": "../../build/three.module.js"
+				}
+			}
+		</script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="lesson-title">
+            <h1>物理</h1>
+        </div>
+        <div class="lesson">
+            <div class="lesson-main">
+
+                <p>物理引擎允许你在 3D 环境中模拟物理现象，如重力、碰撞和力。在典型的 three.js 场景中，对象是通过直接修改它们的位置或旋转来移动的。然而，当使用物理引擎时，你会创建一个平行的物理世界，在这个世界中，物体会对力和碰撞作出反应。然后，你在每一帧中将 three.js 的网格与这些物理物体同步，从而创造出一个物理模拟环境的错觉。</p>
+
+                <p>需要注意的是，物理引擎不一定需要每帧都更新。通常，为了保持体验的一致性，物理更新采用固定的时间步长。例如，我们可能以 60fps 运行游戏循环，但物理引擎以 30fps 更新（即 1/30=3.33ms），同时使用物理引擎的最新状态更新 three.js 网格的变换（例如位置和旋转）。
+</p>
+
+                <p>
+物理模拟对于游戏、交互式可视化以及任何需要真实物体行为的应用尤其有用，例如物体下落、弹跳或滑动。</p>
+
+                <h2 id="integration-approaches">集成方法</h2>
+
+                <p>
+有三种主要方法可以将物理引擎集成到 three.js 项目中：
+</p>
+
+                <h3 id="using-threejs-physics-addons">1. 使用 Three.js 物理插件</h3>
+
+                <p>
+Three.js 在 <i>examples/jsm/physics</i> 目录中提供了几个流行物理引擎的包装类。这些插件通过处理物理世界的初始化和网格的同步来简化设置过程。
+</p>
+
+                <p>
+可用的插件包括：
+</p>
+
+                <ul>
+                    <li><b>AmmoPhysics：</b> Ammo.js（Bullet Physics）的包装器。</li>
+                    <li><b>JoltPhysics：</b> Jolt Physics 的一个封装。</li>
+                    <li><b>RapierPhysics：</b> Rapier 的一个封装。</li>
+                </ul>
+
+                <p>
+这些插件有效地隐藏了底层引擎的大部分复杂性。对于标准使用场景，它们提供了一种非常快速的入门方式。
+</p>
+
+                <h4 id="using-threejs-physics-addons-examples">
+示例
+</h4>
+                <ul>
+                    <li><a href="https://threejs.org/examples/physics_ammo_instancing.html" target="_blank">physics / ammo / instancing</a></li>
+                    <li><a href="https://threejs.org/examples/physics_jolt_instancing.html" target="_blank">physics / jolt / instancing</a></li>
+                    <li><a href="https://threejs.org/examples/physics_rapier_instancing.html" target="_blank">物理 / rapier / 实例化</a></li>
+                </ul>
+
+                <h3 id="using-3rd-party-physics-js-ts-libraries">2. 使用第三方物理 JS/TS 库</h3>
+
+                <p>
+                    许多物理引擎是直接用 JavaScript 或 TypeScript 编写的，并设计为可以轻松与网络生态系统配合使用。像 <b>cannon-es</b> 这样的库是热门选择，因为它们轻量，并且特别容易与 three.js 集成。</p>
+
+                <p>在使用这些库时，你需要自己实例化物理世界和刚体，然后在你的动画循环中手动将物理刚体的位置和四元数复制到 three.js 网格上。
+</p>
+
+
+                <h4 id="using-3rd-party-physics-js-ts-libraries-projects">
+项目
+</h4>
+                <ul>
+                    <li><b><a href="https://github.com/pmndrs/cannon-es" target="_blank">cannon-es</a></b>：一个用 JS/TS 纯写的轻量级 3D 物理引擎。采用 MIT 许可证。显然已不再维护（最新提交超过几年之前）。</li>
+                    <li><b><a href="https://github.com/schteppe/cannon.js" target="_blank">cannon.js</a></b>：一个完全用 JavaScript 编写的轻量级 3D 物理引擎。采用 MIT 许可证。不再维护（最新提交距今已有好几年）。可以考虑使用它更新的分支 cannon-es。</li>
+                    <li><b><a href="https://github.com/lo-th/phy" target="_blank">phy</a></b>：完全用 JavaScript 编写的 three.js 物理引擎。采用 MIT 许可证。最新提交。当前仍在维护。</li>
+                    <li><b><a href="https://github.com/lo-th/Oimo.js" target="_blank">Oimo.js</a></b>：一个不再维护的轻量级 3D 物理引擎，完全用 JavaScript 编写。采用 MIT 许可证。建议改用 phy（根据作者的建议）。</li>
+                </ul>
+                <p>还应该注意，有几款看似用 JS/TS 编写的 3D 物理引擎，实际上是在调用其他独立的 3D 物理引擎。例如：
+</p>
+                <ul>
+                    <li><b><a href="https://github.com/chandlerprall/Physijs" target="_blank">Physijs</a></b>：在后台调用 ammo.js，通过单独的线程（使用 web workers）处理物理运算。采用 MIT 许可证。显然已经不再维护（最近一次提交已有几年）。</li>
+                    <li><b><a href="https://github.com/enable3d/enable3d" target="_blank">enable3d</a></b>：基于 ammo.js 构建的 three.js 3D 物理框架。采用 LGPL-3.0 许可证。似乎还在维护。</li>
+                </ul>
+
+                <h3 id="importing-wasm-based-engines">3. 导入基于 WASM 的引擎</h3>
+
+                <p>为了获得最佳的性能、稳定性和精确性，尤其是在复杂模拟中，您可以使用用 C++ 或 Rust（或任何支持 WASM 的语言）编写并编译为 WebAssembly (WASM) 的物理引擎。像 <b>Ammo.js</b>（Bullet Physics 的移植版）和 <b>Rapier</b> 就属于这一类。
+</p>
+
+                <p>
+虽然这种方法提供了最多的功能和最佳的性能，但通常需要更多的设置代码来直接处理 WASM 内存管理和与物理 API 的交互。
+</p>
+
+                <h4 id="importing-wasm-based-engines-examples">
+示例
+</h4>
+                <ul>
+                    <li><a href="https://threejs.org/examples/physics_ammo_break.html" target="_blank">physics / ammo / break</a></li>
+                    <li><a href="https://threejs.org/examples/physics_ammo_cloth.html" target="_blank">物理 / 弹药 / 布料</a></li>
+                    <li><a href="https://threejs.org/examples/physics_ammo_rope.html" target="_blank">物理 / 弹药 / 绳索</a></li>
+                    <li><a href="https://threejs.org/examples/physics_ammo_terrain.html" target="_blank">物理 / 弹药 / 地形</a></li>
+                    <li><a href="https://threejs.org/examples/physics_ammo_volume.html" target="_blank">物理 / 弹药 / 体积</a></li>
+                </ul>
+
+                <h4 id="importing-wasm-based-engines-projects">
+项目
+</h4>
+                <ul>
+                    <li><b><a href="https://github.com/jrouwe/JoltPhysics" target="_blank">JoltPhysics</a></b>：一个多核友好的刚体物理和碰撞检测库。用 C++ 编写。遵循 MIT 许可证。持续维护中。通过其在世界知名游戏和游戏引擎中的使用得到了验证，包括：《地平线 西之禁域》、《死亡搁浅 2》，并获得 Godot 游戏引擎的官方支持。</li>
+                    <li><b><a href="https://github.com/NVIDIA-Omniverse/PhysX" target="_blank">PhysX</a></b>：由 NVIDIA 提供的行业标准实时 3D 物理引擎。遵循 BSD-3-Clause 许可证。持续维护中，非常稳定。</li>
+                    <li><b><a href="https://github.com/dimforge/rapier" target="_blank">Rapier</a></b>：专注于性能的2D和3D物理引擎。用Rust编写。采用MIT许可证。积极维护中。</li>
+                    <li><b><a href="https://github.com/bulletphysics/bullet3" target="_blank">Bullet</a></b>：用于VR、游戏、视觉特效、机器人、机器学习等的实时碰撞检测和多物理模拟。用C++编写。采用ZLIB许可证。可能不再维护。</li>
+                </ul>
+                <p>这些多平台3D物理引擎中，有一些提供现成可用的WASM端口，包括：</p>
+                <ul>
+                    <li><b><a href="https://github.com/jrouwe/JoltPhysics.js" target="_blank">JoltPhysics.js</a></b>：使用 Emscripten 将 JoltPhysics 移植到 JavaScript。采用 MIT 许可证。目前仍在维护中。</li>
+                    <li><b><a href="https://github.com/fabmax/physx-js-webidl" target="_blank">physx-js-webidl</a></b>：Nvidia PhysX 的 JavaScript WASM 绑定。采用 MIT 许可证。目前仍在维护中。</li>
+                    <li><b><a href="https://github.com/dimforge/rapier.js" target="_blank">Rapier.js</a></b>：Rapier 物理引擎的官方 JavaScript 绑定。采用 Apache-2.0 许可证。积极维护中。</li>
+                    <li><b><a href="https://github.com/kripken/ammo.js" target="_blank">Ammo.js</a></b>：使用 Emscripten 将 Bullet 物理引擎直接移植到 JavaScript。已不再维护（最新提交是在几年前）。采用类似 MIT 的自定义宽松许可。</li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../resources/prettify.js"></script>
+    <script src="../resources/lesson.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>FAQ</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – FAQ">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>FAQ</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <h2 id="which-3d-model-format-is-best-supported">哪种 3D 模型格式最受支持？</h2>
+          <div>
+            <p>
+              导入和导出资源的推荐格式是 glTF（GL 传输格式）。由于 glTF 专注于运行时资产交付，因此传输紧凑且加载速度快。</p>
+            <p>Three.js 还为许多其他流行格式（如 FBX、Collada 或 OBJ）提供了加载器。尽管如此，您应该始终首先尝试在项目中建立基于 glTF 的工作流程。
+            </p>
+          </div>
+
+          <h2 id="why-are-there-meta-viewport-tags-in-examples">为什么示例中有元视口标签？</h2>
+          <div>
+            <pre class="prettyprint notranslate lang-js" translate="no">&lt;meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"&gt;</pre>
+
+              <p>这些标签控制移动浏览器的视口大小和比例（其中页面内容可能以与可见大小不同的大小呈现）视口）.</p>
+
+              <p>[link:https://developer.apple.com/library/content/documentation/AppleApplications/Reference/SafariWebContent/UsingtheViewport/UsingtheViewport.html Safari: Using the Viewport]</p>
+
+              <p>[link:https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag MDN: Using the viewport meta tag]</p>
+          </div>
+
+          <h2 id="how-can-scene-scale-be-preserved-on-resize">如何在调整大小时保留场景比例？</h2>
+          <p>我们希望所有物体，无论它们与摄像机的距离如何，都能呈现相同的大小，即使窗口被调整大小。
+
+解决这个问题的关键公式是给定距离下可见高度的公式：
+
+<pre class="prettyprint notranslate lang-js" translate="no">visible_height = 2 * Math.tan( ( Math.PI / 180 ) * camera.fov / 2 ) * distance_from_camera;</pre>
+如果我们将窗口高度增加一定百分比，那么我们希望所有距离的可见高度都按相同的百分比增加。
+
+这不能通过改变摄像机位置来实现。相反，你必须改变摄像机的视野。
+[link:http://jsfiddle.net/Q4Jpu/ Example]。</p>
+
+          <h2 id="why-is-part-of-my-object-invisible">为什么我的对象的一部分不可见？</h2>
+          <p>这可能是由于面剔除引起的。面有一个方向，决定哪一面是正面。剔除在正常情况下会移除背面。
+要查看这是否是你的问题，请将材质面设置为 THREE.DoubleSide。
+<pre class="prettyprint notranslate lang-js" translate="no">material.side = THREE.DoubleSide</pre></p>
+
+          <h2 id="why-does-threejs-sometimes-return-strange-results-for-invalid-inputs">为什么 Three.js 有时会因无效输入返回奇怪的结果？</h2>
+          <p>
+            出于性能原因，Three.js 在大多数情况下不会验证输入。您的应用程序有责任确保所有输入都有效。
+          </p>
+
+          <h2 id="can-i-use-threejs-in-nodejs">我可以在 Node.js 中使用 Three.js 吗？</h2>
+          <p>因为 Three.js 是为 Web 构建的，所以它依赖于浏览器和 DOM API，而 Node.js 中并不总是存在这些 API。其中一些问题可以通过使用垫片来避免，例如
+            [link:https://github.com/stackgl/headless-gl headless-gl] 和 [link:https://github.com/rstacruz/jsdom-global jsdom-global]，或者通过替换 `TextureLoader` 等组件
+            与定制的替代方案。其他 DOM API 可能与使用它们的代码深深地交织在一起，并且更难解决。我们欢迎简单且可维护的拉动
+            请求改进 Node.js 支持，但建议首先打开一个问题来讨论您的改进。
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

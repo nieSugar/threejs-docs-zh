@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>RenderPipeline - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">RenderPipeline</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此模块负责管理应用程序中的渲染管道设置。
+您通常创建此类的单个实例并使用它来定义
+渲染管线和后处理效果链的输出。</p>
+<p>注意：此模块只能与 <code>WebGPURenderer</code> 一起使用。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const renderPipeline = new RenderPipeline( renderer );
+const scenePass = pass( scene, camera );
+renderPipeline.outputNode = scenePass;
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="RenderPipeline" translate="no">new <a href="#RenderPipeline">RenderPipeline</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, outputNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec4></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新的渲染管线管理模块。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>对渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">outputNode</strong>
+									</td>
+									<td class="description last">
+										<p>可选输出节点.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isRenderPipeline" translate="no">.<a href="#isRenderPipeline">isRenderPipeline</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> </h3>
+					<div class="description">
+						<p>当输出节点更改时必须设置为<code>true</code>。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="outputColorTransform" translate="no">.<a href="#outputColorTransform">outputColorTransform</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否默认输出色调映射和颜色
+应启用或不启用空间变换。</p>
+<p>默认情况下启用此功能，但必须禁用它
+预计在色调映射和颜色之后执行的效果
+空间转换。一个典型的例子是 FXAA
+需要 sRGB 输入。</p>
+<p>当设置为 <code>false</code> 时，应用程序必须控制输出
+使用 <code>RenderOutputNode</code>.</p>
+<pre><code class="language-js">const outputPass = renderOutput( scenePass );
+</code></pre>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="outputNode" translate="no">.<a href="#outputNode">outputNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> </h3>
+					<div class="description">
+						<p>A 节点进行转换，定义渲染的最终输出
+管道。这通常是链中的最后一个节点
+效果节点数。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="renderer" translate="no">.<a href="#renderer">renderer</a><span class="type-signature"> : <a href="Renderer.html">Renderer</a></span> </h3>
+					<div class="description">
+						<p>对渲染器.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部resources.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="render" translate="no">.<a href="#render">render</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>当<code>RenderPipeline</code>用于应用渲染管线和后处理效果时，
+应用程序必须在内部使用此版本的 <code>render()</code>
+它的动画循环（不是来自渲染器的动画循环）。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="renderAsync" translate="no">.<a href="#renderAsync">renderAsync</a><span class="signature">()</span><span class="type-signature"> : Promise</span> <span class="type-signature">(async) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>当 <code>RenderPipeline</code> 用于应用渲染管道和后处理效果时，
+应用程序必须在内部使用此版本的 <code>renderAsync()</code>
+它的动画循环（不是渲染器中的动画循环）.</p>
+						</div>
+						<dl class="details">
+							<dt class="important tag-deprecated"><strong>已弃用：</strong> 是</dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>渲染完成后解析的Promise完成.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/common/RenderPipeline.js" translate="no" target="_blank" rel="noopener"> src/renderers/common/RenderPipeline.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

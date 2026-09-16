@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>RectAreaLightTexturesLib - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">RectAreaLightTexturesLib</h1>
+		<section>
+			<header>
+				<div class="class-description"><p><a href="RectAreaLight.html">RectAreaLight</a> 的纹理库。此类保存 LTC BRDF 数据
+在数据纹理中以供在渲染器中进一步使用。</p>
+<p>参考：具有线性变换余弦的实时多边形光着色
+作者：Eric Heitz、Jonathan Dupuy、Stephen Hill 和 David Neubelt。 <a href="https://github.com/selfshadow/ltc_code/" target="_blank" rel="noopener">代码</a>.</p>
+<p>注意：这是 BRDF 近似纹理数据的临时位置
+基于 Eric Heitz 的作品（见引文）。 BRDF 数据为
+<code>RectAreaLight</code> 当前使用预先计算的纹理进行近似
+大小约为 80kb。希望能找到更好的方式来包容
+在包含完整的 RectAreaLight 实现之前的大纹理数据
+在主构建文件中。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">RectAreaLightTexturesLib</span> 是一个插件，必须显式导入，请参阅<a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';</code></pre>
+				<div class="container-overview">
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id=".LTC_FLOAT_1" translate="no">.<a href="#.LTC_FLOAT_1">LTC_FLOAT_1</a><span class="type-signature"> : <a href="DataTexture.html">DataTexture</a></span> </h3>
+					<div class="description">
+						<p>第一个 LTC FP32 数据纹理.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id=".LTC_FLOAT_2" translate="no">.<a href="#.LTC_FLOAT_2">LTC_FLOAT_2</a><span class="type-signature"> : <a href="DataTexture.html">DataTexture</a></span> </h3>
+					<div class="description">
+						<p>第二个 LTC FP32 数据纹理.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id=".LTC_HALF_1" translate="no">.<a href="#.LTC_HALF_1">LTC_HALF_1</a><span class="type-signature"> : <a href="DataTexture.html">DataTexture</a></span> </h3>
+					<div class="description">
+						<p>第一个 LTC FP16 数据纹理.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id=".LTC_HALF_2" translate="no">.<a href="#.LTC_HALF_2">LTC_HALF_2</a><span class="type-signature"> : <a href="DataTexture.html">DataTexture</a></span> </h3>
+					<div class="description">
+						<p>第二个 LTC FP16 数据纹理.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">静态方法</h2>
+					<h3 class="name name-method" id=".init" translate="no">.<a href="#.init">init</a><span class="signature">()</span><span class="type-signature"> : <a href="RectAreaLightTexturesLib.html">RectAreaLightTexturesLib</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>初始化纹理库.</p>
+						</div>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/lights/RectAreaLightTexturesLib.js" translate="no" target="_blank" rel="noopener"> examples/jsm/lights/RectAreaLightTexturesLib.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

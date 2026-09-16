@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>VXGIVolume - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">VXGIVolume</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>保存 <a href="VXGINode.html">VXGINode</a> 场景的体素表示：各向异性不透明度
+mip 链、直接辐射量和带有缓存反弹的辐射量。</p>
+<p>该表示是 Crassin 等人的预过滤体素层次结构的密集变体。 2011年
+（密集的 mip 链而不是稀疏的八叉树，它将锥体样本保留为两次纹理获取）：
+不透明度存储每个主轴的可见性并进行定向过滤（体积积分
+沿轴，在其上取平均值），辐射度被存储不透明度预乘和间接反弹
+通过锥体追踪缓存在卷中。仅注入直射光。
+体素化在计算着色器中沿主三角轴使用保守光栅化。</p>
+<p>每个体素注入直接光，而不是像在
+paper：渲染器渲染的阴影贴图是光视图贴图，每个占用的体素
+从它们中获取可见性（用于定向光和聚光灯的 2D 贴图，用于点光源的立方体贴图
+灯）并分析评估其辐照度。这会重用现有的影子通道，使得
+注入的阴影与直接照明完全匹配，既不需要原子也不需要
+通过光子密度归一化。没有阴影贴图的灯光会回落到可见锥体
+通过体积进行追踪。权衡是与占用体素的数量成正比的成本
+倍于光而不是光视图分辨率，并且仅输出漫射辐射率
+存储（光泽锥体没有传入方向分布）。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://research.nvidia.com/publication/2011-09_interactive-indirect-illumination-using-voxel-cone-tracing" target="_blank" rel="noopener">https://research.nvidia.com/publication/2011-09_interactive-indirect-illumination-using-voxel-cone-tracing</a>：Crassin 等人，使用体素锥追踪的交互式间接光照，Pacific Graphics 2011。</li>
+<li><a href="https://developer.nvidia.com/content/basics-gpu-voxelization" target="_blank" rel="noopener">https://developer.nvidia.com/content/basics-gpu-voxelization</a>：GPU 体素化基础。</li>
+</ul>
+<p>注意：此类只能与 <code>WebGPURenderer</code> 和 WebGPU 后端一起使用。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">VXGIVolume</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="VXGIVolume" translate="no">new <a href="#VXGIVolume">VXGIVolume</a><span class="signature">( resolution : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新卷.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">resolution</strong>
+									</td>
+									<td class="description last">
+										<p>沿边界最长轴的体素数量。不应超过 <code>256</code>，较高的值超过体素分析器的最大存储缓冲区大小。</p>
+										<p>默认为<code>128</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="bounceConeAngle" translate="no">.<a href="#bounceConeAngle">bounceConeAngle</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>用于缓存反弹的锥体孔径（以度为单位）。</p>
+						<p>默认为<code>60</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bounces" translate="no">.<a href="#bounces">bounces</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>存储在卷中的缓存间接反弹数量。应在 <code>[0, 2]</code>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bounds" translate="no">.<a href="#bounds">bounds</a><span class="type-signature"> : <a href="Box3.html">Box3</a></span> </h3>
+					<div class="description">
+						<p> 请求的卷的世界空间范围内。如果为空（默认），则边界为
+根据体素化场景计算。请参阅 <a href="VXGIVolume.html#worldBounds">VXGIVolume#worldBounds</a> 了解
+有效边界.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="boundsMinNode" translate="no">.<a href="#boundsMinNode">boundsMinNode</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec3></span> </h3>
+					<div class="description">
+						<p>体积的最小角点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="directionalNode" translate="no">.<a href="#directionalNode">directionalNode</a><span class="type-signature"> : <a href="Texture3DNode.html">Texture3DNode</a></span> </h3>
+					<div class="description">
+						<p><a href="VXGIVolume.html#directionalTexture">VXGIVolume#directionalTexture</a> 的纹理节点。在体积的重新分配中保持有效。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="directionalRadiance" translate="no">.<a href="#directionalRadiance">directionalRadiance</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否对较粗的辐射级别进行定向过滤：沿着每个轴，越精细
+体素使用其表面法线从前到后合成，因此圆锥体仅聚集
+面向它的表面。这可以减少透过薄壁和地板的光线（例如，
+阳光照射的地板照亮了下面房间的天花板），但需要额外的内存
+以及更昂贵的辐射查找。更改它会触发重新体素化。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="directionalTexture" translate="no">.<a href="#directionalTexture">directionalTexture</a><span class="type-signature"> : <a href="Storage3DTexture.html">Storage3DTexture</a></span> </h3>
+					<div class="description">
+						<p>针对光线可以传播的六个方向定向过滤的较粗糙的辐射级别
+(+x, -x, +y, -y, +z, -z)，仅使用 <a href="VXGIVolume.html#directionalRadiance">VXGIVolume#directionalRadiance</a> 分配。每个
+texel 保存面向该方向的表面的辐射亮度与其权重的预乘
+(<code>rgb</code>) 和重量 (<code>a</code>);遮挡来自不透明度 MIP 链。六个方向
+沿着 x 并排存储在一个半分辨率 mip 链中；卷的级别 <code>n</code> 是
+其级别<code>n - 1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="directionalWidthNode" translate="no">.<a href="#directionalWidthNode">directionalWidthNode</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>纹理像素中方向纹理的一个方向块的宽度（在其级别0）。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="layers" translate="no">.<a href="#layers">layers</a><span class="type-signature"> : <a href="Layers.html">Layers</a></span> </h3>
+					<div class="description">
+						<p>仅通过此层测试的网格体进行体素化。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lightingNeedsUpdate" translate="no">.<a href="#lightingNeedsUpdate">lightingNeedsUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>设置为<code>true</code> 在下次更新中重新注入照明。灯光和灯光的变化
+注射参数会自动检测，因此很少需要。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxDistance" translate="no">.<a href="#maxDistance">maxDistance</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>世界单位的最大锥体长度。 <code>0</code> 表示无界。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxLevelNode" translate="no">.<a href="#maxLevelNode">maxLevelNode</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 体素纹理的最高有效 mip 级别。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxLights" translate="no">.<a href="#maxLights">maxLights</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p> 注入体积的最大灯光数量。</p>
+						<p>默认为 <code>8</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="minOpacity" translate="no">.<a href="#minOpacity">minOpacity</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p> 不透明度较低的三角形不是体素化.</p>
+						<p>默认为<code>0.1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>设置为<code>true</code>以在下次更新中重新体素化场景。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="opacityNode" translate="no">.<a href="#opacityNode">opacityNode</a><span class="type-signature"> : <a href="Texture3DNode.html">Texture3DNode</a></span> </h3>
+					<div class="description">
+						<p><a href="VXGIVolume.html#opacityTexture">VXGIVolume#opacityTexture</a>的纹理节点。在体积的重新分配中保持有效。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="opacityTexture" translate="no">.<a href="#opacityTexture">opacityTexture</a><span class="type-signature"> : <a href="Storage3DTexture.html">Storage3DTexture</a></span> </h3>
+					<div class="description">
+						<p>场景的每轴不透明度 (<code>xyz</code>) 和作为 mip 链的占用率 (<code>w</code>)。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="radianceNode" translate="no">.<a href="#radianceNode">radianceNode</a><span class="type-signature"> : <a href="Texture3DNode.html">Texture3DNode</a></span> </h3>
+					<div class="description">
+						<p><a href="VXGIVolume.html#radianceTexture">VXGIVolume#radianceTexture</a>的纹理节点。在体积重新分配后仍然有效。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="radianceTexture" translate="no">.<a href="#radianceTexture">radianceTexture</a><span class="type-signature"> : <a href="Storage3DTexture.html">Storage3DTexture</a></span> </h3>
+					<div class="description">
+						<p>场景的辐射度，包括缓存的反弹，预乘占用率，作为 mip 链。
+使用 <a href="VXGIVolume.html#directionalRadiance">VXGIVolume#directionalRadiance</a> 时，仅使用最精细的级别，而使用较粗糙的级别
+级别位于 <a href="VXGIVolume.html#directionalTexture">VXGIVolume#directionalTexture</a>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="resolution" translate="no">.<a href="#resolution">resolution</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>沿边界最长轴的体素数量。不应超过 <code>256</code>，较高的值超过体素分析器的最大存储缓冲区大小。</p>
+						<p>默认为<code>128</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="shadowConeAngle" translate="no">.<a href="#shadowConeAngle">shadowConeAngle</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 向不提供
+阴影贴图。较宽的锥体更便宜，但会软化注入的阴影。</p>
+						<p>默认为<code>10</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="stepScale" translate="no">.<a href="#stepScale">stepScale</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>相对于采样 mip 级别的纹素大小的步长。</p>
+						<p>默认为<code>0.5</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="traceDistanceNode" translate="no">.<a href="#traceDistanceNode">traceDistanceNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>作为节点的有效最大锥体长度。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="volumeSizeNode" translate="no">.<a href="#volumeSizeNode">volumeSizeNode</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec3></span> </h3>
+					<div class="description">
+						<p>体积的大小。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="voxelSizeNode" translate="no">.<a href="#voxelSizeNode">voxelSizeNode</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>a 的大小体素.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="worldBounds" translate="no">.<a href="#worldBounds">worldBounds</a><span class="type-signature"> : <a href="Box3.html">Box3</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>体素网格的有效世界空间边界，在体素化时更新。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部resources.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, scene : <span class="param-type"><a href="Scene.html">Scene</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果需要，更新体积。设置 <code>needsUpdate</code> 时对场景进行体素化并重新注入
+设置 <code>lightingNeedsUpdate</code> 或灯光发生变化时照明。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>场景.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+	<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/lighting/vxgi/VXGIVolume.js" translate="no" target="_blank" rel="noopener"> examples/jsm/lighting/vxgi/VXGIVolume.js</a></p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

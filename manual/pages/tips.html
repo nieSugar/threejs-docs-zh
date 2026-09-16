@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>小贴士</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Tips">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>小贴士</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>本文是关于使用 three.js 时可能遇到的一些小问题的集合，这些问题看起来太小以至于不值得单独成文。</p>
+<hr>
+<p><a id="screenshot" data-toc="Taking a screenshot"></a></p>
+<h1 id="taking-a-screenshot-of-the-canvas">在浏览器中截取画布截图</h1>
+<p>实际上有两种函数可以截取截图。
+旧的方式
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL"><code class="notranslate" translate="no">canvas.toDataURL</code></a>
+以及新的更好的方式
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob"><code class="notranslate" translate="no">canvas.toBlob</code></a></p>
+<p>所以你可能会认为，只需添加一些代码就可以轻松截取截图</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;canvas id="c"&gt;&lt;/canvas&gt;
++&lt;button id="screenshot" type="button"&gt;Save...&lt;/button&gt;
+</pre>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const elem = document.querySelector('#screenshot');
+elem.addEventListener('click', () =&gt; {
+  canvas.toBlob((blob) =&gt; {
+    saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`);
+  });
+});
+
+const saveBlob = (function() {
+  const a = document.createElement('a');
+  document.body.appendChild(a);
+  a.style.display = 'none';
+  return function saveData(blob, fileName) {
+     const url = window.URL.createObjectURL(blob);
+     a.href = url;
+     a.download = fileName;
+     a.click();
+  };
+}());
+</pre>
+<p>这是<a href="responsive.html">关于响应性的文章</a>中的示例
+在上面的代码基础上添加了一些 CSS 来放置按钮</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/tips-screenshot-bad.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/tips-screenshot-bad.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>当我尝试时，我得到了这个截图</p>
+<div class="threejs_center"><img src="../resources/images/screencapture-413x313.png"></div>
+
+<p>是的，这只是一个黑色的图像。</p>
+<p>根据你的浏览器/操作系统，它可能对你有效，但一般来说不太可能成功。</p>
+<p>问题在于出于性能和兼容性原因，浏览器默认会在你绘制完WebGL画布后清除绘图缓冲区。</p>
+<p>解决方法是在捕获之前调用你的渲染代码。</p>
+<p>在我们的代码中，我们需要调整一些东西。首先，让我们把渲染代码分离出来。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">+const state = {
++  time: 0,
++};
+
+-function render(time) {
+-  time *= 0.001;
++function render() {
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
+
+  cubes.forEach((cube, ndx) =&gt; {
+    const speed = 1 + ndx * .1;
+-    const rot = time * speed;
++    const rot = state.time * speed;
+    cube.rotation.x = rot;
+    cube.rotation.y = rot;
+  });
+
+  renderer.render(scene, camera);
+
+-  requestAnimationFrame(render);
+}
+
++function animate(time) {
++  state.time = time * 0.001;
++
++  render();
++
++  requestAnimationFrame(animate);
++}
++requestAnimationFrame(animate);
+</pre>
+<p>现在 <code class="notranslate" translate="no">render</code> 只专注于实际渲染，我们可以在捕获画布之前调用它。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const elem = document.querySelector('#screenshot');
+elem.addEventListener('click', () =&gt; {
++  render();
+  canvas.toBlob((blob) =&gt; {
+    saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`);
+  });
+});
+</pre>
+<p>现在它应该可以工作了。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/tips-screenshot-good.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/tips-screenshot-good.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>有关不同的解决方案，请参见下一项。</p>
+<hr>
+<p><a id="preservedrawingbuffer" data-toc="Prevent the Canvas Being Cleared"></a></p>
+<h1 id="preventing-the-canvas-being-cleared">防止画布被清除</h1>
+<p>假设你想让用户用一个动画对象进行绘画。当你创建<a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderer"><code class="notranslate" translate="no">preserveDrawingBuffer: true</code></a>时，需要传入<code class="notranslate" translate="no">WebGLRenderer</code>。这可以防止浏览器清除画布。你还需要告诉 three.js 不要清除画布。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const canvas = document.querySelector('#c');
+-const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
++const renderer = new THREE.WebGLRenderer({
++  canvas,
++  preserveDrawingBuffer: true,
++  alpha: true,
++});
++renderer.autoClearColor = false;
+</pre>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/tips-preservedrawingbuffer.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/tips-preservedrawingbuffer.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>请注意，如果你认真想制作一个绘图程序，这并不是一个解决方案，因为每当我们改变画布的分辨率时，浏览器仍然会清除画布。我们改变的是基于显示尺寸的分辨率。当窗口大小变化时，其显示尺寸也会变化。这包括用户下载文件时，即使在另一个标签页中，以及浏览器添加状态栏时。它也包括用户旋转手机，浏览器从竖屏切换到横屏时。</p>
+<p>如果你真的想制作一个绘图程序，你可以<a href="rendertargets.html">使用渲染目标渲染到纹理</a>。</p>
+<hr>
+<p><a id="tabindex" data-toc="Get Keyboard Input From a Canvas"></a></p>
+<h1 id="getting-keyboard-input">获取键盘输入</h1>
+<p>在这些教程中，我们经常将事件监听器附加到 <code class="notranslate" translate="no">canvas</code> 上。虽然许多事件都能正常工作，但默认情况下不能工作的一个是键盘事件。</p>
+<p>要获取键盘事件，请将画布的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/tabIndex"><code class="notranslate" translate="no">tabindex</code></a> 设置为 0 或更大的值。例如 </p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;canvas tabindex="0"&gt;&lt;/canvas&gt;
+</pre>
+<p>不过这样会引发一个新问题。任何设置了 <code class="notranslate" translate="no">tabindex</code> 的元素在获得焦点时都会被高亮。要解决此问题，将其焦点 CSS 轮廓设置为无 </p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">canvas:focus {
+  outline:none;
+}
+</pre>
+<p>为了演示，这里有 3 个画布 </p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;canvas id="c1"&gt;&lt;/canvas&gt;
+&lt;canvas id="c2" tabindex="0"&gt;&lt;/canvas&gt;
+&lt;canvas id="c3" tabindex="1"&gt;&lt;/canvas&gt;
+</pre>
+<p> 以及仅针对最后一个画布的一些 CSS </p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">#c3:focus {
+    outline: none;
+}
+</pre>
+<p>让我们将相同的事件监听器附加到它们所有人</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">document.querySelectorAll('canvas').forEach((canvas) =&gt; {
+  const ctx = canvas.getContext('2d');
+
+  function draw(str) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(str, canvas.width / 2, canvas.height / 2);
+  }
+  draw(canvas.id);
+
+  canvas.addEventListener('focus', () =&gt; {
+    draw('has focus press a key');
+  });
+
+  canvas.addEventListener('blur', () =&gt; {
+    draw('lost focus');
+  });
+
+  canvas.addEventListener('keydown', (e) =&gt; {
+    draw(`keyCode: ${e.keyCode}`);
+  });
+});
+</pre>
+<p>注意，你无法让第一个画布接受键盘输入。
+第二个画布可以接受，但会被高亮显示。第三个画布同时应用了两种解决方案。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/tips-tabindex.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/tips-tabindex.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<hr>
+<p><a id="transparent-canvas" data-toc="Make the Canvas Transparent"></a></p>
+<h1 id="making-the-canvas-transparent">使画布透明</h1>
+<p>默认情况下，THREE.js会使画布不透明。如果你想让画布透明，在创建<a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderer#alpha"><code class="notranslate" translate="no">alpha:true</code></a>时传入参数<a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderer"><code class="notranslate" translate="no">WebGLRenderer</code></a>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const canvas = document.querySelector('#c');
+-const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
++const renderer = new THREE.WebGLRenderer({
++  canvas,
++  alpha: true,
++});
+</pre>
+<p>你可能还想告诉它，你的结果<strong>不</strong>使用预乘 alpha。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const canvas = document.querySelector('#c');
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  alpha: true,
++  premultipliedAlpha: false,
+});
+</pre>
+<p>Three.js 默认情况下 canvas 使用 <a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderer#premultipliedAlpha"><code class="notranslate" translate="no">premultipliedAlpha: true</code></a>，但默认材料输出 <a href="/threejs-docs-zh/docs/#api/en/materials/Material#premultipliedAlpha"><code class="notranslate" translate="no">premultipliedAlpha: false</code></a>。</p>
+<p>如果你想更好地理解何时使用或不使用预乘 alpha，这里有一篇 <a href="https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre">很好的相关文章</a>。</p>
+<p>无论如何，让我们设置一个带透明画布的简单示例。</p>
+<p>我们将上述设置应用到 <a href="responsive.html">关于响应性的文章</a>中的示例中。我们还将使材料更加透明。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function makeInstance(geometry, color, x) {
+-  const material = new THREE.MeshPhongMaterial({color});
++  const material = new THREE.MeshPhongMaterial({
++    color,
++    opacity: 0.5,
++  });
+
+...
+</pre>
+<p>让我们添加一些 HTML 内容</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;body&gt;
+  &lt;canvas id="c"&gt;&lt;/canvas&gt;
++  &lt;div id="content"&gt;
++    &lt;div&gt;
++      &lt;h1&gt;Cubes-R-Us!&lt;/h1&gt;
++      &lt;p&gt;We make the best cubes!&lt;/p&gt;
++    &lt;/div&gt;
++  &lt;/div&gt;
+&lt;/body&gt;
+</pre>
+<p>以及一些 CSS 来将画布置于前面</p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">body {
+    margin: 0;
+}
+#c {
+    width: 100%;
+    height: 100%;
+    display: block;
++    position: fixed;
++    left: 0;
++    top: 0;
++    z-index: 2;
++    pointer-events: none;
+}
++#content {
++  font-size: 7vw;
++  font-family: sans-serif;
++  text-align: center;
++  width: 100%;
++  height: 100%;
++  display: flex;
++  justify-content: center;
++  align-items: center;
++}
+</pre>
+<p>注意 <code class="notranslate" translate="no">pointer-events: none</code> 会让画布对鼠标和触摸事件不可见，因此你可以选择其下方的文字。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/tips-transparent-canvas.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/tips-transparent-canvas.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<hr>
+<p><a id="html-background" data-toc="Use three.js as Background in HTML"></a></p>
+<h1 id="making-your-background-a-three-js-animation">让你的背景成为一个 three.js 动画</h1>
+<p>一个常见的问题是如何让 three.js 动画成为网页的背景。</p>
+<p>有两种明显的方法。</p>
+<ul>
+<li>将画布 CSS <code class="notranslate" translate="no">position</code> 设置为 <code class="notranslate" translate="no">fixed</code>，如</li>
+</ul>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">#c {
+ position: fixed;
+ left: 0;
+ top: 0;
+ ...
+}
+</pre>
+<p>您基本上可以在前面的示例中看到这个确切的解决方案。只需将 <code class="notranslate" translate="no">z-index</code> 设置为 -1，立方体就会出现在文本后面。</p>
+<p>这个解决方案的一小个缺点是您的 JavaScript 必须与页面集成，如果您的页面复杂，则需要确保 three.js 可视化中的 JavaScript 不与页面中执行其他操作的 JavaScript 冲突。</p>
+<ul>
+<li>使用一个 <code class="notranslate" translate="no">iframe</code></li>
+</ul>
+<p>这是在<a href="/">本站首页</a>使用的解决方案。</p>
+<p>在您的网页中只需插入一个 iframe，例如</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;iframe id="background" src="responsive.html"&gt;
+&lt;div&gt;
+  Your content goes here.
+&lt;/div&gt;
+</pre>
+<p>然后将 iframe 样式设置为填充窗口并置于背景中，这基本上与我们上面为 canvas 使用的代码相同，只是我们还需要将 <code class="notranslate" translate="no">border</code> 设置为 <code class="notranslate" translate="no">none</code>，因为 iframe 默认有边框。</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">#background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    border: none;
+    pointer-events: none;
+}
+</pre><p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/tips-html-background.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/tips-html-background.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

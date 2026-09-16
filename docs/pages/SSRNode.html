@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>SSRNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → </p>
+	<h1 translate="no">SSRNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于计算屏幕空间反射（SSR）的后处理节点。</p>
+<p>参考： <a href="https://lettier.github.io/3d-game-shaders-for-beginners/screen-space-reflection.html" target="_blank" rel="noopener">https://lettier.github.io/3d-game-shaders-for-beginners/screen-space-reflection.html</a></p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">SSRNode</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { ssr } from 'three/addons/tsl/display/SSRNode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="SSRNode" translate="no">new <a href="#SSRNode">SSRNode</a><span class="signature">( colorNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec4></span>, depthNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span>, normalNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, options : <span class="param-type"><a href="global.html#SSRNodeOptions">SSRNodeOptions</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的SSR节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">colorNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表美容通道的节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表美丽通道深度的节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">normalNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表美容通道法线的节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>材质的可选输入和环境数据。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="_binaryRefine" translate="no">.<a href="#_binaryRefine">_binaryRefine</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>启用检测到的命中的子步骤二分搜索细化。打开时，粗
+十字路口被平分到精确的交叉点（更锐利的打击，更少的步数
+混叠）以额外深度样本为代价。烘焙到着色器中作为
+编译时常量；分配新值会重建 SSR 材质。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="_blurQuality" translate="no">.<a href="#_blurQuality">_blurQuality</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>模糊的质量。必须是 <code>[1,3]</code>.</p>
+<p> 范围内的整数作为编译时常量烘焙到模糊着色器中，因此 <code>(size*2+1)²</code>
+样品环展开；分配新值会重新编译模糊材质。</p>
+						<p>默认为<code>2</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="_reflectNonMetals" translate="no">.<a href="#_reflectNonMetals">_reflectNonMetals</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>仅在 <a href="SSRNode.html#stochastic">SSRNode#stochastic</a> 为 <code>false</code> 时使用。当<code>false</code>时，非金属
+表面被丢弃以获得显着的性能提升；将 <code>true</code> 设置为也
+反射电介质。作为编译时常量烘焙到着色器中；分配一个
+新值重新编译 SSR 材质。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="_screenEdgeFadeBlack" translate="no">.<a href="#_screenEdgeFadeBlack">_screenEdgeFadeBlack</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>当 <code>true</code> 时，SSR 在屏幕边界附近淡入零，而不是混合到
+环境地图。反射样本 UV 使命中值变淡；错过的是
+由表面像素 UV 淡出。</p>
+<p>作为编译时常量烘焙到着色器中，因此未使用的淡入淡出分支为
+被淘汰；分配新值会重新编译 SSR 材料。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="_stepExponent" translate="no">.<a href="#_stepExponent">_stepExponent</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>非线性阶跃分布指数。 <code>1</code> =统一步骤； <code>&gt; 1</code> 浓缩液
+射线原点附近的样本（大多数短程反射被遗漏）以及
+将它们间隔到 maxDistance，如 <code>s = (i / steps) ^ stepExponent</code>.</p>
+<p> 作为编译时常量烘焙到着色器中，因此 <code>pow()</code> 折叠为几个
+乘以；分配新值会重新编译 SSR 材料。仅由使用
+随机反射路径.</p>
+						<p>默认为<code>2</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="binaryRefine" translate="no">.<a href="#binaryRefine">binaryRefine</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否启用子步二分搜索命中细化（编译时常量）。
+分配新值会重建 SSR 材料。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="blurQuality" translate="no">.<a href="#blurQuality">blurQuality</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>Blur 内核大小（编译时常量）。分配一个新值重新编译
+模糊材质。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
+					<div class="description">
+						<p>渲染场景的相机。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="colorNode" translate="no">.<a href="#colorNode">colorNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> </h3>
+					<div class="description">
+						<p>代表美容通道的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="depthNode" translate="no">.<a href="#depthNode">depthNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>代表美丽通道深度的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="diffuseNode" translate="no">.<a href="#diffuseNode">diffuseNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> </h3>
+					<div class="description">
+						<p>表示场景漫反射颜色的节点（通常是 MRT <code>diffuseColor</code> 附件）。
+当<code>null</code>时，着色器使用<code>vec3(1)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="envImportanceSampling" translate="no">.<a href="#envImportanceSampling">envImportanceSampling</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>当<code>true</code>时，构建环境亮度CDF表并使用MIS来处理环境未命中。
+在构建时修复。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="envMapIntensity" translate="no">.<a href="#envMapIntensity">envMapIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>重要性采样环境贡献的强度乘数。
+仅在调用 setEnvMap 后可用。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="environmentIntensity" translate="no">.<a href="#environmentIntensity">environmentIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>应用于屏幕空间上的环境贴图反射的强度乘数
+未命中和屏幕边缘。默认为 π 以匹配以前的硬编码乘数。</p>
+						<p>默认为 <code>Math.PI</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="environmentNode" translate="no">.<a href="#environmentNode">environmentNode</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>屏幕空间未命中的 HDR 环境贴图。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="historyTexture" translate="no">.<a href="#historyTexture">historyTexture</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>表示多次反射的历史纹理的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="intensity" translate="no">.<a href="#intensity">intensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>整体反射强度的乘数。 <code>1</code> 离开
+反射不变，较低的值会使它们变暗，较高的值会增强它们。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxDistance" translate="no">.<a href="#maxDistance">maxDistance</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>控制片段可以反射的距离。增加该值会导致更多
+计算开销，但也增加了反射距离。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxLuminance" translate="no">.<a href="#maxLuminance">maxLuminance</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>绝对环境亮度上限。在此之上的 HDR 环境样本按比例缩小（保留色调）。</p>
+						<p>默认为<code>10</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="metalnessNode" translate="no">.<a href="#metalnessNode">metalnessNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>每像素金属性，用于驱动 GGX 反射采样和非金属
+早出。当<code>null</code>时，着色器将表面视为非金属。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="mirrorBias" translate="no">.<a href="#mirrorBias">mirrorBias</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>随机GGX采样的镜像偏差。将反射光线集中到
+波瓣的狭窄（近镜面）核心，用少量的偏差换取更少的噪音。
+<code>0</code> 对整个 VNDF 波瓣进行采样；值朝向 <code>1</code> 拧紧锥体。范围 <code>[0,1]</code>.</p>
+						<p>默认为<code>0.5</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="normalNode" translate="no">.<a href="#normalNode">normalNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
+					<div class="description">
+						<p>代表美容通道法线的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="quality" translate="no">.<a href="#quality">quality</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>此参数控制光线行进过程的详细程度。
+值范围为 <code>[0,1]</code>，其中 <code>1</code> 表示最佳质量（最大数量
+raymarching 迭代/样本）和 <code>0</code> 意味着根本没有样本。</p>
+<p><code>0.5</code> 的质量通常足以满足大多数用例。尝试保留
+这个参数越低越好。值越大，效果越显着
+</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="reflectNonMetals" translate="no">.<a href="#reflectNonMetals">reflectNonMetals</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>电介质是否反映在非随机路径中（编译时常数）。
+分配新值会重建 SSR 材质。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="resolutionScale" translate="no">.<a href="#resolutionScale">resolutionScale</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>分辨率比例。有效值范围为 <code>[0,1]</code>。<code>1</code> 表示最佳质量，但也会导致更多的计算开销。设置为 <code>0.5</code> 表示效果以半分辨率计算。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="roughnessNode" translate="no">.<a href="#roughnessNode">roughnessNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>每像素粗糙度，用于驱动 GGX 反射采样和模糊 mip
+选择。当<code>null</code>时，着色器将表面视为完全平滑。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="screenEdgeFade" translate="no">.<a href="#screenEdgeFade">screenEdgeFade</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>屏幕边缘淡入淡出宽度（以UV单位为单位）。当屏幕空间撞击接近屏幕时
+边界，反射在这段距离内减弱——要么朝向环境
+反射 (<a href="SSRNode.html#screenEdgeFadeBlack">SSRNode#screenEdgeFadeBlack</a> <code>false</code>) 或为零强度
+(<code>true</code>)。 <code>0</code> 禁用它。</p>
+						<p>默认为<code>0.2</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="screenEdgeFadeBlack" translate="no">.<a href="#screenEdgeFadeBlack">screenEdgeFadeBlack</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>SSR 是否在屏幕边框附近淡入黑色（编译时常量）。分配
+新值重新编译 SSR 材料。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="stepExponent" translate="no">.<a href="#stepExponent">stepExponent</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>非线性步长分布指数（编译时常数）。看背衬
+字段了解详细信息。分配新值会重新编译 SSR 材质。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="stochastic" translate="no">.<a href="#stochastic">stochastic</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>当 <code>true</code> 时，每个像素的反射方向随随机 GGX 射线而变化
+（第二代SSR）。当<code>false</code>时，追踪单个镜面反射并
+通过模糊通道软化粗糙度（第一代 SSR）。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="thickness" translate="no">.<a href="#thickness">thickness</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>控制什么算作可能的反射命中和什么不算作反射命中之间的截止。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>自节点渲染以来，<code>updateBeforeType</code> 设置为 <code>NodeUpdateType.FRAME</code>
+<code>updateBefore()</code>.</p>
+						<p>中每帧效果一次，默认为 <code>'frame'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBeforeType">TempNode#updateBeforeType</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="velocityTexture" translate="no">.<a href="#velocityTexture">velocityTexture</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
+					<div class="description">
+						<p>表示重投影的速度纹理的节点。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要效果时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#dispose">TempNode#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTextureNode" translate="no">.<a href="#getTextureNode">getTextureNode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理节点的形式返回效果的结果。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>表示以下结果的纹理节点效果.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setEnvMap" translate="no">.<a href="#setEnvMap">setEnvMap</a><span class="signature">( hdr : <span class="param-type"><a href="Texture.html">Texture</a> | null</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置重要采样环境光照的环境贴图
+屏幕空间光线未命中。每当场景的环境图发生变化时调用此函数。</p>
+<p>使用<a href="ImportanceSampledEnvironment.html">ImportanceSampledEnvironment</a>（CDF + MIS改编自
+<a href="https://github.com/gkjohnson/three-gpu-pathtracer" target="_blank" rel="noopener">三-gpu-pathtracer</a>).</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">hdr</strong>
+									</td>
+									<td class="description last">
+										<p>等距矩形HDR环境贴图，或为空以禁用。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-see">参见：</dt>
+							<dd class="tag-see">
+								<ul>
+									<li><a href="https://github.com/gkjohnson/three-gpu-pathtracer" target="_blank" rel="noopener">https://github.com/gkjohnson/three-gpu-pathtracer</a></li>
+								</ul>
+							</dd>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setHistory" translate="no">.<a href="#setHistory">setHistory</a><span class="signature">( history : <span class="param-type"><a href="Texture.html">Texture</a></span>, velocity : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec2></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>连接多次反射的反馈输入：之前的框架的
+去噪结果 (<code>history</code>) 以及用于重新投影它的速度缓冲区
+(<code>velocity</code>)。 <code>history</code> 接受生成节点（例如
+<a href="RecurrentDenoiseNode.html">RecurrentDenoiseNode</a>) — 使用其输出渲染目标 — 或原始
+纹理。为两者传递 <code>null</code> 以禁用多次反弹。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">history</strong>
+									</td>
+									<td class="description last">
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">velocity</strong>
+									</td>
+									<td class="description last">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置效果的大小.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>效果的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>效果的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于设置效果的TSL code.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#setup">TempNode#setup</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于每帧渲染一次效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBefore">TempNode#updateBefore</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+		<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/display/SSRNode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/display/SSRNode.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

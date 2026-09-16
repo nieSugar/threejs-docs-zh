@@ -1,0 +1,161 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>渲染目标</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Render Targets">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>渲染目标</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>three.js 中的渲染目标基本上是一个可以渲染到的纹理。在渲染到它之后，你可以像使用其他纹理一样使用该纹理。</p>
+<p>让我们做一个简单的示例。我们将从<a href="responsive.html">关于响应性的文章</a>中的一个示例开始。</p>
+<p>将渲染输出到渲染目标几乎与普通渲染完全相同。首先我们创建一个 <a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderTarget"><code class="notranslate" translate="no">WebGLRenderTarget</code></a>.</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const rtWidth = 512;
+const rtHeight = 512;
+const renderTarget = new THREE.WebGLRenderTarget(rtWidth, rtHeight);
+</pre>
+<p> 然后我们需要一个 <a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a> 和一个 <a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a></p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const rtFov = 75;
+const rtAspect = rtWidth / rtHeight;
+const rtNear = 0.1;
+const rtFar = 5;
+const rtCamera = new THREE.PerspectiveCamera(rtFov, rtAspect, rtNear, rtFar);
+rtCamera.position.z = 2;
+
+const rtScene = new THREE.Scene();
+rtScene.background = new THREE.Color('red');
+</pre>
+<p> 注意我们将宽高比设置为渲染目标的宽高比，而不是画布的。应使用的正确宽高比取决于我们渲染的用途。在这种情况下，我们将在立方体的一侧使用渲染目标的纹理。由于立方体的面是方形的，所以我们希望宽高比为 1.0。</p>
+<p>我们用各种东西填充场景。在这个例子中，我们使用光源和来自<a href="responsive.html">上一篇文章</a>的三个立方体</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">{
+  const color = 0xFFFFFF;
+  const intensity = 1;
+  const light = new THREE.DirectionalLight(color, intensity);
+  light.position.set(-1, 2, 4);
+*  rtScene.add(light);
+}
+
+const boxWidth = 1;
+const boxHeight = 1;
+const boxDepth = 1;
+const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
+function makeInstance(geometry, color, x) {
+  const material = new THREE.MeshPhongMaterial({color});
+
+  const cube = new THREE.Mesh(geometry, material);
+*  rtScene.add(cube);
+
+  cube.position.x = x;
+
+  return cube;
+}
+
+*const rtCubes = [
+  makeInstance(geometry, 0x44aa88,  0),
+  makeInstance(geometry, 0x8844aa, -2),
+  makeInstance(geometry, 0xaa8844,  2),
+];
+</pre>
+<p>。上一篇文章中的<a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a>和<a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a>仍然存在。我们将使用它们来渲染到画布上。
+
+我们只需要添加一些可渲染的东西。</p>
+<p>让我们添加一个使用渲染目标纹理的立方体。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const material = new THREE.MeshPhongMaterial({
+  map: renderTarget.texture,
+});
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+</pre>
+<p>现在在渲染时，首先我们将渲染目标场景渲染到渲染目标中。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render(time) {
+  time *= 0.001;
+
+  ...
+
+  // rotate all the cubes in the render target scene
+  rtCubes.forEach((cube, ndx) =&gt; {
+    const speed = 1 + ndx * .1;
+    const rot = time * speed;
+    cube.rotation.x = rot;
+    cube.rotation.y = rot;
+  });
+
+  // draw render target scene to render target
+  renderer.setRenderTarget(renderTarget);
+  renderer.render(rtScene, rtCamera);
+  renderer.setRenderTarget(null);
+</pre>
+<p>然后我们将使用渲染目标纹理的单个立方体的场景渲染到画布上。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">  // rotate the cube in the scene
+  cube.rotation.x = time;
+  cube.rotation.y = time * 1.1;
+
+  // render the scene to the canvas
+  renderer.render(scene, camera);
+</pre>
+<p>瞧，完成了</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/render-target.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/render-target.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>立方体是红色的，因为我们将 <code class="notranslate" translate="no">background</code> 的 <code class="notranslate" translate="no">rtScene</code> 设置为红色，因此渲染目标的纹理被清除为红色。</p>
+<p>渲染目标用于各种用途。<a href="shadows.html">阴影</a> 使用渲染目标。<a href="picking.html">拾取可以使用渲染目标</a>。各种<a href="post-processing.html">后期处理效果</a>需要渲染目标。在车内渲染后视镜或在 3D 场景内的显示器上显示实时画面可能会使用渲染目标。</p>
+<p>使用 <a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderTarget"><code class="notranslate" translate="no">WebGLRenderTarget</code></a> 的一些注意事项。</p>
+<ul>
+<li><p>默认情况下，<a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderTarget"><code class="notranslate" translate="no">WebGLRenderTarget</code></a> 会创建两种纹理。一个是颜色纹理，一个是深度/模板纹理。如果你不需要深度或模板纹理，可以通过传入选项来请求不创建它们。示例：</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">  const rt = new THREE.WebGLRenderTarget(width, height, {
+    depthBuffer: false,
+    stencilBuffer: false,
+  });
+</pre>
+</li>
+<li><p>你可能需要更改渲染目标的大小</p>
+<p>在上面的例子中，我们创建了一个固定大小为 512x512 的渲染目标。对于诸如后期处理之类的情况，你通常需要创建一个与画布相同大小的渲染目标。在我们的代码中，这意味着当我们更改画布大小时，也会更新渲染目标的大小以及我们在渲染到渲染目标时使用的相机。示例：</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">function render(time) {
+  time *= 0.001;
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+
++    renderTarget.setSize(canvas.width, canvas.height);
++    rtCamera.aspect = camera.aspect;
++    rtCamera.updateProjectionMatrix();
+}
+</pre></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>FlakesTexture - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">FlakesTexture</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于生成薄片纹理图像的实用程序类。这张图片可能会用到
+作为法线贴图来产生类似汽车油漆的效果。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">FlakesTexture</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="FlakesTexture" translate="no">new <a href="#FlakesTexture">FlakesTexture</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span><span class="type-signature"> : HTMLCanvasElement</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>生成一个新的薄片纹理图像。结果是画布
+可以用作 <a href="CanvasTexture.html">CanvasTexture</a>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>图像的宽度.</p>
+										<p>默认为<code>512</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>图像的高度.</p>
+										<p>默认为<code>512</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 生成的图片.</dt>
+						</dl>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/textures/FlakesTexture.js" translate="no" target="_blank" rel="noopener"> examples/jsm/textures/FlakesTexture.js</a></p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

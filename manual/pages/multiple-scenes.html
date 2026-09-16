@@ -1,0 +1,600 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>多个画布 多个场景</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Multiple Canvases Multiple Scenes">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>多个画布 多个场景</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>一个常见的问题是如何在多个画布中使用 THREE.js。 假设你想制作一个电子商务网站，或者想制作一个包含大量 3D 图表的页面。乍一看，这似乎很容易。 只需在每个需要图表的地方创建一个画布。 对于每个画布，创建一个 <a href="/threejs-docs-zh/docs/#api/en/constants/Renderer"><code class="notranslate" translate="no">Renderer</code></a>。</p>
+<p>但是你很快会发现会遇到问题。</p>
+<ol>
+<li><p>浏览器对你可以拥有的 WebGL 上下文数量有限制。</p>
+<p>通常该限制大约为 8 个。一旦你创建第 9 个上下文，最旧的上下文将会丢失。</p>
+</li>
+<li><p>WebGL 资源不能在上下文之间共享</p>
+<p>这意味着如果你想将一个 10 兆的模型加载到两个画布中，并且该模型使用了 20 兆的纹理，你的 10 兆模型将不得不加载两次，纹理也会被加载两次。不同的上下文之间不能共享任何东西。这也意味着必须初始化两次，着色器编译两次，等等。随着画布数量增加，情况会变得更糟。</p>
+</li>
+</ol>
+<p>那么解决方案是什么？</p>
+<p>解决方案是在背景中使用一个填充视口的画布，并使用其他元素表示每个“虚拟”画布。我们创建一个单独的 <a href="/threejs-docs-zh/docs/#api/en/constants/Renderer"><code class="notranslate" translate="no">Renderer</code></a>，然后为每个虚拟画布创建一个 <a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a>。随后我们检查虚拟画布元素的位置，如果它们在屏幕上，我们会告诉 THREE.js 在正确的位置绘制它们的场景。</p>
+<p>使用这种解决方案，只有一个画布，因此可以解决上述问题 1 和 2。我们不会遇到 WebGL 上下文限制，因为我们只会使用一个上下文。出于同样的原因，我们也不会遇到共享问题。</p>
+<p>让我们先从一个只有两个场景的简单例子开始。首先我们来制作 HTML</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;canvas id="c"&gt;&lt;/canvas&gt;
+&lt;p&gt;
+  &lt;span id="box" class="diagram left"&gt;&lt;/span&gt;
+  I love boxes. Presents come in boxes.
+  When I find a new box I'm always excited to find out what's inside.
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;span id="pyramid" class="diagram right"&gt;&lt;/span&gt;
+  When I was a kid I dreamed of going on an expedition inside a pyramid
+  and finding a undiscovered tomb full of mummies and treasure.
+&lt;/p&gt;
+</pre>
+<p>然后我们可以设置 CSS，可能像这样</p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">#c {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;
+}
+.diagram {
+  display: inline-block;
+  width: 5em;
+  height: 3em;
+  border: 1px solid black;
+}
+.left {
+  float: left;
+  margin-right: .25em;
+}
+.right {
+  float: right;
+  margin-left: .25em;
+}
+</pre>
+<p>我们将画布设置为填充屏幕，并将其 <code class="notranslate" translate="no">z-index</code> 设置为 -1，以使其出现在其他元素的后面。我们还需要为我们的虚拟画布元素指定某种宽度和高度，因为里面没有任何东西来赋予它们大小。</p>
+<p>现在我们将制作两个场景，每个场景都有一个灯光和一个摄像机。一个场景中我们添加一个立方体，另一个场景中添加一个钻石。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function makeScene(elem) {
+  const scene = new THREE.Scene();
+
+  const fov = 45;
+  const aspect = 2;  // the canvas default
+  const near = 0.1;
+  const far = 5;
+  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.z = 2;
+  camera.position.set(0, 1, 2);
+  camera.lookAt(0, 0, 0);
+
+  {
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+  }
+
+  return {scene, camera, elem};
+}
+
+function setupScene1() {
+  const sceneInfo = makeScene(document.querySelector('#box'));
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshPhongMaterial({color: 'red'});
+  const mesh = new THREE.Mesh(geometry, material);
+  sceneInfo.scene.add(mesh);
+  sceneInfo.mesh = mesh;
+  return sceneInfo;
+}
+
+function setupScene2() {
+  const sceneInfo = makeScene(document.querySelector('#pyramid'));
+  const radius = .8;
+  const widthSegments = 4;
+  const heightSegments = 2;
+  const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+  const material = new THREE.MeshPhongMaterial({
+    color: 'blue',
+    flatShading: true,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  sceneInfo.scene.add(mesh);
+  sceneInfo.mesh = mesh;
+  return sceneInfo;
+}
+
+const sceneInfo1 = setupScene1();
+const sceneInfo2 = setupScene2();
+</pre>
+<p>然后我们将创建一个函数，仅当元素在屏幕上时才渲染每个场景。我们可以通过开启<em>scissor</em>测试来告诉THREE.js只渲染画布的一部分，方法是使用<a href="/threejs-docs-zh/docs/#api/en/constants/Renderer.setScissorTest"><code class="notranslate" translate="no">Renderer.setScissorTest</code></a>，然后使用<a href="/threejs-docs-zh/docs/#api/en/constants/Renderer.setViewport"><code class="notranslate" translate="no">Renderer.setViewport</code></a>和<a href="/threejs-docs-zh/docs/#api/en/constants/Renderer.setScissor"><code class="notranslate" translate="no">Renderer.setScissor</code></a>设置剪裁和视口。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function renderSceneInfo(sceneInfo) {
+  const {scene, camera, elem} = sceneInfo;
+
+  // get the viewport relative position of this element
+  const {left, right, top, bottom, width, height} =
+      elem.getBoundingClientRect();
+
+  const isOffscreen =
+      bottom &lt; 0 ||
+      top &gt; renderer.domElement.clientHeight ||
+      right &lt; 0 ||
+      left &gt; renderer.domElement.clientWidth;
+
+  if (isOffscreen) {
+    return;
+  }
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+
+  const positiveYUpBottom = canvasRect.height - bottom;
+  renderer.setScissor(left, positiveYUpBottom, width, height);
+  renderer.setViewport(left, positiveYUpBottom, width, height);
+
+  renderer.render(scene, camera);
+}
+</pre>
+<p>然后我们的渲染函数将首先清空屏幕，然后渲染每个场景。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render(time) {
+  time *= 0.001;
+
+  resizeRendererToDisplaySize(renderer);
+
+  renderer.setScissorTest(false);
+  renderer.clear(true, true);
+  renderer.setScissorTest(true);
+
+  sceneInfo1.mesh.rotation.y = time * .1;
+  sceneInfo2.mesh.rotation.y = time * .1;
+
+  renderSceneInfo(sceneInfo1);
+  renderSceneInfo(sceneInfo2);
+
+  requestAnimationFrame(render);
+}
+</pre>
+<p>就是这样</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/multiple-scenes-v1.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/multiple-scenes-v1.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>你可以看到第一个 <code class="notranslate" translate="no">&lt;span&gt;</code> 的位置有一个红色立方体，而第二个 <code class="notranslate" translate="no">span</code> 的位置有一个蓝色钻石。</p>
+<h2 id="syncing-up">同步</h2>
+<p>上面的代码可以运行，但有一个小问题。如果你的场景很复杂，或者由于某种原因渲染耗时过长，绘制到画布中的场景位置就会落后于页面的其他部分。</p>
+<p>如果我们给每个区域加上边框</p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">.diagram {
+  display: inline-block;
+  width: 5em;
+  height: 3em;
++  border: 1px solid black;
+}
+</pre>
+<p>并设置每个场景的背景</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const scene = new THREE.Scene();
++scene.background = new THREE.Color('red');
+</pre>
+<p>如果我们<a href="../examples/multiple-scenes-v2.html" target="_blank">快速上下滚动</a>，我们会看到这个问题。这里有一个动画，显示滚动速度减慢了10倍。</p>
+<div class="threejs_center"><img class="border" src="../resources/images/multi-view-skew.gif"></div>
+
+<p>我们可以切换到一种具有不同权衡的方法。我们将把画布的 CSS 从 <code class="notranslate" translate="no">position: fixed</code> 切换到 <code class="notranslate" translate="no">position: absolute</code>。</p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">#c {
+-  position: fixed;
++  position: absolute;
+</pre>
+<p>然后我们将设置画布的变换，使其移动到画布顶部与页面当前滚动到的部分顶部对齐。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render(time) {
+  ...
+
+  const transform = `translateY(${window.scrollY}px)`;
+  renderer.domElement.style.transform = transform;
+</pre>
+<p><code class="notranslate" translate="no">position: fixed</code> 完全阻止了画布滚动，而页面的其他部分则可以在其上方滚动。<code class="notranslate" translate="no">position: absolute</code> 将允许画布随页面一起滚动，这意味着无论我们绘制什么，都会随页面滚动，即使我们渲染得太慢。当我们最终有机会渲染时，我们会移动画布，使其与页面已滚动的位置匹配，然后重新渲染。这意味着窗口的边缘只会短暂显示一些未渲染的部分，但 <a href="../examples/multiple-scenes-v2.html" target="_blank">页面中间的内容应该会匹配，并且不会滑动</a>。这是新方法效果的一个视图，慢放了10倍。</p>
+<div class="threejs_center"><img class="border" src="../resources/images/multi-view-fixed.gif"></div>
+
+<h2 id="making-it-more-generic"> 使其更通用</h2>
+<p>既然我们已经让多个场景能够运行了，让我们把它做得稍微通用一些。</p>
+<p>我们可以让主渲染函数，也就是管理画布的那个函数，只维护一个元素及其关联渲染函数的列表。对于每个元素，它会检查该元素是否在屏幕上，如果在，则调用对应的渲染函数。通过这种方式，我们将拥有一个通用系统，其中各个场景实际上并不知道自己正在被渲染在某个小区域中。</p>
+<p>这是主渲染函数</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const sceneElements = [];
+function addScene(elem, fn) {
+  sceneElements.push({elem, fn});
+}
+
+function render(time) {
+  time *= 0.001;
+
+  resizeRendererToDisplaySize(renderer);
+
+  renderer.setScissorTest(false);
+  renderer.setClearColor(clearColor, 0);
+  renderer.clear(true, true);
+  renderer.setScissorTest(true);
+
+  const transform = `translateY(${window.scrollY}px)`;
+  renderer.domElement.style.transform = transform;
+
+  for (const {elem, fn} of sceneElements) {
+    // get the viewport relative position of this element
+    const rect = elem.getBoundingClientRect();
+    const {left, right, top, bottom, width, height} = rect;
+
+    const isOffscreen =
+        bottom &lt; 0 ||
+        top &gt; renderer.domElement.clientHeight ||
+        right &lt; 0 ||
+        left &gt; renderer.domElement.clientWidth;
+
+    if (!isOffscreen) {
+      const positiveYUpBottom = renderer.domElement.clientHeight - bottom;
+      renderer.setScissor(left, positiveYUpBottom, width, height);
+      renderer.setViewport(left, positiveYUpBottom, width, height);
+
+      fn(time, rect);
+    }
+  }
+
+  requestAnimationFrame(render);
+}
+</pre>
+<p>你可以看到它循环遍历 <code class="notranslate" translate="no">sceneElements</code>，它期望这是一个对象数组，每个对象都有 <code class="notranslate" translate="no">elem</code> 和 <code class="notranslate" translate="no">fn</code> 属性。</p>
+<p>它检查元素是否在屏幕上。如果在屏幕上，它会调用 <code class="notranslate" translate="no">fn</code> 并传递当前时间和它的矩形。</p>
+<p>现在，每个场景的设置代码只是将自己添加到场景列表中</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">{
+  const elem = document.querySelector('#box');
+  const {scene, camera} = makeScene();
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshPhongMaterial({color: 'red'});
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+  addScene(elem, (time, rect) =&gt; {
+    camera.aspect = rect.width / rect.height;
+    camera.updateProjectionMatrix();
+    mesh.rotation.y = time * .1;
+    renderer.render(scene, camera);
+  });
+}
+
+{
+  const elem = document.querySelector('#pyramid');
+  const {scene, camera} = makeScene();
+  const radius = .8;
+  const widthSegments = 4;
+  const heightSegments = 2;
+  const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+  const material = new THREE.MeshPhongMaterial({
+    color: 'blue',
+    flatShading: true,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+  addScene(elem, (time, rect) =&gt; {
+    camera.aspect = rect.width / rect.height;
+    camera.updateProjectionMatrix();
+    mesh.rotation.y = time * .1;
+    renderer.render(scene, camera);
+  });
+}
+</pre>
+<p>这样我们就不再需要 <code class="notranslate" translate="no">sceneInfo1</code> 和 <code class="notranslate" translate="no">sceneInfo2</code>，而旋转网格的代码现在特定于每个场景。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/multiple-scenes-generic.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/multiple-scenes-generic.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<h2 id="using-html-dataset">使用 HTML Dataset</h2>
+<p>最后一个更通用的做法是使用 HTML <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset">dataset</a>。这是一种向 HTML 元素添加自定义数据的方式。我们将不使用 <code class="notranslate" translate="no">id="..."</code>，而是像这样使用 <code class="notranslate" translate="no">data-diagram="..."</code></p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;canvas id="c"&gt;&lt;/canvas&gt;
+&lt;p&gt;
+-  &lt;span id="box" class="diagram left"&gt;&lt;/span&gt;
++  &lt;span data-diagram="box" class="left"&gt;&lt;/span&gt;
+  I love boxes. Presents come in boxes.
+  When I find a new box I'm always excited to find out what's inside.
+&lt;/p&gt;
+&lt;p&gt;
+-  &lt;span id="pyramid" class="diagram left"&gt;&lt;/span&gt;
++  &lt;span data-diagram="pyramid" class="right"&gt;&lt;/span&gt;
+  When I was a kid I dreamed of going on an expedition inside a pyramid
+  and finding a undiscovered tomb full of mummies and treasure.
+&lt;/p&gt;
+</pre>
+<p>我们可以将它们更改为 CSS 选择器，以选择 </p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">-.diagram
++*[data-diagram] {
+  display: inline-block;
+  width: 5em;
+  height: 3em;
+}
+</pre>
+<p>。我们将场景设置代码更改为只是名称到<em>场景初始化函数</em>的映射，这些函数返回一个<em>场景渲染函数</em>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const sceneInitFunctionsByName = {
+  'box': () =&gt; {
+    const {scene, camera} = makeScene();
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshPhongMaterial({color: 'red'});
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    return (time, rect) =&gt; {
+      mesh.rotation.y = time * .1;
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
+      renderer.render(scene, camera);
+    };
+  },
+  'pyramid': () =&gt; {
+    const {scene, camera} = makeScene();
+    const radius = .8;
+    const widthSegments = 4;
+    const heightSegments = 2;
+    const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+    const material = new THREE.MeshPhongMaterial({
+      color: 'blue',
+      flatShading: true,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    return (time, rect) =&gt; {
+      mesh.rotation.y = time * .1;
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
+      renderer.render(scene, camera);
+    };
+  },
+};
+</pre>
+<p>要初始化时，我们只需使用 <code class="notranslate" translate="no">querySelectorAll</code> 找到所有图表并调用该图表对应的初始化函数。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">document.querySelectorAll('[data-diagram]').forEach((elem) =&gt; {
+  const sceneName = elem.dataset.diagram;
+  const sceneInitFunction = sceneInitFunctionsByName[sceneName];
+  const sceneRenderFunction = sceneInitFunction(elem);
+  addScene(elem, sceneRenderFunction);
+});
+</pre>
+<p>视觉效果没有改变，但代码更加通用。</p>
+<p></p>
+<h2 id="adding-controls-to-each-element">为每个元素添加控件</h2>
+<p>交互地添加，例如，一个 <code class="notranslate" translate="no">TrackballControls</code> 同样容易。首先我们添加控件的脚本。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import {TrackballControls} from 'three/addons/controls/TrackballControls.js';
+</pre>
+<p>然后我们可以向每个场景添加一个 <code class="notranslate" translate="no">TrackballControls</code>，并传入与该场景关联的元素。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-function makeScene() {
++function makeScene(elem) {
+  const scene = new THREE.Scene();
+
+  const fov = 45;
+  const aspect = 2;  // the canvas default
+  const near = 0.1;
+  const far = 5;
+  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.set(0, 1, 2);
+  camera.lookAt(0, 0, 0);
++  scene.add(camera);
+
++  const controls = new TrackballControls(camera, elem);
++  controls.noZoom = true;
++  controls.noPan = true;
+
+  {
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+-    scene.add(light);
++    camera.add(light);
+  }
+
+-  return {scene, camera};
++ return {scene, camera, controls};
+}
+</pre>
+<p>你会注意到我们将相机添加到场景中，并将光源添加到相机中。这使光源相对于相机。由于 <code class="notranslate" translate="no">TrackballControls</code> 正在移动相机，这可能正是我们想要的。它保持光照照在我们所看的物体的一侧。</p>
+<p>我们需要在渲染函数中更新这些控件</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const sceneInitFunctionsByName = {
+- 'box': () =&gt; {
+-    const {scene, camera} = makeScene();
++ 'box': (elem) =&gt; {
++    const {scene, camera, controls} = makeScene(elem);
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshPhongMaterial({color: 'red'});
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    return (time, rect) =&gt; {
+      mesh.rotation.y = time * .1;
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
++      controls.handleResize();
++      controls.update();
+      renderer.render(scene, camera);
+    };
+  },
+-  'pyramid': () =&gt; {
+-    const {scene, camera} = makeScene();
++  'pyramid': (elem) =&gt; {
++    const {scene, camera, controls} = makeScene(elem);
+    const radius = .8;
+    const widthSegments = 4;
+    const heightSegments = 2;
+    const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+    const material = new THREE.MeshPhongMaterial({
+      color: 'blue',
+      flatShading: true,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    return (time, rect) =&gt; {
+      mesh.rotation.y = time * .1;
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
++      controls.handleResize();
++      controls.update();
+      renderer.render(scene, camera);
+    };
+  },
+};
+</pre>
+<p>现在，如果你拖动物体，它们就会旋转。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/multiple-scenes-controls.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/multiple-scenes-controls.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>这些技术在本网站本身就有使用。特别是 <a href="primitives.html">关于原语的文章</a> 和 <a href="materials.html">关于材质的文章</a> 使用该技术在文章中添加各种示例。</p>
+<p>另一个解决方案是渲染到一个离屏画布，然后将结果复制到每个元素的 2D 画布上。
+这个解决方案的优点是对每个独立区域的合成没有限制。而之前的解决方案，我们在后台只有一个画布。使用这个解决方案，我们有的是普通的 HTML 元素。</p>
+<p>缺点是它较慢，因为每个区域都要进行一次复制。慢多少取决于浏览器和 GPU 的性能。</p>
+<p>所需的更改相当小</p>
+<p>首先我们将更改 HTML，因为页面中不再需要画布</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;body&gt;
+-  &lt;canvas id="c"&gt;&lt;/canvas&gt;
+  ...
+&lt;/body&gt;
+</pre>
+<p>然后我们将更改 CSS</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">-#c {
+-  position: absolute;
+-  left: 0;
+-  top: 0;
+-  width: 100%;
+-  height: 100%;
+-  display: block;
+-  z-index: -1;
+-}
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+*[data-diagram] {
+  display: inline-block;
+  width: 5em;
+  height: 3em;
+}
+</pre><p>我们已经使所有画布填满它们的容器。</p>
+<p>现在让我们更改 JavaScript。首先我们不再查找画布。相反，我们创建一个画布。我们也只是从一开始就开启剪切测试。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function main() {
+-  const canvas = document.querySelector('#c');
++  const canvas = document.createElement('canvas');
+  const renderer = new THREE.WebGLRenderer({antialias: true, canvas, alpha: true});
++  renderer.setScissorTest(true);
+
+  ...
+</pre>
+<p>然后对于每个场景，我们创建一个 2D 渲染上下文，并将其画布附加到该场景的元素中</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const sceneElements = [];
+function addScene(elem, fn) {
++  const ctx = document.createElement('canvas').getContext('2d');
++  elem.appendChild(ctx.canvas);
+-  sceneElements.push({elem, fn});
++  sceneElements.push({elem, ctx, fn});
+}
+</pre>
+<p>然后在渲染时，如果渲染器的画布不足以渲染这个区域，我们就会增加它的大小。同时，如果这个区域的画布尺寸不正确，我们也会改变它的大小。最后我们设置裁剪和视口，渲染这个区域的场景，然后将结果复制到该区域的画布上。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render(time) {
+  time *= 0.001;
+
+-  resizeRendererToDisplaySize(renderer);
+-
+-  renderer.setScissorTest(false);
+-  renderer.setClearColor(clearColor, 0);
+-  renderer.clear(true, true);
+-  renderer.setScissorTest(true);
+-
+-  const transform = `translateY(${window.scrollY}px)`;
+-  renderer.domElement.style.transform = transform;
+
+-  for (const {elem, fn} of sceneElements) {
++  for (const {elem, fn, ctx} of sceneElements) {
+    // get the viewport relative position of this element
+    const rect = elem.getBoundingClientRect();
+    const {left, right, top, bottom, width, height} = rect;
++    const rendererCanvas = renderer.domElement;
+
+    const isOffscreen =
+        bottom &lt; 0 ||
+-        top &gt; renderer.domElement.clientHeight ||
++        top &gt; window.innerHeight ||
+        right &lt; 0 ||
+-        left &gt; renderer.domElement.clientWidth;
++        left &gt; window.innerWidth;
+
+    if (!isOffscreen) {
+-      const positiveYUpBottom = renderer.domElement.clientHeight - bottom;
+-      renderer.setScissor(left, positiveYUpBottom, width, height);
+-      renderer.setViewport(left, positiveYUpBottom, width, height);
+
++      // make sure the renderer's canvas is big enough
++      if (rendererCanvas.width &lt; width || rendererCanvas.height &lt; height) {
++        renderer.setSize(width, height, false);
++      }
++
++      // make sure the canvas for this area is the same size as the area
++      if (ctx.canvas.width !== width || ctx.canvas.height !== height) {
++        ctx.canvas.width = width;
++        ctx.canvas.height = height;
++      }
++
++      renderer.setScissor(0, 0, width, height);
++      renderer.setViewport(0, 0, width, height);
+
+      fn(time, rect);
+
++      // copy the rendered scene to this element's canvas
++      ctx.globalCompositeOperation = 'copy';
++      ctx.drawImage(
++          rendererCanvas,
++          0, rendererCanvas.height - height, width, height,  // src rect
++          0, 0, width, height);                              // dst rect
+    }
+  }
+
+  requestAnimationFrame(render);
+}
+</pre>
+<p>结果看起来一样</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/multiple-scenes-copy-canvas.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/multiple-scenes-copy-canvas.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>这个解决方案的另一个优点是，你可能可以使用<a href="https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas"><code class="notranslate" translate="no">OffscreenCanvas</code></a>从web worker进行渲染，同时仍然使用这种技术。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

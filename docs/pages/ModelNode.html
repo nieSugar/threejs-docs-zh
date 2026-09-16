@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>ModelNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="Object3DNode.html">Object3DNode</a> → </p>
+	<h1 translate="no">ModelNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>这种类型的节点是 <code>Object3DNode</code> 的专门版本
+具有更大的模型相关指标集。与 <code>Object3DNode</code> 不同，
+<code>ModelNode</code> 从 中提取对 3D 对象的引用
+当前节点框架状态。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="ModelNode" translate="no">new <a href="#ModelNode">ModelNode</a><span class="signature">( scope : <span class="param-type">'position' | 'viewPosition' | 'direction' | 'scale' | 'worldMatrix'</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的对象模型节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scope</strong>
+									</td>
+									<td class="description last">
+										<p>该节点根据范围表示不同类型的转换。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从框架状态中提取模型引用，然后
+根据范围更新统一值。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Object3DNode.html#update">Object3DNode#update</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/src/nodes/accessors/ModelNode.js" translate="no" target="_blank" rel="noopener"> src/nodes/accessors/ModelNode.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

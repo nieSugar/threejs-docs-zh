@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Scene - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → </p>
+	<h1 translate="no">Scene</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Scenes 允许您设置要渲染的内容以及 Three.js 的渲染位置。
+您可以在此处放置网格、线条或灯光等 3D 对象。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Scene" translate="no">new <a href="#Scene">Scene</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新场景。</p>
+						</div>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="background" translate="no">.<a href="#background">background</a><span class="type-signature"> : <a href="Color.html">Color</a> | <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>定义场景的背景。有效输入为：</p>
+<ul>
+<li>用于定义均匀颜色背景的颜色。</li>
+<li>用于定义（平面）纹理背景的纹理。</li>
+<li>立方体纹理或等矩形纹理，用于定义天空盒。</li>
+</ul>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="backgroundBlurriness" translate="no">.<a href="#backgroundBlurriness">backgroundBlurriness</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>设置背景的模糊度。仅影响环境贴图
+分配给 <a href="Scene.html#background">Scene#background</a>。有效输入是 <code>0</code> 之间的浮点数
+和 <code>1</code>.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="backgroundIntensity" translate="no">.<a href="#backgroundIntensity">backgroundIntensity</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p> 减弱背景颜色。仅适用于背景纹理。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="backgroundRotation" translate="no">.<a href="#backgroundRotation">backgroundRotation</a><span class="type-signature"> : <a href="Euler.html">Euler</a></span> </h3>
+					<div class="description">
+						<p>背景的旋转弧度。仅影响环境贴图
+分配给 <a href="Scene.html#background">Scene#background</a>.</p>
+						<p>默认为<code>(0,0,0)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="environment" translate="no">.<a href="#environment">environment</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p> 设置场景中所有物理材质的环境贴图。然而，
+无法覆盖分配给 <code>envMap</code> 的现有纹理
+材质属性.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="environmentIntensity" translate="no">.<a href="#environmentIntensity">environmentIntensity</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>减弱环境的颜色。仅影响环境贴图
+分配给<a href="Scene.html#environment">Scene#environment</a>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="environmentRotation" translate="no">.<a href="#environmentRotation">environmentRotation</a><span class="type-signature"> : <a href="Euler.html">Euler</a></span> </h3>
+					<div class="description">
+						<p>环境贴图的旋转（以弧度为单位）。只影响物理材质
+在使用 <a href="Scene.html#environment">Scene#environment</a> 时的场景中。</p>
+						<p>默认为<code>(0,0,0)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="fog" translate="no">.<a href="#fog">fog</a><span class="type-signature"> : <a href="Fog.html">Fog</a> | <a href="FogExp2.html">FogExp2</a></span> </h3>
+					<div class="description">
+						<p>定义影响所有内容的雾类型的雾实例
+在场景中渲染。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isScene" translate="no">.<a href="#isScene">isScene</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="overrideMaterial" translate="no">.<a href="#overrideMaterial">overrideMaterial</a><span class="type-signature"> : <a href="Material.html">Material</a></span> </h3>
+					<div class="description">
+						<p>强制使用定义的材质渲染场景中的所有内容。有可能
+通过将 <a href="Material.html#allowOverride">Material#allowOverride</a> 设置为 <code>false</code>.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p><a href="https://github.com/mrdoob/three.js/blob/master/src/scenes/Scene.js" translate="no" target="_blank" rel="noopener"> src/scenes/Scene.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>SSAAPassNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → <a href="PassNode.html">PassNode</a> → </p>
+	<h1 translate="no">SSAAPassNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>一个特殊的渲染通道节点，使用 SSAA（超级采样抗锯齿）渲染场景。
+这种手动 SSAA 方法会通过相机抖动重新渲染每个样本的场景并累积结果。</p>
+<p>该节点产生高质量的抗锯齿输出，但也非常昂贵，因为
+它多次重新渲染整个场景的强力方法。</p>
+<p>参考：<a href="https://en.wikipedia.org/wiki/Supersampling" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Supersampling</a></p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">SSAAPassNode</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="SSAAPassNode" translate="no">new <a href="#SSAAPassNode">SSAAPassNode</a><span class="signature">( scene : <span class="param-type"><a href="Scene.html">Scene</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新的SSAA通关节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要渲染的场景.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>用于渲染场景的相机。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isSSAAPassNode" translate="no">.<a href="#isSSAAPassNode">isSSAAPassNode</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sampleLevel" translate="no">.<a href="#sampleLevel">sampleLevel</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>指定样本级别为n，其中样本数量为2^n，
+所以sampleLevel = 4，是2^4个样本，16.</p>
+						<p>默认为<code>4</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sampleWeight" translate="no">.<a href="#sampleWeight">sampleWeight</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>代表样本权重的统一节点。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="unbiased" translate="no">.<a href="#unbiased">unbiased</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否应减少舍入误差。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要该通道时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="PassNode.html#dispose">PassNode#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于设置效果的 MRT 配置和四边形网格。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="PassNode.html#setup">PassNode#setup</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于每次渲染一次 SSAA 效果框架.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="PassNode.html#updateBefore">PassNode#updateBefore</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p><a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/display/SSAAPassNode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/display/SSAAPassNode.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

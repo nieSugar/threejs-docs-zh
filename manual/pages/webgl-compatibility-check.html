@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>WebGL 兼容性检查</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – WebGL Compatibility Check">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>WebGL 兼容性检查</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>
+            虽然这个问题越来越少，但一些设备或浏览器仍可能不支持 WebGL 2。
+            以下方法可以让你检查是否支持，如果不支持则向用户显示消息。
+            导入 WebGL 支持检测模块，并在尝试渲染任何内容之前运行以下内容。
+          </p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import WebGL from 'three/addons/capabilities/WebGL.js';
+
+if ( WebGL.isWebGL2Available() ) {
+
+  // Initiate function or other initializations here
+  animate();
+
+} else {
+
+  const warning = WebGL.getWebGL2ErrorMessage();
+  document.getElementById( 'container' ).appendChild( warning );
+
+}
+</pre>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

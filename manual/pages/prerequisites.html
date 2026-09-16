@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>前提条件</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Prerequisites">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>前提条件</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>这些文章旨在帮助你学习如何使用 three.js。它们假设你会使用 JavaScript 编程。它们假设你知道什么是 DOM，如何编写 HTML，以及如何在 JavaScript 中创建 DOM 元素。它们假设你知道如何通过 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">es6 模块</a> 使用 import 和 <code class="notranslate" translate="no">&lt;script type="module"&gt;</code> 标签。它们假设你知道如何使用 import maps。它们假设你了解一些 CSS，并且知道 <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors">CSS 选择器</a> 是什么。它们还假设你了解 ES5、ES6 以及可能的一些 ES7。它们假设你知道浏览器仅通过事件和回调来运行 JavaScript。它们假设你知道什么是闭包。</p>
+<p>以下是一些简短的复习和笔记</p>
+<h2 id="es6-modules">es6 模块</h2>
+<p>es6 模块可以通过脚本中的 <code class="notranslate" translate="no">import</code> 关键字加载，或通过 <code class="notranslate" translate="no">&lt;script type="module"&gt;</code> 标签内联加载。这里是一个示例</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">
+&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "three": "./path/to/three.module.js",
+    "three/addons/": "./different/path/to/examples/jsm/"
+  }
+}
+&lt;/script&gt;
+
+&lt;script type="module"&gt;
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+...
+
+&lt;/script&gt;
+</pre>
+<p>更多细节请参见 <a href="fundamentals.html">这篇文章</a> 的底部。</p>
+<h2 id="-document-queryselector-and-document-queryselectorall-"><code class="notranslate" translate="no">document.querySelector</code> 和 <code class="notranslate" translate="no">document.querySelectorAll</code></h2>
+<p>你可以使用 <code class="notranslate" translate="no">document.querySelector</code> 来选择匹配 CSS 选择器的第一个元素。<code class="notranslate" translate="no">document.querySelectorAll</code> 返回匹配 CSS 选择器的所有元素。</p>
+<h2 id="you-don-t-need-onload-">你不需要 <code class="notranslate" translate="no">onload</code></h2>
+<p>许多20年前的页面使用类似 HTML 的代码</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">&lt;body onload="somefunction()"&gt;
+</pre><p>那种样式已被弃用。将你的脚本放在页面的底部。</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;html&gt;
+  &lt;head&gt;
+    ...
+  &lt;/head&gt;
+  &lt;body&gt;
+     ...
+  &lt;/body&gt;
+  &lt;script&gt;
+    // inline javascript
+  &lt;/script&gt;
+&lt;/html&gt;
+</pre>
+<p>或者 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">使用 <code class="notranslate" translate="no">defer</code> 属性</a>。</p>
+<h2 id="know-how-closures-work">了解闭包是如何工作的</h2>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function a(v) {
+  const foo = v;
+  return function() {
+     return foo;
+  };
+}
+
+const f = a(123);
+const g = a(456);
+console.log(f());  // prints 123
+console.log(g());  // prints 456
+</pre>
+<p>在上面的代码中，每次调用函数 <code class="notranslate" translate="no">a</code> 时都会创建一个新函数。该函数 <em>闭合</em> 变量 <code class="notranslate" translate="no">foo</code>。这里有 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures">更多信息</a>。</p>
+<h2 id="understand-how-this-works">理解 <code class="notranslate" translate="no">this</code> 的工作原理</h2>
+<p><code class="notranslate" translate="no">this</code> 不是魔法。它实际上是一个变量，会像将参数传递给函数一样自动传递给函数。简单的解释是，当你直接调用一个函数时，比如 </p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">somefunction(a, b, c);
+</pre><p><code class="notranslate" translate="no">this</code> 将会是 <code class="notranslate" translate="no">null</code>（在严格模式或模块中），而当你通过点操作符调用函数时 <code class="notranslate" translate="no">.</code>，例如 </p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">someobject.somefunction(a, b, c);
+</pre><p>，<code class="notranslate" translate="no">this</code> 会被设置为 <code class="notranslate" translate="no">someobject</code>。</p>
+<p>人们容易困惑的部分是在回调函数上。</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no"> const callback = someobject.somefunction;
+ loader.load(callback);
+</pre><p>不会像经验不足的人所期望的那样工作，因为当 <code class="notranslate" translate="no">loader.load</code> 调用回调时，它并不是用点操作符 <code class="notranslate" translate="no">.</code> 来调用的，所以默认情况下 <code class="notranslate" translate="no">this</code> 将是 null（除非加载器明确将其设置为某个值）。如果你希望在回调发生时 <code class="notranslate" translate="no">this</code> 是 <code class="notranslate" translate="no">someobject</code>，你需要通过将其绑定到函数来告诉 JavaScript。</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no"> const callback = someobject.somefunction.bind(someobject);
+ loader.load(callback);
+</pre><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"><em>this</em> 文章可能有助于解释 <code class="notranslate" translate="no">this</code></a>。</p>
+<h2 id="es5-es6-es7-stuff">ES5/ES6/ES7 相关内容</h2>
+<h3 id="-var-is-deprecated-use-const-and-or-let-"><code class="notranslate" translate="no">var</code> 已被弃用。请使用 <code class="notranslate" translate="no">const</code> 和/或 <code class="notranslate" translate="no">let</code></h3>
+<p>没有理由 <strong>永远</strong> 使用 <code class="notranslate" translate="no">var</code>，现在使用它完全被认为是不好的做法。如果变量永远不会被重新赋值（大多数情况下都是这样），请使用 <code class="notranslate" translate="no">const</code>。在那些值会变化的情况下使用 <code class="notranslate" translate="no">let</code>。这将有助于避免大量的错误。</p>
+<h3 id="use-for-elem-of-collection-never-for-elem-in-collection-">永远不要使用 <code class="notranslate" translate="no">for(elem of collection)</code>，使用 <code class="notranslate" translate="no">for(elem in collection)</code></h3>
+<p><code class="notranslate" translate="no">for of</code> 是新的，<code class="notranslate" translate="no">for in</code> 是旧的。<code class="notranslate" translate="no">for in</code> 有问题，<code class="notranslate" translate="no">for of</code> 解决了这些问题。</p>
+<p>例如，你可以迭代对象的所有键/值对</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">for (const [key, value] of Object.entries(someObject)) {
+  console.log(key, value);
+}
+</pre>
+<h3 id="use-foreach-map-and-filter-where-useful">在有用的地方使用 <code class="notranslate" translate="no">forEach</code>、<code class="notranslate" translate="no">map</code> 和 <code class="notranslate" translate="no">filter</code></h3>
+<p>数组添加了函数 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"><code class="notranslate" translate="no">forEach</code></a>、<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"><code class="notranslate" translate="no">map</code></a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter"><code class="notranslate" translate="no">filter</code></a>，并且在现代 JavaScript 中被广泛使用。</p>
+<h3 id="use-destructuring">使用解构</h3>
+<p>假设一个对象 <code class="notranslate" translate="no">const dims = {width: 300, height: 150}</code></p>
+<p>旧代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const width = dims.width;
+const height = dims.height;
+</pre>
+<p>新代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const {width, height} = dims;
+</pre>
+<p>解构也适用于数组。假设有一个数组 <code class="notranslate" translate="no">const position = [5, 6, 7, 1]</code>;</p>
+<p>旧代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const y = position[1];
+const z = position[2];
+</pre>
+<p>新代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const [, y, z] = position;
+</pre>
+<p>解构也适用于函数参数</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const dims = {width: 300, height: 150};
+const vector = [3, 4];
+
+function lengthOfVector([x, y]) {
+  return Math.sqrt(x * x + y * y);
+}
+
+const dist = lengthOfVector(vector);  // dist = 5
+
+function area({width, height}) {
+  return width * height;
+}
+const a = area(dims);  // a = 45000
+</pre>
+<h3 id="use-object-declaration-short-cuts">使用对象声明简写</h3>
+<p>旧代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no"> const width = 300;
+ const height = 150;
+ const obj = {
+   width: width,
+   height: height,
+   area: function() {
+     return this.width * this.height
+   },
+ };
+</pre>
+<p>新代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no"> const width = 300;
+ const height = 150;
+ const obj = {
+   width,
+   height,
+   area() {
+     return this.width * this.height;
+   },
+ };
+</pre>
+<h3 id="use-the-rest-parameter-and-the-spread-operator-">使用剩余参数和扩展运算符 <code class="notranslate" translate="no">...</code></h3>
+<p>剩余参数可以用来接收任意数量的参数。例如</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no"> function log(className, ...args) {
+   const elem = document.createElement('div');
+   elem.className = className;
+   elem.textContent = args.join(' ');
+   document.body.appendChild(elem);
+ }
+</pre>
+<p>扩展运算符可以用来将可迭代对象展开为参数</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const position = [1, 2, 3];
+someMesh.position.set(...position);
+</pre>
+<p>或者复制数组</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const copiedPositionArray = [...position];
+copiedPositionArray.push(4); // [1,2,3,4]
+console.log(position); // [1,2,3] position is unaffected
+</pre>
+<p>或者合并对象</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">const a = {abc: 123};
+const b = {def: 456};
+const c = {...a, ...b};  // c is now {abc: 123, def: 456}
+</pre><h3 id="use-class-">使用 <code class="notranslate" translate="no">class</code></h3>
+<p>在 ES5 之前，创建类对象的语法对大多数程序员来说是不熟悉的。从 ES5 开始，你现在可以<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">使用 <code class="notranslate" translate="no">class</code> 关键字</a>，这种语法更接近 C++/C#/Java 的风格。</p>
+<h3 id="understand-getters-and-setters">理解 getter 和 setter</h3>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get">Getter</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set">Setter</a> 在大多数现代语言中都很常见。ES5 的 <code class="notranslate" translate="no">class</code> 语法使它们比 ES5 之前更容易使用。</p>
+<h3 id="use-arrow-functions-where-appropriate">在适当的地方使用箭头函数</h3>
+<p>这在回调函数和 Promise 中尤其有用。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">loader.load((texture) =&gt; {
+  // use texture
+});
+</pre>
+<p>箭头函数将 <code class="notranslate" translate="no">this</code> 绑定到创建箭头函数时的上下文。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const foo = (args) =&gt; {/* code */};
+</pre>
+<p>是</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const foo = (function(args) {/* code */}).bind(this));
+</pre>
+<p>的快捷方式。有关 <code class="notranslate" translate="no">this</code> 的详细信息，请参见上面的链接。</p>
+<h3 id="promises-as-well-as-async-await">Promise 以及 async/await</h3>
+<p>Promise 有助于异步代码。Async/await 有助于使用 Promise。</p>
+<p>它是一个过于庞大的主题，无法在此详细说明，但您可以 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">在这里阅读关于 Promise 的内容</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await">在这里阅读关于 async/await 的内容</a>。</p>
+<h3 id="use-template-literals">使用模板字符串</h3>
+<p>模板字符串是使用反引号而不是引号的字符串。</p>
+<pre class="prettyprint showlinemods notranslate notranslate" translate="no">const foo = `this is a template literal`;
+</pre><p>模板字符串基本上有两个功能。一是它们可以多行</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const foo = `this
+is
+a
+template
+literal`;
+const bar = "this\nis\na\ntemplate\nliteral";
+</pre>
+<p><code class="notranslate" translate="no">foo</code> 和 <code class="notranslate" translate="no">bar</code> 上面是相同的。</p>
+<p>另一个是你可以退出字符串模式并使用 <code class="notranslate" translate="no">${javascript-expression}</code> 插入 JavaScript 代码片段。这就是模板部分。例如：</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const r = 192;
+const g = 255;
+const b = 64;
+const rgbCSSColor = `rgb(${r},${g},${b})`;
+</pre>
+<p>或者</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const color = [192, 255, 64];
+const rgbCSSColor = `rgb(${color.join(',')})`;
+</pre>
+<p>或者</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const aWidth = 10;
+const bWidth = 20;
+someElement.style.width = `${aWidth + bWidth}px`;
+</pre>
+<h1 id="learn-javascript-coding-conventions-">学习 JavaScript 编码规范。</h1>
+<p>虽然你可以按自己选择的方式格式化代码，但至少有一个约定你应该了解。JavaScript 中的变量、函数名、方法名都是小写驼峰式命名（lowerCasedCamelCase）。构造函数和类名是大写驼峰式命名（CapitalizedCamelCase）。如果你遵循这个规则，你的代码将与大多数 JavaScript 代码保持一致。许多 <a href="https://eslint.org">代码检查工具</a>，即检查代码中明显错误的程序，如果你使用了错误的大小写，会指出错误，因为遵循上述约定，它们可以知道你何时使用不正确。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const v = new vector(); // clearly an error if all classes start with a capital letter
+const v = Vector();     // clearly an error if all functions start with a lowercase letter.
+</pre>
+<h1 id="consider-using-visual-studio-code">考虑使用 Visual Studio Code</h1>
+<p>当然可以使用你想要的任何编辑器，但如果你还没有尝试过，可以考虑使用<a href="https://code.visualstudio.com/">Visual Studio Code</a>来进行JavaScript开发，并在安装后<a href="https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint">设置eslint</a>。可能需要几分钟来进行设置，但它会极大地帮助你发现JavaScript中的错误。</p>
+<p>一些示例</p>
+<p>如果你启用了<a href="https://eslint.org/docs/rules/no-undef"><code class="notranslate" translate="no">no-undef</code>规则</a>，那么通过ESLint，VSCode会提示你很多未定义的变量。</p>
+<div class="threejs_center"><img style="width: 615px;" src="../resources/images/vscode-eslint-not-defined.png"></div>
+
+<p>在上面你可以看到我把 <code class="notranslate" translate="no">doTheThing</code> 错拼成了 <code class="notranslate" translate="no">doThing</code>。在 <code class="notranslate" translate="no">doThing</code> 下有一个红色波浪线，鼠标悬停上去它告诉我未定义。一个错误被避免了。</p>
+<p>如果你使用 <code class="notranslate" translate="no">&lt;script&gt;</code> 标签来引入 three.js，使用 <code class="notranslate" translate="no">THREE</code> 会收到警告，所以在你的 JavaScript 文件顶部添加 <code class="notranslate" translate="no">/* global THREE */</code> 来告诉 eslint <code class="notranslate" translate="no">THREE</code> 存在。（或者更好地，使用 <code class="notranslate" translate="no">import</code> 😉）</p>
+<div class="threejs_center"><img style="width: 615px;" src="../resources/images/vscode-eslint-not-a-constructor.png"></div>
+
+<p>上面你可以看到 eslint 知道 <code class="notranslate" translate="no">UpperCaseNames</code> 是构造函数的规则，因此你应该使用 <code class="notranslate" translate="no">new</code>。另一个错误被捕捉并避免了。这是 <a href="https://eslint.org/docs/rules/new-cap"><code class="notranslate" translate="no">new-cap</code> 规则</a>。</p>
+<p>有 <a href="https://eslint.org/docs/rules/">成百上千的规则可以开启、关闭或自定义</a>。例如，上面我提到你应该使用 <code class="notranslate" translate="no">const</code> 和 <code class="notranslate" translate="no">let</code> 而不是 <code class="notranslate" translate="no">var</code>。</p>
+<p>在这里我使用了 <code class="notranslate" translate="no">var</code>，它提醒我应该使用 <code class="notranslate" translate="no">let</code> 或 <code class="notranslate" translate="no">const</code>。</p>
+<div class="threejs_center"><img style="width: 615px;" src="../resources/images/vscode-eslint-var.png"></div>
+
+<p>在这里我使用了 <code class="notranslate" translate="no">let</code>，但它发现我从未更改这个值，所以建议我使用 <code class="notranslate" translate="no">const</code>。</p>
+<div class="threejs_center"><img style="width: 615px;" src="../resources/images/vscode-eslint-let.png"></div>
+
+<p>当然，如果你更愿意继续使用 <code class="notranslate" translate="no">var</code>，你可以直接关闭那个规则。正如我上面所说的，我更喜欢使用 <code class="notranslate" translate="no">const</code> 和 <code class="notranslate" translate="no">let</code> 而不是 <code class="notranslate" translate="no">var</code>，因为它们效果更好并且可以防止错误。</p>
+<p>对于那些你确实需要覆盖规则的情况，<a href="https://eslint.org/docs/user-guide/configuring#disabling-rules-with-inline-comments">你可以添加注释来禁用它们</a>，适用于单行或一段代码。</p>
+<h1 id="if-you-really-need-to-support-legacy-browsers-use-a-transpiler">如果你确实需要支持旧版本浏览器，可以使用转译器。</h1>
+<p>大多数现代浏览器都会自动更新，因此使用所有这些功能将帮助你提高工作效率并避免错误。话虽如此，如果你正在进行一个必须支持旧浏览器的项目，<a href="https://babeljs.io">有一些工具可以将你的 ES5/ES6/ES7 代码转译回 ES5 之前的 Javascript</a>。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

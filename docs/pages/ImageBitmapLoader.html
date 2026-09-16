@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>ImageBitmapLoader - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="Loader.html">Loader</a> → </p>
+	<h1 translate="no">ImageBitmapLoader</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于将图像加载为 <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap" target="_blank" rel="noopener">ImageBitmap</a> 的加载器。
+<code>ImageBitmap</code> 提供了一种异步且资源高效的途径来准备
+用于渲染的纹理。</p>
+<p>注意，图像位图会忽略<a href="Texture.html#flipY">Texture#flipY</a>和<a href="Texture.html#premultiplyAlpha">Texture#premultiplyAlpha</a>。
+这些选项需要在加载之前通过 <a href="ImageBitmapLoader.html#setOptions">ImageBitmapLoader#setOptions</a> 配置，
+与可以在纹理上配置以在 GPU 上传时设置这些选项的常规图像不同。</p>
+<p>为了匹配 <a href="Texture.html">Texture</a> 的默认行为，需要以下选项：</p>
+<pre><code class="language-js">{ imageOrientation: 'flipY', premultiplyAlpha: 'none' }
+</code></pre>
+<p>另请注意，与 <a href="FileLoader.html">FileLoader</a> 不同，此加载程序只会避免对如果启用 <a href="Cache.html">Cache</a>，则为相同的 URL。</p>
+<pre><code class="language-js">const loader = new THREE.ImageBitmapLoader();
+loader.setOptions( { imageOrientation: 'flipY' } ); // set options if needed
+const imageBitmap = await loader.loadAsync( 'image.png' );
+const texture = new THREE.Texture( imageBitmap );
+texture.needsUpdate = true;
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="ImageBitmapLoader" translate="no">new <a href="#ImageBitmapLoader">ImageBitmapLoader</a><span class="signature">( manager : <span class="param-type"><a href="LoadingManager.html">LoadingManager</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 构造新的图像位图加载器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">manager</strong>
+									</td>
+									<td class="description last">
+										<p>加载管理器。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isImageBitmapLoader" translate="no">.<a href="#isImageBitmapLoader">isImageBitmapLoader</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="options" translate="no">.<a href="#options">options</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p> 表示加载器选项。</p>
+						<p> 默认为<code>{premultiplyAlpha:'none'}</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="abort" translate="no">.<a href="#abort">abort</a><span class="signature">()</span><span class="type-signature"> : <a href="ImageBitmapLoader.html">ImageBitmapLoader</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>中止正在进行的提取requests.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#abort">Loader#abort</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( url : <span class="param-type">string</span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>开始从给定的 URL 加载并将加载的图像位图传递给 <code>onLoad()</code> 回调。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">url</strong>
+									</td>
+									<td class="description last">
+										<p>要加载的文件的路径/URL。这也可以是数据 URI。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onLoad</strong>
+									</td>
+									<td class="description last">
+										<p>加载过程完成时执行。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onProgress</strong>
+									</td>
+									<td class="description last">
+										<p> 此加载程序不支持。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onError</strong>
+									</td>
+									<td class="description last">
+										<p>发生错误时执行。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#load">Loader#load</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setOptions" translate="no">.<a href="#setOptions">setOptions</a><span class="signature">( options : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ImageBitmapLoader.html">ImageBitmapLoader</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置给定的加载器选项。对象的结构必须与 <code>options</code> 参数匹配
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap" target="_blank" rel="noopener">createImageBitmap</a>.</p>
+<p>注意：启用缓存后，缓存键仅基于 URL。加载相同的 URL
+不同的选项将返回第一个请求的缓存结果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>要设置的加载器选项。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此图像位图加载器的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/loaders/ImageBitmapLoader.js" translate="no" target="_blank" rel="noopener"> src/loaders/ImageBitmapLoader.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

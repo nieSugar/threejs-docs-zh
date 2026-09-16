@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>MaskPass - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="Pass.html">Pass</a> → </p>
+	<h1 translate="no">MaskPass</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此通道可用于在后处理期间定义掩码。
+意味着仅后续后处理的区域受到影响
+位于该通道的掩蔽区域中。在内部，掩蔽
+使用模板缓冲区实现。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const maskPass = new MaskPass( scene, camera );
+composer.addPass( maskPass );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">MaskPass</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { MaskPass } from 'three/addons/postprocessing/MaskPass.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="MaskPass" translate="no">new <a href="#MaskPass">MaskPass</a><span class="signature">( scene : <span class="param-type"><a href="Scene.html">Scene</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的遮罩通道。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>该场景中的3D对象将定义遮罩。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>相机.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
+					<div class="description">
+						<p>相机.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="clear" translate="no">.<a href="#clear">clear</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>默认覆盖以执行清除操作。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Pass.html#clear">Pass#clear</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="inverse" translate="no">.<a href="#inverse">inverse</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否反转遮罩.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="needsSwap" translate="no">.<a href="#needsSwap">needsSwap</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>覆盖以禁用交换.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Pass.html#needsSwap">Pass#needsSwap</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="scene" translate="no">.<a href="#scene">scene</a><span class="type-signature"> : <a href="Scene.html">Scene</a></span> </h3>
+					<div class="description">
+						<p>该场景定义遮罩。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="render" translate="no">.<a href="#render">render</a><span class="signature">( renderer : <span class="param-type"><a href="WebGLRenderer.html">WebGLRenderer</a></span>, writeBuffer : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span>, readBuffer : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span>, deltaTime : <span class="param-type">number</span>, maskActive : <span class="param-type">boolean</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>使用配置的场景和相机执行遮罩通道。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">writeBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>写入缓冲区。该缓冲区旨在作为渲染
+传递的目的地。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">readBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>读缓冲区。该通行证可以访问结果
+此缓冲区的上一次传递。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">deltaTime</strong>
+									</td>
+									<td class="description last">
+										<p>以秒为单位的增量时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">maskActive</strong>
+									</td>
+									<td class="description last">
+										<p>屏蔽是否处于活动状态。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Pass.html#render">Pass#render</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+				<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/postprocessing/MaskPass.js" translate="no" target="_blank" rel="noopener"> examples/jsm/postprocessing/MaskPass.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

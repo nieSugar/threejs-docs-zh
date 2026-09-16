@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Raycaster - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Raycaster</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此类旨在协助光线投射。光线投射用于
+鼠标拾取（计算出鼠标位于 3D 空间中的哪些对象）
+除此之外.</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Raycaster" translate="no">new <a href="#Raycaster">Raycaster</a><span class="signature">( origin : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, direction : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, near : <span class="param-type">number</span>, far : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的光线投射器.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">origin</strong>
+									</td>
+									<td class="description last">
+										<p>光线投射的原点向量.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">direction</strong>
+									</td>
+									<td class="description last">
+										<p>为光线提供方向的（归一化）方向向量.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">near</strong>
+									</td>
+									<td class="description last">
+										<p>返回的所有结果都比近处更远。近不能为负。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">far</strong>
+									</td>
+									<td class="description last">
+										<p>返回的所有结果都比远更近。远不能低于近。</p>
+										<p>默认为 <code>Infinity</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
+					<div class="description">
+						<p>针对依赖于视图的对象进行光线投射时使用的相机，例如
+广告牌上的对象，例如精灵。该字段可以手动设置或
+在调用 <code>setFromCamera()</code> 时设置。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="far" translate="no">.<a href="#far">far</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>返回的所有结果都比远更近。远不能低于近。</p>
+						<p>默认为 <code>Infinity</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="layers" translate="no">.<a href="#layers">layers</a><span class="type-signature"> : <a href="Layers.html">Layers</a></span> </h3>
+					<div class="description">
+						<p> 允许在执行相交测试时有选择地忽略 3D 对象。
+以下代码示例确保只有 <code>1</code> 层上的 3D 对象才会被
+由 raycaster 授予。</p>
+<pre><code class="language-js">raycaster.layers.set( 1 );
+object.layers.enable( 1 );
+</code></pre>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="near" translate="no">.<a href="#near">near</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>返回的所有结果都比近处更远。近不能为负。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="params" translate="no">.<a href="#params">params</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>配置光线投射的参数对象。它具有以下结构：</p>
+<pre class="prettyprint source"><code>{
+	Mesh: {},
+	Line: { threshold: 1 },
+	LOD: {},
+	Points: { threshold: 1 },
+	Sprite: {}
+}
+</code></pre>
+<p>其中<code>threshold</code>是光线投射器在与对象相交时的精度（以世界单位表示）。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="ray" translate="no">.<a href="#ray">ray</a><span class="type-signature"> : <a href="Ray.html">Ray</a></span> </h3>
+					<div class="description">
+						<p>用于光线投射的光线。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="intersectObject" translate="no">.<a href="#intersectObject">intersectObject</a><span class="signature">( object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, recursive : <span class="param-type">boolean</span>, intersects : <span class="param-type">Array.&lt;<a href="Raycaster.html#~Intersection">Raycaster~Intersection</a>></span> )</span><span class="type-signature"> : Array.&lt;<a href="Raycaster.html#~Intersection">Raycaster~Intersection</a>></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检查光线与物体之间有或没有相交的所有相交的
+后代。返回的交点按距离排序，最接近的在前。</p>
+<p><code>Raycaster</code> 委托给所传递的 3D 对象的 <code>raycast()</code> 方法，当
+评估光线是否与物体相交。这允许网格响应
+与射线投射与线或点不同。</p>
+<p>注意，对于网格体，面必须按顺序指向射线原点
+被检测到；穿过脸部背面的光线的交点不会
+被检测到。要对对象的两个面进行光线投射，您需要设置 <a href="Material.html#side">Material#side</a>
+到 <code>THREE.DoubleSide</code>.</p>
+<p>请注意，精确地沿着两个面共享的边撞击三角形网格的光线可能是
+由两个面报告，导致两个重合的交叉点（相同的点和
+返回数组中的距离）。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>要检查与ray.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">recursive</strong>
+									</td>
+									<td class="description last">
+										<p>如果设置为 <code>true</code>，它还会检查所有后代。
+否则，它仅检查与对象的相交。</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">intersects</strong>
+									</td>
+									<td class="description last">
+										<p>保存方法结果的目标数组。</p>
+										<p>默认为<code>[]</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 保存交点的数组。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="intersectObjects" translate="no">.<a href="#intersectObjects">intersectObjects</a><span class="signature">( objects : <span class="param-type">Array.&lt;<a href="Object3D.html">Object3D</a>></span>, recursive : <span class="param-type">boolean</span>, intersects : <span class="param-type">Array.&lt;<a href="Raycaster.html#~Intersection">Raycaster~Intersection</a>></span> )</span><span class="type-signature"> : Array.&lt;<a href="Raycaster.html#~Intersection">Raycaster~Intersection</a>></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检查光线与有或没有的物体之间的所有交集
+后代。返回的交点按距离排序，最接近的在前。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">objects</strong>
+									</td>
+									<td class="description last">
+										<p>要检查与射线是否相交的 3D 对象。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">recursive</strong>
+									</td>
+									<td class="description last">
+										<p>如果设置为 <code>true</code>，它还会检查所有后代。
+否则，它仅检查与对象的相交。</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">intersects</strong>
+									</td>
+									<td class="description last">
+										<p>保存方法结果的目标数组。</p>
+										<p>默认为<code>[]</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 保存交点的数组。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="set" translate="no">.<a href="#set">set</a><span class="signature">( origin : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, direction : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>通过复制参数中的值，用新的原点和方向更新射线。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">origin</strong>
+									</td>
+									<td class="description last">
+										<p>光线投射的原点向量.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">direction</strong>
+									</td>
+									<td class="description last">
+										<p>为光线提供方向的（归一化）方向向量.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setFromCamera" translate="no">.<a href="#setFromCamera">setFromCamera</a><span class="signature">( coords : <span class="param-type"><a href="Vector2.html">Vector2</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>使用给定的坐标和相机计算内部射线的新原点和方向。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">coords</strong>
+									</td>
+									<td class="description last">
+										<p>以标准化设备坐标表示的鼠标的 2D 坐标（国家数据中心）。
+X 和 Y 分量应位于 <code>-1</code> 和 <code>1</code> 之间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>光线应源自的相机。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setFromXRController" translate="no">.<a href="#setFromXRController">setFromXRController</a><span class="signature">( controller : <span class="param-type"><a href="WebXRController.html">WebXRController</a></span> )</span><span class="type-signature"> : <a href="Raycaster.html">Raycaster</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>使用给定的 WebXR 控制器计算内部图像的新原点和方向射线.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">controller</strong>
+									</td>
+									<td class="description last">
+										<p>复制位置和方向的控制器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此光线投射器的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">类型定义</h2>
+				<div class="member">
+					<h3 class="name" id="~Intersection" translate="no">.<a href="#~Intersection">Intersection</a> </h3>
+					<div class="description">
+						<p>光线投射器相交测试的交点。</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>distance</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>距离射线的原点到交点。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>distanceToRay</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>一些 3D 对象，例如<a href="Points.html">Points</a> 提供
+与射线上最近点的交点。对于其他对象，它将是<code>undefined</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>point</strong>
+						<br>
+<span class="param-type"><a href="Vector3.html">Vector3</a></span>
+				</td>
+			<td class="description last">
+				<p>世界坐标中的交点。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>face</strong>
+						<br>
+<span class="param-type">Object</span>
+				</td>
+			<td class="description last">
+				<p>已相交的面.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>faceIndex</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>面索引.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>object</strong>
+						<br>
+<span class="param-type"><a href="Object3D.html">Object3D</a></span>
+				</td>
+			<td class="description last">
+				<p>3D已相交的对象。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>uv</strong>
+						<br>
+<span class="param-type"><a href="Vector2.html">Vector2</a></span>
+				</td>
+			<td class="description last">
+				<p>交点处的 U,V 坐标。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>uv1</strong>
+						<br>
+<span class="param-type"><a href="Vector2.html">Vector2</a></span>
+				</td>
+			<td class="description last">
+				<p>交点处的第二组 U、V 坐标。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>normal</strong>
+						<br>
+<span class="param-type"><a href="Vector3.html">Vector3</a></span>
+				</td>
+			<td class="description last">
+				<p>交点处的插值法向量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>instanceId</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>实例所在实例的索引号雷
+与 <a href="InstancedMesh.html">InstancedMesh</a>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js" translate="no" target="_blank" rel="noopener"> src/core/Raycaster.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

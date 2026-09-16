@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>OrthographicCamera - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → <a href="Camera.html">Camera</a> → </p>
+	<h1 translate="no">OrthographicCamera</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用<a href="https://en.wikipedia.org/wiki/Orthographic_projection" target="_blank" rel="noopener">正交投影</a>的相机.</p>
+<p>在此投影中模式下，渲染图像中对象的大小保持不变
+无论距相机的距离如何，都是恒定的。这可能很有用
+用于渲染 2D 场景和 UI 元素等。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+scene.add( camera );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="OrthographicCamera" translate="no">new <a href="#OrthographicCamera">OrthographicCamera</a><span class="signature">( left : <span class="param-type">number</span>, right : <span class="param-type">number</span>, top : <span class="param-type">number</span>, bottom : <span class="param-type">number</span>, near : <span class="param-type">number</span>, far : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的正交相机。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">left</strong>
+									</td>
+									<td class="description last">
+										<p>相机平截头体的左平面。</p>
+										<p>默认为 <code>-1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">right</strong>
+									</td>
+									<td class="description last">
+										<p>相机平截头体的右平面.</p>
+										<p>默认为<code>1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">top</strong>
+									</td>
+									<td class="description last">
+										<p>The相机视锥体的顶部平面。</p>
+										<p>默认为<code>1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">bottom</strong>
+									</td>
+									<td class="description last">
+										<p>相机视锥体的底部平面。</p>
+										<p>默认为 <code>-1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">near</strong>
+									</td>
+									<td class="description last">
+										<p>相机的近平面。</p>
+										<p>默认为<code>0.1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">far</strong>
+									</td>
+									<td class="description last">
+										<p>相机的远平面。</p>
+										<p>默认为<code>2000</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="bottom" translate="no">.<a href="#bottom">bottom</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>相机视锥体的底部平面。</p>
+						<p>默认为 <code>-1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="far" translate="no">.<a href="#far">far</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>相机的远平面。必须大于
+<a href="OrthographicCamera.html#near">OrthographicCamera#near</a>.</p>
+						<p>默认为<code>2000</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isOrthographicCamera" translate="no">.<a href="#isOrthographicCamera">isOrthographicCamera</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="left" translate="no">.<a href="#left">left</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>相机平截头体的左平面。</p>
+						<p>默认为 <code>-1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="near" translate="no">.<a href="#near">near</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>相机近平面的当前值。有效范围大于<code>0</code>
+并且小于 <a href="OrthographicCamera.html#far">OrthographicCamera#far</a> 的当前值。</p>
+<p> 请注意，与 <a href="PerspectiveCamera.html">PerspectiveCamera</a> 不同，<code>0</code> 是
+正交相机近平面的有效值。</p>
+						<p>默认为<code>0.1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="right" translate="no">.<a href="#right">right</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>相机平截头体的右平面.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="top" translate="no">.<a href="#top">top</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The相机视锥体的顶部平面。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="view" translate="no">.<a href="#view">view</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>表示视锥体窗口规范。不应编辑此属性
+直接但通过 <a href="PerspectiveCamera.html#setViewOffset">PerspectiveCamera#setViewOffset</a> 和 <a href="PerspectiveCamera.html#clearViewOffset">PerspectiveCamera#clearViewOffset</a>.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="zoom" translate="no">.<a href="#zoom">zoom</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>相机的变焦系数。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="clearViewOffset" translate="no">.<a href="#clearViewOffset">clearViewOffset</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从投影矩阵中删除视图偏移。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="setViewOffset" translate="no">.<a href="#setViewOffset">setViewOffset</a><span class="signature">( fullWidth : <span class="param-type">number</span>, fullHeight : <span class="param-type">number</span>, x : <span class="param-type">number</span>, y : <span class="param-type">number</span>, width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置较大的偏移截锥体。这对于多窗口或
+多屏/多机设置.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">fullWidth</strong>
+									</td>
+									<td class="description last">
+										<p>多视图设置的全宽.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">fullHeight</strong>
+									</td>
+									<td class="description last">
+										<p>多视图设置的全高.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">x</strong>
+									</td>
+									<td class="description last">
+										<p>子摄像头的水平偏移.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">y</strong>
+									</td>
+									<td class="description last">
+										<p>子摄像头的垂直偏移子摄像头.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>子摄像头的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>子摄像头的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-see">参见：</dt>
+							<dd class="tag-see">
+								<ul>
+									<li><a href="PerspectiveCamera.html#setViewOffset">PerspectiveCamera#setViewOffset</a></li>
+								</ul>
+							</dd>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateProjectionMatrix" translate="no">.<a href="#updateProjectionMatrix">updateProjectionMatrix</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>更新相机的投影矩阵。必须在任何更改后调用
+相机属性.</p>
+						</div>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/src/cameras/OrthographicCamera.js" translate="no" target="_blank" rel="noopener"> src/cameras/OrthographicCamera.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

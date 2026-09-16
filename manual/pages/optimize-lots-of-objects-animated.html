@@ -1,0 +1,416 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title> 优化大量动画对象</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Optimize Lots of Objects Animated">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1> 优化大量动画对象</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>本文是<a href="optimize-lots-of-objects.html">关于优化大量对象的文章</a>的延续。如果你还没有阅读，请在继续之前先阅读它。</p>
+<p>在上一篇文章中，我们将大约19000个立方体合并为一个几何体。这的好处是优化了绘制19000个立方体的过程，但缺点是移动任何单独的立方体变得更困难。</p>
+<p>根据我们试图实现的目标，有不同的解决方案。在这种情况下，我们将绘制多组数据并在这些数据组之间动画切换。</p>
+<p>我们首先需要做的是获取多组数据。理想情况下，我们可能会离线预处理数据，但在本例中，让我们加载2组数据并生成另外2组。</p>
+<p>这是我们的旧加载代码</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">loadFile('resources/data/gpw/gpw_v4_basic_demographic_characteristics_rev10_a000_014mt_2010_cntm_1_deg.asc')
+  .then(parseData)
+  .then(addBoxes)
+  .then(render);
+</pre>
+<p>我们将其改为类似这样</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">async function loadData(info) {
+  const text = await loadFile(info.url);
+  info.file = parseData(text);
+}
+
+async function loadAll() {
+  const fileInfos = [
+    {name: 'men',   hueRange: [0.7, 0.3], url: 'resources/data/gpw/gpw_v4_basic_demographic_characteristics_rev10_a000_014mt_2010_cntm_1_deg.asc' },
+    {name: 'women', hueRange: [0.9, 1.1], url: 'resources/data/gpw/gpw_v4_basic_demographic_characteristics_rev10_a000_014ft_2010_cntm_1_deg.asc' },
+  ];
+
+  await Promise.all(fileInfos.map(loadData));
+
+  ...
+}
+loadAll();
+</pre>
+<p>上面的代码会加载 <code class="notranslate" translate="no">fileInfos</code> 中的所有文件，并且完成后 <code class="notranslate" translate="no">fileInfos</code> 中的每个对象都会有一个 <code class="notranslate" translate="no">file</code> 属性，包含加载的文件。<code class="notranslate" translate="no">name</code> 和 <code class="notranslate" translate="no">hueRange</code> 我们稍后会使用。<code class="notranslate" translate="no">name</code> 将用于一个 UI 字段。<code class="notranslate" translate="no">hueRange</code> 将用于选择一个色相范围进行映射。</p>
+<p>上面两个文件显然是截至 2010 年每个地区的男性人数和女性人数。注意，我完全不确定这些数据是否正确，但这其实并不重要。重要的是展示不同的数据集。</p>
+<p>让我们再生成两组数据。一组是男性人数多于女性人数的地方，另一组是女性人数多于男性人数的地方。</p>
+<p>首先，让我们编写一个函数，给定一个像之前一样的二维数组，它将遍历该数组以生成一个新的二维数组</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function mapValues(data, fn) {
+  return data.map((row, rowNdx) =&gt; {
+    return row.map((value, colNdx) =&gt; {
+      return fn(value, rowNdx, colNdx);
+    });
+  });
+}
+</pre>
+<p>像普通的 <code class="notranslate" translate="no">Array.map</code> 函数一样，<code class="notranslate" translate="no">mapValues</code> 函数会对二维数组中的每个值调用一个函数 <code class="notranslate" translate="no">fn</code>。它会传入该值以及行和列的索引。</p>
+<p>现在让我们编写一些代码来生成一个新文件，这个文件是两个文件之间的比较</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function makeDiffFile(baseFile, otherFile, compareFn) {
+  let min;
+  let max;
+  const baseData = baseFile.data;
+  const otherData = otherFile.data;
+  const data = mapValues(baseData, (base, rowNdx, colNdx) =&gt; {
+    const other = otherData[rowNdx][colNdx];
+      if (base === undefined || other === undefined) {
+        return undefined;
+      }
+      const value = compareFn(base, other);
+      min = Math.min(min === undefined ? value : min, value);
+      max = Math.max(max === undefined ? value : max, value);
+      return value;
+  });
+  // make a copy of baseFile and replace min, max, and data
+  // with the new data
+  return {...baseFile, min, max, data};
+}
+</pre>
+<p>上面的代码使用 <code class="notranslate" translate="no">mapValues</code> 来生成一组新的数据，这组数据是基于传入的 <code class="notranslate" translate="no">compareFn</code> 函数进行的比较。它还跟踪了 <code class="notranslate" translate="no">min</code> 和 <code class="notranslate" translate="no">max</code> 的比较结果。最后，它生成一个新文件，拥有与 <code class="notranslate" translate="no">baseFile</code> 相同的所有属性，但具有新的 <code class="notranslate" translate="no">min</code>、<code class="notranslate" translate="no">max</code> 和 <code class="notranslate" translate="no">data</code>。</p>
+<p>然后，让我们使用它来生成 2 组新的数据</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">{
+  const menInfo = fileInfos[0];
+  const womenInfo = fileInfos[1];
+  const menFile = menInfo.file;
+  const womenFile = womenInfo.file;
+
+  function amountGreaterThan(a, b) {
+    return Math.max(a - b, 0);
+  }
+  fileInfos.push({
+    name: '&gt;50%men',
+    hueRange: [0.6, 1.1],
+    file: makeDiffFile(menFile, womenFile, (men, women) =&gt; {
+      return amountGreaterThan(men, women);
+    }),
+  });
+  fileInfos.push({
+    name: '&gt;50% women',
+    hueRange: [0.0, 0.4],
+    file: makeDiffFile(womenFile, menFile, (women, men) =&gt; {
+      return amountGreaterThan(women, men);
+    }),
+  });
+}
+</pre>
+<p>现在，让我们生成一个 UI 来在这些数据集之间进行选择。首先我们需要一些 UI html</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;body&gt;
+  &lt;canvas id="c"&gt;&lt;/canvas&gt;
++  &lt;div id="ui"&gt;&lt;/div&gt;
+&lt;/body&gt;
+</pre>
+<p>以及一些 CSS 来使其显示在左上角</p>
+<pre class="prettyprint showlinemods notranslate lang-css" translate="no">#ui {
+  position: absolute;
+  left: 1em;
+  top: 1em;
+}
+#ui&gt;div {
+  font-size: 20pt;
+  padding: 1em;
+  display: inline-block;
+}
+#ui&gt;div.selected {
+  color: red;
+}
+</pre>
+<p>然后我们可以逐个查看每个文件，并为每组数据生成一组合并的框，以及一个元素，当鼠标悬停在其上时将显示该组并隐藏所有其他组。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">// show the selected data, hide the rest
+function showFileInfo(fileInfos, fileInfo) {
+  fileInfos.forEach((info) =&gt; {
+    const visible = fileInfo === info;
+    info.root.visible = visible;
+    info.elem.className = visible ? 'selected' : '';
+  });
+  requestRenderIfNotRequested();
+}
+
+const uiElem = document.querySelector('#ui');
+fileInfos.forEach((info) =&gt; {
+  const boxes = addBoxes(info.file, info.hueRange);
+  info.root = boxes;
+  const div = document.createElement('div');
+  info.elem = div;
+  div.textContent = info.name;
+  uiElem.appendChild(div);
+  div.addEventListener('mouseover', () =&gt; {
+    showFileInfo(fileInfos, info);
+  });
+});
+// show the first set of data
+showFileInfo(fileInfos, fileInfos[0]);
+</pre>
+<p>我们需要从上一个示例中做的另一个更改是我们需要让 <code class="notranslate" translate="no">addBoxes</code> 接受一个 <code class="notranslate" translate="no">hueRange</code></p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-function addBoxes(file) {
++function addBoxes(file, hueRange) {
+
+  ...
+
+    // compute a color
+-    const hue = THREE.MathUtils.lerp(0.7, 0.3, amount);
++    const hue = THREE.MathUtils.lerp(...hueRange, amount);
+
+  ...
+</pre>
+<p>通过这个方法，我们应该能够显示4组数据。将鼠标悬停在标签上或触摸它们以切换数据集。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/lots-of-objects-multiple-data-sets.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/lots-of-objects-multiple-data-sets.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>注意，有一些奇怪的数据点真的很突出。我想知道那些是怎么回事!??!无论如何，我们如何在这4组数据之间做动画。</p>
+<p>有很多想法。</p>
+<ul>
+<li><p>只需使用 <a href="/threejs-docs-zh/docs/#api/en/materials/Material.opacity"><code class="notranslate" translate="no">Material.opacity</code></a></p>
+<p> 在它们之间淡入淡出。这个解决方案的问题是立方体完全重叠，这意味着会有深度冲突问题。我们可能可以通过更改深度函数并使用混合来解决它。我们可能应该研究一下。</p>
+</li>
+<li><p>放大我们想看到的集合并缩小其他集合</p>
+<p>因为所有的盒子它们的原点都在行星的中心，如果我们将它们缩放到小于1.0，它们会沉入行星。起初这听起来像是个好主意，但问题是所有低高度的盒子几乎会立即消失，直到新的数据集缩放到1.0时才会被替换。这使得过渡不是很顺畅。我们也许可以用一个花哨的自定义着色器来解决这个问题。</p>
+</li>
+<li><p>使用Morphtargets</p>
+<p>Morphtargets是一种我们为几何体的每个顶点提供多个值的方法，然后在它们之间<em>形态变化</em>或线性插值（lerp）。Morphtargets最常用于3D角色的面部动画，但这不是它们的唯一用途。</p>
+</li>
+</ul>
+<p>让我们尝试morphtargets。</p>
+<p>我们仍然会为每组数据创建几何体，但之后我们会从每个几何体中提取 <code class="notranslate" translate="no">position</code> 属性，并将它们用作变形目标。</p>
+<p>首先，让我们修改 <code class="notranslate" translate="no">addBoxes</code>，只生成并返回合并后的几何体。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-function addBoxes(file, hueRange) {
++function makeBoxes(file, hueRange) {
+  const {min, max, data} = file;
+  const range = max - min;
+
+  ...
+
+-  const mergedGeometry = BufferGeometryUtils.mergeGeometries(
+-      geometries, false);
+-  const material = new THREE.MeshBasicMaterial({
+-    vertexColors: true,
+-  });
+-  const mesh = new THREE.Mesh(mergedGeometry, material);
+-  scene.add(mesh);
+-  return mesh;
++  return BufferGeometryUtils.mergeGeometries(
++     geometries, false);
+}
+</pre>
+<p>不过，我们这里还有一件事需要做。Morphtargets（形态目标）要求所有目标的顶点数量完全相同。一个目标中的第123号顶点需要在所有其他目标中都有对应的第123号顶点。但是，现在不同的数据集可能存在一些数据点没有数据，因此不会为该点生成任何盒子，这意味着其他集合中不会有对应的顶点。因此，我们需要检查所有数据集，并且如果任意数据集中有数据，就总是生成一些东西；如果任意数据集缺少数据，就什么都不生成。我们采取后者。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">+function dataMissingInAnySet(fileInfos, latNdx, lonNdx) {
++  for (const fileInfo of fileInfos) {
++    if (fileInfo.file.data[latNdx][lonNdx] === undefined) {
++      return true;
++    }
++  }
++  return false;
++}
+
+-function makeBoxes(file, hueRange) {
++function makeBoxes(file, hueRange, fileInfos) {
+  const {min, max, data} = file;
+  const range = max - min;
+
+  ...
+
+  const geometries = [];
+  data.forEach((row, latNdx) =&gt; {
+    row.forEach((value, lonNdx) =&gt; {
++      if (dataMissingInAnySet(fileInfos, latNdx, lonNdx)) {
++        return;
++      }
+      const amount = (value - min) / range;
+
+  ...
+</pre>
+<p>现在我们将修改原本调用<code class="notranslate" translate="no">addBoxes</code>的代码，改为使用<code class="notranslate" translate="no">makeBoxes</code>，并设置morphtargets</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">+// make geometry for each data set
++const geometries = fileInfos.map((info) =&gt; {
++  return makeBoxes(info.file, info.hueRange, fileInfos);
++});
++
++// use the first geometry as the base
++// and add all the geometries as morphtargets
++const baseGeometry = geometries[0];
++baseGeometry.morphAttributes.position = geometries.map((geometry, ndx) =&gt; {
++  const attribute = geometry.getAttribute('position');
++  const name = `target${ndx}`;
++  attribute.name = name;
++  return attribute;
++});
++baseGeometry.morphAttributes.color = geometries.map((geometry, ndx) =&gt; {
++  const attribute = geometry.getAttribute('color');
++  const name = `target${ndx}`;
++  attribute.name = name;
++  return attribute;
++});
++const material = new THREE.MeshBasicMaterial({
++  vertexColors: true,
++});
++const mesh = new THREE.Mesh(baseGeometry, material);
++scene.add(mesh);
+
+const uiElem = document.querySelector('#ui');
+fileInfos.forEach((info) =&gt; {
+-  const boxes = addBoxes(info.file, info.hueRange);
+-  info.root = boxes;
+  const div = document.createElement('div');
+  info.elem = div;
+  div.textContent = info.name;
+  uiElem.appendChild(div);
+  function show() {
+    showFileInfo(fileInfos, info);
+  }
+  div.addEventListener('mouseover', show);
+  div.addEventListener('touchstart', show);
+});
+// show the first set of data
+showFileInfo(fileInfos, fileInfos[0]);
+</pre>
+<p>上面我们为每个数据集创建几何体，使用第一个作为基准，然后从每个几何体获取一个<code class="notranslate" translate="no">position</code>属性，并将其作为morphtarget添加到基准几何体上用于<code class="notranslate" translate="no">position</code>。</p>
+<p>现在我们需要改变显示和隐藏各个数据集的方式。我们不再通过显示或隐藏网格来操作，而是需要改变morphtarget的影响力。对于我们想要看到的数据集，其影响力应为1，而对于我们不想看到的所有数据集，其影响力应为0。</p>
+<p>我们本可以直接将它们设置为 0 或 1，但如果我们那样做，就看不到任何动画，它会直接跳变，这和我们已有的没有区别。我们也可以编写一些自定义动画代码，这很容易，但由于原来的 WebGL 地球使用了<a href="https://github.com/tweenjs/tween.js/">一个动画库</a>，我们这里也使用同一个库。</p>
+<p>我们需要引入该库</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import * as THREE from 'three';
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
++import TWEEN from 'three/addons/libs/tween.module.js';
+</pre>
+<p>然后创建一个 <code class="notranslate" translate="no">Tween</code> 来动画化这些影响。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">// show the selected data, hide the rest
+function showFileInfo(fileInfos, fileInfo) {
++  const targets = {};
+-  fileInfos.forEach((info) =&gt; {
++  fileInfos.forEach((info, i) =&gt; {
+    const visible = fileInfo === info;
+-    info.root.visible = visible;
+    info.elem.className = visible ? 'selected' : '';
++    targets[i] = visible ? 1 : 0;
+  });
++  const durationInMs = 1000;
++  new TWEEN.Tween(mesh.morphTargetInfluences)
++    .to(targets, durationInMs)
++    .start();
+  requestRenderIfNotRequested();
+}
+</pre>
+<p>我们也应该在渲染循环的每一帧中调用 <code class="notranslate" translate="no">TWEEN.update</code>，但这暴露了一个问题。"tween.js" 是为连续渲染设计的，但我们是<a href="rendering-on-demand.html">按需渲染</a>。我们可以切换到连续渲染，但有时候仅按需渲染也不错，因为那样可以在没有活动时停止使用用户的电力，所以让我们看看是否可以按需动画。</p>
+<p>我们将创建一个 <code class="notranslate" translate="no">TweenManager</code> 来帮助。我们将用它来创建 <code class="notranslate" translate="no">Tween</code> 并跟踪它们。它将有一个 <code class="notranslate" translate="no">update</code> 方法，如果我们需要再次调用它会返回 <code class="notranslate" translate="no">true</code>，如果所有动画都完成则返回 <code class="notranslate" translate="no">false</code>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">class TweenManger {
+  constructor() {
+    this.numTweensRunning = 0;
+  }
+  _handleComplete() {
+    --this.numTweensRunning;
+    console.assert(this.numTweensRunning &gt;= 0);
+  }
+  createTween(targetObject) {
+    const self = this;
+    ++this.numTweensRunning;
+    let userCompleteFn = () =&gt; {};
+    // create a new tween and install our own onComplete callback
+    const tween = new TWEEN.Tween(targetObject).onComplete(function(...args) {
+      self._handleComplete();
+      userCompleteFn.call(this, ...args);
+    });
+    // replace the tween's onComplete function with our own
+    // so we can call the user's callback if they supply one.
+    tween.onComplete = (fn) =&gt; {
+      userCompleteFn = fn;
+      return tween;
+    };
+    return tween;
+  }
+  update() {
+    TWEEN.update();
+    return this.numTweensRunning &gt; 0;
+  }
+}
+</pre>
+<p>要使用它，我们将创建一个</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function main() {
+  const canvas = document.querySelector('#c');
+  const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
++  const tweenManager = new TweenManger();
+
+  ...
+</pre>
+<p>我们将使用它来创建我们的 <code class="notranslate" translate="no">Tween</code>s。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">// show the selected data, hide the rest
+function showFileInfo(fileInfos, fileInfo) {
+  const targets = {};
+  fileInfos.forEach((info, i) =&gt; {
+    const visible = fileInfo === info;
+    info.elem.className = visible ? 'selected' : '';
+    targets[i] = visible ? 1 : 0;
+  });
+  const durationInMs = 1000;
+-  new TWEEN.Tween(mesh.morphTargetInfluences)
++  tweenManager.createTween(mesh.morphTargetInfluences)
+    .to(targets, durationInMs)
+    .start();
+  requestRenderIfNotRequested();
+}
+</pre>
+<p>然后我们将更新渲染循环，以更新补间动画并在仍有动画运行时继续渲染。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render() {
+  renderRequested = false;
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
+
++  if (tweenManager.update()) {
++    requestRenderIfNotRequested();
++  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+render();
+</pre>
+<p>这样我们就应该能够在数据集之间实现动画。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/lots-of-objects-morphtargets.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/lots-of-objects-morphtargets.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>希望这个过程对你有帮助。使用形态目标（morphtargets）是一种常见的移动大量对象的技术。例如，我们可以给每个立方体一个在另一个目标中的随机位置，并将其从该位置变形到它们在地球上的初始位置。这可能是一种引入地球的很酷方式。</p>
+<p>接下来，你可能会对给地球添加标签感兴趣，可以参考 <a href="align-html-elements-to-3d.html">将 HTML 元素对齐到 3D</a>。</p>
+<p>注意：我们可以尝试只绘制男性百分比或女性百分比，或者原始差异，但根据我们显示信息的方式——从地面生长出的立方体——我们希望大多数立方体比较低。如果我们使用这些其他比较，大多数立方体大约是它们最高高度的一半，这不会产生好的可视化效果。可以将 <a href="/threejs-docs-zh/docs/#api/en/math/Math.max(a - b, 0)"><code class="notranslate" translate="no">amountGreaterThan</code></a> 中的 <code class="notranslate" translate="no">Math.max(a - b, 0)</code> 改为类似 <code class="notranslate" translate="no">(a - b)</code> "原始差异" 或 <code class="notranslate" translate="no">a / (a +
+b)</code> "百分比"，然后你就会明白我的意思。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

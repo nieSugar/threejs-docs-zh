@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>材料</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Materials">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>材料</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>本文是关于 three.js 系列文章的一部分。第一篇文章是 <a href="fundamentals.html">three.js 基础</a>。如果你还没有阅读过，并且你是 three.js 新手，你可能想从那里开始。</p>
+<p>Three.js 提供了多种类型的材质。它们定义了对象在场景中的呈现方式。你使用哪种材质取决于你想要实现的效果。</p>
+<p>设置大多数材质属性有两种方式。一种是在创建时设置，我们之前已经见过。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const material = new THREE.MeshPhongMaterial({
+  color: 0xFF0000,    // red (can also use a CSS color string here)
+  flatShading: true,
+});
+</pre>
+<p>另一种是在创建之后设置</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const material = new THREE.MeshPhongMaterial();
+material.color.setHSL(0, 1, .5);  // red
+material.flatShading = true;
+</pre>
+<p>注意，类型为 <a href="/threejs-docs-zh/docs/#api/en/math/Color"><code class="notranslate" translate="no">THREE.Color</code></a> 的属性有多种设置方式。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">material.color.set(0x00FFFF);    // same as CSS's #RRGGBB style
+material.color.set(cssString);   // any CSS color, eg 'purple', '#F32',
+                                 // 'rgb(255, 127, 64)',
+                                 // 'hsl(180, 50%, 25%)'
+material.color.set(someColor)    // some other THREE.Color
+material.color.setHSL(h, s, l)   // where h, s, and l are 0 to 1
+material.color.setRGB(r, g, b)   // where r, g, and b are 0 to 1
+</pre>
+<p>在创建时，你可以传递十六进制数字或 CSS 字符串</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const m1 = new THREE.MeshBasicMaterial({color: 0xFF0000});         // red
+const m2 = new THREE.MeshBasicMaterial({color: 'red'});            // red
+const m3 = new THREE.MeshBasicMaterial({color: '#F00'});           // red
+const m4 = new THREE.MeshBasicMaterial({color: 'rgb(255,0,0)'});   // red
+const m5 = new THREE.MeshBasicMaterial({color: 'hsl(0,100%,50%)'}); // red
+</pre>
+<p>。所以让我们来看看 three.js 的材质集合。</p>
+<p> <a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a> 不受光照影响。<a href="/threejs-docs-zh/docs/#api/en/materials/MeshLambertMaterial"><code class="notranslate" translate="no">MeshLambertMaterial</code></a> 仅在顶点计算光照，而 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> 在每个像素上都计算光照。<a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> 还支持高光。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="MeshBasicMaterial"></div>
+    <div class="code">Basic</div>
+  </div>
+  <div>
+    <div data-diagram="MeshLambertMaterial"></div>
+    <div class="code">Lambert</div>
+  </div>
+  <div>
+    <div data-diagram="MeshPhongMaterial"></div>
+    <div class="code">Phong</div>
+  </div>
+</div>
+<div class="spread">
+  <div>
+    <div data-diagram="MeshBasicMaterialLowPoly"></div>
+  </div>
+  <div>
+    <div data-diagram="MeshLambertMaterialLowPoly"></div>
+  </div>
+  <div>
+    <div data-diagram="MeshPhongMaterialLowPoly"></div>
+  </div>
+</div>
+<div class="threejs_center code">low-poly models with same materials</div>
+
+<p> <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">shininess</code></a> 的 <code class="notranslate" translate="no">MeshPhongMaterial</code> 设置决定了高光的 <em>光泽度</em>，默认值为 30。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="MeshPhongMaterialShininess0"></div>
+    <div class="code">shininess: 0</div>
+  </div>
+  <div>
+    <div data-diagram="MeshPhongMaterialShininess30"></div>
+    <div class="code">shininess: 30</div>
+  </div>
+  <div>
+    <div data-diagram="MeshPhongMaterialShininess150"></div>
+    <div class="code">shininess: 150</div>
+  </div>
+</div>
+
+<p>请注意，将 <code class="notranslate" translate="no">emissive</code> 属性设置为颜色，无论是在 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshLambertMaterial"><code class="notranslate" translate="no">MeshLambertMaterial</code></a> 还是 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> 上，并将 <code class="notranslate" translate="no">color</code> 设置为黑色（对于 phong，将 <code class="notranslate" translate="no">shininess</code> 设置为 0）最终看起来就像 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a>。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="MeshBasicMaterialCompare"></div>
+    <div class="code">
+      <div>Basic</div>
+      <div>color: 'purple'</div>
+    </div>
+  </div>
+  <div>
+    <div data-diagram="MeshLambertMaterialCompare"></div>
+    <div class="code">
+      <div>Lambert</div>
+      <div>color: 'black'</div>
+      <div>emissive: 'purple'</div>
+    </div>
+  </div>
+  <div>
+    <div data-diagram="MeshPhongMaterialCompare"></div>
+    <div class="code">
+      <div>Phong</div>
+      <div>color: 'black'</div>
+      <div>emissive: 'purple'</div>
+      <div>shininess: 0</div>
+    </div>
+  </div>
+</div>
+
+<p>为什么要同时拥有三者，当 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> 可以做 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a> 和 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshLambertMaterial"><code class="notranslate" translate="no">MeshLambertMaterial</code></a> 的同样事情？原因是更复杂的材质需要更多的 GPU 功率来进行渲染。在 GPU 较慢的设备上，比如说手机上，你可能想通过使用较不复杂的材质来减少渲染场景所需的 GPU 功率。同样地，如果你不需要额外的功能，那么就使用最简单的材质。如果你不需要光照和镜面高光，那么就使用 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a>。</p>
+<p><a href="/threejs-docs-zh/docs/#api/en/materials/MeshToonMaterial"><code class="notranslate" translate="no">MeshToonMaterial</code></a> 类似于 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a>，但有一个很大的区别。它不是平滑着色，而是使用渐变贴图（一个 X 乘 1 的纹理）来决定如何着色。默认使用的渐变贴图在前 70% 区域亮度为 70%，之后为 100%，但你可以提供自己的渐变贴图。最终效果呈现出类似卡通的双色调外观。</p>
+<div class="spread">
+  <div data-diagram="MeshToonMaterial"></div>
+</div>
+
+<p> 接下来是两个 <em>基于物理的渲染</em> 材质。基于物理的渲染通常缩写为 PBR。</p>
+<p>上面的材料使用简单的数学来制作看起来是3D的材料，但它们并不是现实世界中实际发生的情况。两种PBR材料使用更复杂的数学来接近现实世界中实际发生的情况。</p>
+<p>第一个是 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial"><code class="notranslate" translate="no">MeshStandardMaterial</code></a>。<a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> 和 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial"><code class="notranslate" translate="no">MeshStandardMaterial</code></a> 最大的区别是它使用了不同的参数。<a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> 有一个 <code class="notranslate" translate="no">shininess</code> 设置。<a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial"><code class="notranslate" translate="no">MeshStandardMaterial</code></a> 有两个设置 <code class="notranslate" translate="no">roughness</code> 和 <code class="notranslate" translate="no">metalness</code>。</p>
+<p>在基本层面上，<a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial#roughness"><code class="notranslate" translate="no">roughness</code></a> 是 <code class="notranslate" translate="no">shininess</code> 的相反。具有高粗糙度的物体，例如棒球，不会有强烈的反射，而不粗糙的物体，例如台球，非常光亮。粗糙度的范围是从 0 到 1。</p>
+<p> 另一个设置，<a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial#metalness"><code class="notranslate" translate="no">metalness</code></a>，表示材料的金属程度。金属的行为与非金属不同。非金属为 0，金属为 1。</p>
+<p> 下面是一个快速示例，使用 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial"><code class="notranslate" translate="no">MeshStandardMaterial</code></a>，水平上 <code class="notranslate" translate="no">roughness</code> 从 0 到 1，垂直上 <code class="notranslate" translate="no">metalness</code> 从 0 到 1。</p>
+<div data-diagram="MeshStandardMaterial" style="min-height: 400px"></div>
+
+<p><a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhysicalMaterial"><code class="notranslate" translate="no">MeshPhysicalMaterial</code></a> 与 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial"><code class="notranslate" translate="no">MeshStandardMaterial</code></a> 相同，但它增加了一个 <code class="notranslate" translate="no">clearcoat</code> 参数，其范围从 0 到 1，用于设置清漆光泽层的应用程度，以及一个 <code class="notranslate" translate="no">clearCoatRoughness</code> 参数，用于指定光泽层的粗糙程度。</p>
+<p> 下面是与上面相同的 <code class="notranslate" translate="no">roughness</code> 与 <code class="notranslate" translate="no">metalness</code> 的网格，但带有 <code class="notranslate" translate="no">clearcoat</code> 和 <code class="notranslate" translate="no">clearCoatRoughness</code> 设置。</p>
+<div data-diagram="MeshPhysicalMaterial" style="min-height: 400px"></div>
+
+<p>各种标准材质的处理速度从快到慢依次为
+<a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a> ➡ <a href="/threejs-docs-zh/docs/#api/en/materials/MeshLambertMaterial"><code class="notranslate" translate="no">MeshLambertMaterial</code></a> ➡ <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a> ➡
+<a href="/threejs-docs-zh/docs/#api/en/materials/MeshStandardMaterial"><code class="notranslate" translate="no">MeshStandardMaterial</code></a> ➡ <a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhysicalMaterial"><code class="notranslate" translate="no">MeshPhysicalMaterial</code></a>。较慢的材质可以制作出更逼真的场景，但您可能需要在低性能或移动设备上设计代码以使用速度更快的材质。</p>
+<p>有三种材料具有特殊用途。<a href="/threejs-docs-zh/docs/#api/en/materials/ShadowMaterial"><code class="notranslate" translate="no">ShadowMaterial</code></a>用于获取由阴影产生的数据。我们还没有讲到阴影。当我们讲到时，我们将使用这种材料来看看幕后发生了什么。</p>
+<p> <a href="/threejs-docs-zh/docs/#api/en/materials/MeshDepthMaterial"><code class="notranslate" translate="no">MeshDepthMaterial</code></a>渲染每个像素的深度，其中摄像机负<a href="/threejs-docs-zh/docs/#api/en/cameras/PerspectiveCamera#near"><code class="notranslate" translate="no">near</code></a>处的像素为0，负<a href="/threejs-docs-zh/docs/#api/en/cameras/PerspectiveCamera#far"><code class="notranslate" translate="no">far</code></a>处的像素为1。某些特殊效果可以使用这些数据，我们将在另一个时间讨论。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="MeshDepthMaterial"></div>
+  </div>
+</div>
+
+<p>这<a href="/threejs-docs-zh/docs/#api/en/materials/MeshNormalMaterial"><code class="notranslate" translate="no">MeshNormalMaterial</code></a>将向你展示<em>正常人</em>几何学的。<em>法线</em>是特定三角形或像素所面向的方向。<a href="/threejs-docs-zh/docs/#api/en/materials/MeshNormalMaterial"><code class="notranslate" translate="no">MeshNormalMaterial</code></a>绘制视图空间法线（相对于相机的法线）。<span style="background: red;" class="color">x 是红色的</span>,
+<span style="background: green;" class="dark-color">y 是绿色的</span>，并且<span style="background: blue;" class="dark-color">z 是蓝色的</span>所以面向右边的东西将是<span style="background: #FF7F7F;" class="color">粉色</span>左边将是<span style="background: #007F7F;" class="dark-color">水色</span>,向上将会<span style="background: #7FFF7F;" class="color">浅绿色</span>,向下将会<span style="background: #7F007F;" class="dark-color">紫色</span>，并且朝向屏幕将会是<span style="background: #7F7FFF;" class="color">薰衣草</span>.</p>
+<div class="spread">
+  <div>
+    <div data-diagram="MeshNormalMaterial"></div>
+  </div>
+</div>
+
+<p><a href="/threejs-docs-zh/docs/#api/en/materials/ShaderMaterial"><code class="notranslate" translate="no">ShaderMaterial</code></a> 用于使用 three.js 着色器系统制作自定义材质。<a href="/threejs-docs-zh/docs/#api/en/materials/RawShaderMaterial"><code class="notranslate" translate="no">RawShaderMaterial</code></a> 用于制作完全自定义的着色器，不依赖 three.js 的帮助。这两个主题都很庞大，将在后面讲解。</p>
+<p>大多数材质共享一组由 <a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a> 定义的设置。<a href="/threejs-docs-zh/docs/#api/en/materials/Material">查看文档</a> 了解所有设置，但我们先来看看两个最常用的属性。</p>
+<p><a href="/threejs-docs-zh/docs/#api/en/materials/Material#flatShading"><code class="notranslate" translate="no">flatShading</code></a>：对象是看起来有棱角还是平滑。默认值 = <code class="notranslate" translate="no">false</code>。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="smoothShading"></div>
+    <div class="code">flatShading: false</div>
+  </div>
+  <div>
+    <div data-diagram="flatShading"></div>
+    <div class="code">flatShading: true</div>
+  </div>
+</div>
+
+<p><a href="/threejs-docs-zh/docs/#api/en/materials/Material#side"><code class="notranslate" translate="no">side</code></a>：显示三角形的哪一面。默认是 <code class="notranslate" translate="no">THREE.FrontSide</code>。其他选项是 <code class="notranslate" translate="no">THREE.BackSide</code> 和 <code class="notranslate" translate="no">THREE.DoubleSide</code>（双面）。在 Three.js 中绘制的大多数 3D 对象可能是透明固体，因此背面（面向固体内部的面）不需要绘制。设置 <code class="notranslate" translate="no">side</code> 的最常见原因是用于平面或其他非固体对象，在这些对象中通常可以看到三角形的背面。</p>
+<p>这里有6架飞机，用<code class="notranslate" translate="no">THREE.FrontSide</code>和<code class="notranslate" translate="no">THREE.DoubleSide</code>绘制。</p>
+<div class="spread">
+  <div>
+    <div data-diagram="sideDefault" style="height: 250px;"></div>
+    <div class="code">side: THREE.FrontSide</div>
+  </div>
+  <div>
+    <div data-diagram="sideDouble" style="height: 250px;"></div>
+    <div class="code">side: THREE.DoubleSide</div>
+  </div>
+</div>
+
+<p>在材质方面真的有很多需要考虑的地方，实际上我们还有很多工作要做。特别是我们大多忽略了纹理，这将打开一整系列的选项。但在我们讲纹理之前，我们需要先休息一下并讲一下<a href="setup.html">设置开发环境</a>。</p>
+<div class="threejs_bottombar">
+<h3 id="material-needsupdate">material.needsUpdate</h3>
+<p>这个话题很少影响大多数 three.js 应用，但仅供参考……
+three.js 在使用材质时会应用材质设置，其中“使用”是指“渲染使用该材质的某些内容”。有些材质设置只会应用一次，因为更改它们需要 three.js 做大量工作。
+在这种情况下，您需要设置 <code class="notranslate" translate="no">material.needsUpdate = true</code> 来告诉 three.js 应用您的材质更改。如果在使用材质后更改设置，最常见需要设置 <code class="notranslate" translate="no">needsUpdate</code> 的设置有：
+</p>
+<ul>
+  <li><code class="notranslate" translate="no">flatShading</code></li>
+  <li>添加或移除纹理
+    <p>
+    更换纹理是可以的，但如果想从不使用纹理切换为使用纹理，或者从使用纹理切换为不使用纹理，
+    那么您需要设置 <code class="notranslate" translate="no">needsUpdate = true</code>。</p>
+    <p>在从有纹理到无纹理的情况下，通常最好使用一个1x1像素的白色纹理。</p>
+  </li>
+</ul>
+<p>如上所述，大多数应用程序从未遇到这些问题。大多数应用程序不会在平面着色和非平面着色之间切换。大多数应用程序也要么使用纹理，要么使用给定材质的纯色，它们很少会从使用一种切换到使用另一种。</p>
+</div>
+
+<p><canvas id="c"></canvas></p>
+<script type="module" src="../resources/threejs-materials.js"></script>
+
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

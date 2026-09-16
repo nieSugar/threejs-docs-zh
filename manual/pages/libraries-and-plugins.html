@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>库和插件</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Libraries and Plugins">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>库和插件</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p class="desc">这里列出了为 three.js 开发的外部兼容库和插件。该列表及相关软件包由社区维护，不能保证是最新的。如果您想更新此列表，请提交一个 PR！
+</p>
+
+          <h3 id="physics">物理</h3>
+
+          <ul>
+            <li>[link:https://github.com/lo-th/Oimo.js/ Oimo.js]</li>
+            <li>[link:https://enable3d.io/ enable3d]</li>
+            <li>[link:https://github.com/kripken/ammo.js/ ammo.js]</li>
+            <li>[link:https://github.com/pmndrs/cannon-es cannon-es]</li>
+            <li>[link:https://rapier.rs/ rapier]</li>
+            <li>[link:https://github.com/jrouwe/JoltPhysics.js Jolt]</li>
+
+          </ul>
+
+          <h3 id="postprocessing">后期处理</h3>
+
+          <p>
+除了 [link:https://github.com/mrdoob/three.js/tree/dev/examples/jsm/postprocessing official three.js postprocessing effects] 外，
+还可以通过外部库支持一些额外的效果和框架。
+</p>
+
+          <ul>
+            <li>[link:https://github.com/vanruesc/postprocessing postprocessing]</li>
+          </ul>
+
+          <h3 id="intersection-and-raycast-performance">交点和射线投射性能</h3>
+
+          <ul>
+            <li>[link:https://github.com/gkjohnson/three-mesh-bvh three-mesh-bvh]</li>
+          </ul>
+
+          <h3 id="path-tracing">路径追踪</h3>
+
+          <ul>
+            <li>[link:https://github.com/gkjohnson/three-gpu-pathtracer three-gpu-pathtracer]</li>
+          </ul>
+
+          <h3 id="file-formats">文件格式</h3>
+
+          <p>除了 [link:https://github.com/mrdoob/three.js/tree/dev/examples/jsm/loaders official three.js loaders] 外，通过外部库还可以支持一些额外的格式。</p>
+
+          <ul>
+            <li>[link:https://github.com/gkjohnson/urdf-loaders/tree/master/javascript urdf-loader]</li>
+            <li>[link:https://github.com/NASA-AMMOS/3DTilesRendererJS 3d-tiles-renderer-js]</li>
+            <li>[link:https://github.com/kaisalmen/WWOBJLoader WebWorker OBJLoader]</li>
+            <li>[link:https://github.com/IFCjs/web-ifc-three IFC.js]</li>
+          </ul>
+
+          <h3 id="geometry">几何</h3>
+
+          <ul>
+            <li>[link:https://github.com/spite/THREE.MeshLine THREE.MeshLine]</li>
+          </ul>
+
+          <h3 id="3d-text-and-layout">3D 文本和布局</h3>
+
+          <ul>
+            <li>[link:https://github.com/protectwise/troika/tree/master/packages/troika-three-text troika-three-text]</li>
+            <li>[link:https://github.com/felixmariotto/three-mesh-ui three-mesh-ui]</li>
+          </ul>
+
+          <h3 id="particle-systems">粒子系统</h3>
+
+          <ul>
+            <li>[link:https://github.com/Alchemist0823/three.quarks three.quarks]</li>
+            <li>[link:https://github.com/creativelifeform/three-nebula three-nebula]</li>
+          </ul>
+
+          <h3 id="inverse-kinematics">逆向运动学</h3>
+
+          <ul>
+            <li>[link:https://github.com/jsantell/THREE.IK THREE.IK]</li>
+            <li>[link:https://github.com/lo-th/fullik fullik]</li>
+            <li>[link:https://github.com/gkjohnson/closed-chain-ik-js closed-chain-ik]</li>
+          </ul>
+
+          <h3 id="game-ai">游戏 AI</h3>
+
+          <ul>
+            <li>[link:https://mugen87.github.io/yuka/ yuka]</li>
+            <li>[link:https://github.com/donmccurdy/three-pathfinding three-pathfinding]</li>
+            <li>[link:https://github.com/isaac-mason/recast-navigation-js recast-navigation-js]</li>
+          </ul>
+
+          <h3 id="wrappers-and-frameworks">封装和框架</h3>
+
+          <ul>
+            <li>[link:https://aframe.io/ A-Frame]</li>
+            <li>[link:https://lume.io/ Lume] - 基于 Three 构建的用于 3D 图形的 HTML 元素。</li>
+            <li>[link:https://github.com/pmndrs/react-three-fiber react-three-fiber] - 基于 Three 构建的用于 3D 图形的 React 组件。</li>
+            <li>[link:https://threepipe.org/ threepipe] - 使用 Three.js 进行渲染的多功能 3D 查看器框架。</li>
+            <li>[link:https://github.com/ecsyjs/ecsy-three ECSY]</li>
+            <li>[link:https://threlte.xyz/ Threlte] - 用于构建 3D 图形的 Svelte 组件Three.</li>
+            <li>[link:https://needle.tools/ Needle Engine]</li>
+            <li>[link:https://tresjs.org/ tresjs] - 基于 Three.</li>
+            <li>[link:https://giro3d.org Giro3D] 构建的 3D 图形 Vue 组件基于 Three，用于可视化地理空间 2D、2.5D 和 3D 数据并与之交互。</li>
+            <li>[link:https://zap.works/mattercraft/ Mattercraft] - 基于浏览器的 AR、WebXR 和 3D Web 内容可视化编辑器，基于 Three.js 构建，具有实时预览和物理引擎。</li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

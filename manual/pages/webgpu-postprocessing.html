@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>使用 WebGPURenderer 进行后处理</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Post-Processing with WebGPURenderer">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "../../build/three.module.js"
+      }
+    }
+    </script>
+    </head>
+    <body>
+      <div class="container">
+        <div class="lesson-title">
+          <h1>使用 WebGPURenderer 进行后处理</h1>
+        </div>
+        <div class="lesson">
+          <div class="lesson-main">
+
+            <p>`WebGPURenderer` 配备了一个全新的后期处理组件。本文将展示新系统的工作原理，并提供一些基本的使用指南。
+</p>
+
+            <h2 id="overview">概述</h2>
+
+             <p>
+`WebGLRenderer` 的以前的后期处理存在许多概念性问题。由于渲染器的支持有限，使用多重渲染目标（MRT）比较繁琐，而且没有自动的通道/效果组合来提升整体性能。
+</p>
+
+            <p>
+`WebGPURenderer` 的新后期处理栈从一开始就设计为支持这些用例。</p>
+            <ul>
+              <li>`WebGPURenderer` 提供完整的内置 MRT 支持。</li>
+              <li> 系统会在可能的情况下合并效果，从而减少整体渲染通道的数量。</li>
+              <li> 效果链以节点组合的形式表示，这允许更灵活的效果设置。</li>
+            </ul>
+            <p> 让我们来了解如何在 three.js 应用中集成后期处理。</p>
+
+            <h2 id="basics">基础</h2>
+
+            <p>首先，请阅读指南中关于 <a href="webgpurenderer">WebGPURenderer</a> 的说明，以正确配置你的导入。之后，你可以像这样创建渲染管线模块的实例：
+</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+const renderPipeline = new THREE.RenderPipeline( renderer );
+</pre>
+
+            <p>
+`RenderPipeline` 的实例取代了先前的 `EffectComposer` 实例。为了确保你实际使用该模块的输出，你必须像这样更新你的动画循环：</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+-  renderer.render( scene, camera );
++  renderPipeline.render();
+</pre>
+
+            <p>许多后期处理设置从所谓的“场景通道”或“场景颜色通道”开始，它代表了你渲染场景的图像。
+这个图像随后应通过不同的效果进行增强，比如泛光、景深或屏幕空间反射（SSR）。首先从 TSL 命名空间中导入 `pass()` TSL 函数，并使用它来创建通道。
+</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+import { pass } from 'three/tsl';
+
+// in your init routine
+
+const scenePass = pass( scene, camera );
+</pre>
+            <p>
+节点系统的基本理念是将材质或后期处理效果表示为节点组合。要配置一个基本的点屏效果和 RGB 偏移效果，你可以使用 TSL 函数创建效果节点并将它们组合在一起。
+</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+import { pass } from 'three/tsl';
++  import { dotScreen } from 'three/addons/tsl/display/DotScreenNode.js';
++  import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js';
+
+// in your init routine
+
+const scenePass = pass( scene, camera );
+
++  const dotScreenPass = dotScreen( scenePass );
++  const rgbShiftPass = rgbShift( dotScreenPass );
+</pre>
+
+            <p>
+完成后，你可以简单地将最终节点分配给 `RenderPipeline` 实例。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+renderPipeline.outputNode = rgbShiftPass;
+</pre>
+
+            <h2 id="tone-mapping-and-color-spaces">色调映射和色彩空间</h2>
+
+            <p>
+            在使用后期处理时，色调映射和色彩空间转换会在效果链的末端自动应用。不过，有时你可能希望完全控制这些步骤的执行方式和时间。
+            例如，如果你想使用 `FXAANode` 应用 FXAA 或使用 `Lut3DNode` 进行颜色分级，你可以禁用自动色调映射和色彩空间转换，并通过自己调用 `renderOutput()` 来应用它。
+            </p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+import { pass, renderOutput } from 'three/tsl';
+import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
+
+// in your init routine
+
+const renderPipeline = new THREE.RenderPipeline( renderer );
+renderPipeline.outputColorTransform = false; // disable default output color transform
+
+const scenePass = pass( scene, camera );
+const outputPass = renderOutput( scenePass ); // apply tone mapping and color space conversion here
+
+// FXAA must be computed in sRGB color space
+
+const fxaaPass = fxaa( outputPass );
+renderPipeline.outputNode = fxaaPass;
+</pre>
+
+          <p>
+            使用 `renderOutput()` 并不是强制性的，你也可以根据你的需求实现自定义的色调映射和色彩空间转换。
+          </p>
+
+          <h2 id="mrt">MRT</h2>
+
+          <p>新的后处理堆栈具有内置的多渲染目标（MRT）支持，这对于更高级的设置至关重要。MRT 允许您在单次渲染过程中生成多个输出。例如，在使用 TRAA 渲染场景时，您需要以下设置来为抗锯齿准备输入。</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+import { pass, mrt, output, velocity } from 'three/tsl';
+
+// in your init routine
+
+const scenePass = pass( scene, camera );
+scenePass.setMRT( mrt( {
+  output: output,
+  velocity: velocity
+} ) );
+</pre>
+          <p>你分配给 `mrt()` TSL 函数的配置对象描述了通道的不同输出。在这种情况下，我们保存默认输出（场景颜色）和场景的速度，因为我们想要设置 TRAA。如果你还需要场景的深度，则无需将其配置为 MRT 输出。如果你在应用程序中请求它，你可以在默认输出通道中免费获取它。如果你想在后续效果中使用这些输出，可以将它们作为纹理节点查询。</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+import { traa } from 'three/addons/tsl/display/TRAANode.js';
+
+// in your init routine
+
+const scenePassColor = scenePass.getTextureNode( 'output' );
+const scenePassDepth = scenePass.getTextureNode( 'depth' );
+const scenePassVelocity = scenePass.getTextureNode( 'velocity' );
+
+const traaPass = traa( scenePassColor, scenePassDepth, scenePassVelocity, camera );
+renderPipeline.outputNode = traaPass;
+</pre>
+
+          <p>MRT 配置取决于您的设置。您可以使用许多不同的 TSL 对象，例如 `output`、`velocity`、`normalView` 或 `emissive`，来在 MRT 附件中保存每个片段的数据。为了提高性能并避免触及内存限制，在复杂的 MRT 设置中对数据进行打包和优化非常重要。默认情况下，所有附件的精度都是 RGBA16（半浮点），这对于所有类型的数据并非必要。例如，下面的代码查询 `diffuseColor` 附件并将其格式设置为 RGBA8，从而将内存和带宽减半。</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+const diffuseTexture = scenePass.getTexture( 'diffuseColor' );
+diffuseTexture.type = THREE.UnsignedByteType;
+</pre>
+
+          <p>下面的屏幕空间反射（SSR）设置将默认的 FP16 法线转换为 RGBA8 颜色，并将金属度/粗糙度打包到一个附件中。使用 `sample()` TSL 函数可以实现自定义解包。在这个例子中，它将颜色转换回一个（归一化的）方向向量。
+</p>
+
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">
+scenePass.setMRT( mrt( {
+  output: output,
+  normal: packNormalToRGB( normalView ),
+  metalrough: vec2( metalness, roughness )
+} ) );
+
+// use RGBA8 instead of RGBA16
+
+const normalTexture = scenePass.getTexture( 'normal' );
+normalTexture.type = THREE.UnsignedByteType;
+
+const metalRoughTexture = scenePass.getTexture( 'metalrough' );
+metalRoughTexture.type = THREE.UnsignedByteType;
+
+// custom unpacking. use the resulting "sceneNormal" instead of "scenePassNormal"
+// in subsequent effects
+
+const sceneNormal = sample( ( uv ) => {
+
+  return unpackRGBToNormal( scenePassNormal.sample( uv ) );
+
+} );
+</pre>
+
+          <p>
+我们希望在未来进一步改进打包/解包功能，以提供更多打包/解包 MRT 数据的方式。与此同时，请查看 <a href="https://threejs.org/examples/?q=webgpu%20postprocessing" target="_blank">官方示例</a>，以便了解现有效果和设置的概况。
+</p>
+          </div>
+        </div>
+      </div>
+
+    <script src="../resources/prettify.js"></script>
+    <script src="../resources/lesson.js"></script>
+  </body>
+</html>

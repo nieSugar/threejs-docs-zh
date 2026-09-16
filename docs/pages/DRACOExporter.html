@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>DRACOExporter - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">DRACOExporter</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用 Draco 库压缩几何图形的导出器。</p>
+<p><a href="https://google.github.io/draco/" target="_blank" rel="noopener">Draco</a> 是一个用于压缩和的开源库
+解压缩 3D 网格和点云。压缩后的几何体可以明显更小，
+以客户端设备上的额外解码时间为代价。</p>
+<p>独立的 Draco 文件具有 <code>.drc</code> 扩展名，并包含顶点位置，
+法线、颜色和其他属性。 Draco 文件<em>不</em>包含材料，
+纹理、动画或节点层次结构 - 要使用这些功能，请嵌入 Draco 几何体
+glTF 文件内部。普通的 glTF 文件可以转换为 Draco 压缩的 glTF 文件
+使用 <a href="https://github.com/AnalyticalGraphicsInc/gltf-pipeline" target="_blank" rel="noopener">glTF-Pipeline</a>.</p>
+<p>导出器要求将 Draco 编码器作为全局脚本加载advance:</p>
+<pre><code class="language-html">&lt;script src=&quot;https://cdn.jsdelivr.net/gh/google/draco@1.5.7/javascript/draco_encoder.js&quot;>&lt;/script>
+</code></pre>
+<pre><code class="language-js">const exporter = new DRACOExporter();
+const data = await exporter.parseAsync( mesh, options );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">DRACOExporter</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { DRACOExporter } from 'three/addons/exporters/DRACOExporter.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="DRACOExporter" translate="no">new <a href="#DRACOExporter">DRACOExporter</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id=".MESH_EDGEBREAKER_ENCODING" translate="no">.<a href="#.MESH_EDGEBREAKER_ENCODING">MESH_EDGEBREAKER_ENCODING</a><span class="type-signature"> : number</span> <span class="type-signature">(constant) </span></h3>
+					<div class="description">
+						<p>Edgebreaker编码.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id=".MESH_SEQUENTIAL_ENCODING" translate="no">.<a href="#.MESH_SEQUENTIAL_ENCODING">MESH_SEQUENTIAL_ENCODING</a><span class="type-signature"> : number</span> <span class="type-signature">(constant) </span></h3>
+					<div class="description">
+						<p>顺序编码.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<dl class="details">
+							<dt class="important tag-deprecated"><strong>已弃用：</strong>使用<a href="DRACOExporter.html#parseAsync">DRACOExporter#parseAsync</a>代替。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="parseAsync" translate="no">.<a href="#parseAsync">parseAsync</a><span class="signature">( object : <span class="param-type"><a href="Mesh.html">Mesh</a> | <a href="Points.html">Points</a></span>, options : <span class="param-type"><a href="DRACOExporter.html#~Options">DRACOExporter~Options</a></span> )</span><span class="type-signature"> : Promise.&lt;Int8Array></span> <span class="type-signature">(async) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>解析给定的网格或点云并生成Draco输出.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>要导出的网格或点云.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>导出选项.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>使用导出的Draco解析的Promise.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">类型定义</h2>
+				<div class="member">
+					<h3 class="name" id="~Options" translate="no">.<a href="#~Options">Options</a> </h3>
+					<div class="description">
+						<p>导出选项<code>DRACOExporter</code>.</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>decodeSpeed</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>指示如何调整编码器的解码速度（0 提供更好的速度但最差的质量）。</p>
+						<p>默认为<code>5</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>encodeSpeed</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>指示如何调整编码器参数（0 提供更好的速度但最差的质量）。</p>
+						<p>默认为<code>5</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>encoderMethod</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>顺序（很少压缩）或破边者。 Edgebreaker 以确定性、螺旋状的方式遍历网格的三角形，这提供了此数据格式的大部分优点。</p>
+						<p>默认为<code>1</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>quantization</strong>
+						<br>
+<span class="param-type">Array.&lt;number></span>
+				</td>
+			<td class="description last">
+				<p>表示按顺序存储在 draco 文件中的每种类型数据的精度（POSITION、NORMAL、COLOR、TEX_COORD、GENERIC）。</p>
+						<p>默认为<code>[ 16, 8, 8, 8, 8 ]</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>exportUvs</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否导出UV.</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>exportNormals</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否导出法线.</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>exportColor</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否导出颜色.</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/exporters/DRACOExporter.js" translate="no" target="_blank" rel="noopener"> examples/jsm/exporters/DRACOExporter.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

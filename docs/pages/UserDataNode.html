@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>UserDataNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="ReferenceNode.html">ReferenceNode</a> → </p>
+	<h1 translate="no">UserDataNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>一种特殊类型的引用节点，允许链接以下值
+<code>userData</code> 字段到节点对象。</p>
+<p>由于 <code>UserDataNode</code> 是从 <a href="ReferenceNode.html">ReferenceNode</a> 扩展而来，因此节点值
+当 <code>rotation</code> 用户数据字段更改时，将自动更新。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">sprite.userData.rotation = 1; // stores individual rotation per sprite
+const material = new THREE.SpriteNodeMaterial();
+material.rotationNode = userData( 'rotation', 'float' );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="UserDataNode" translate="no">new <a href="#UserDataNode">UserDataNode</a><span class="signature">( property : <span class="param-type">string</span>, inputType : <span class="param-type">string</span>, userData : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新的用户数据节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">property</strong>
+									</td>
+									<td class="description last">
+										<p>节点应引用的属性名称。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">inputType</strong>
+									</td>
+									<td class="description last">
+										<p>引用的节点数据类型。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">userData</strong>
+									</td>
+									<td class="description last">
+										<p>对<code>userData</code>对象的引用。如果未提供，则评估使用节点材质的 3D 对象的 <code>userData</code> 属性。</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="userData" translate="no">.<a href="#userData">userData</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>对 <code>userData</code> 对象的引用。如果未提供，则 <code>userData</code>
+评估使用节点材质的 3D 对象的属性。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="updateReference" translate="no">.<a href="#updateReference">updateReference</a><span class="signature">( state : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a> | <a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>覆盖以确保 <a href="ReferenceNode.html#reference">ReferenceNode#reference</a> 指向正确的
+<code>userData</code> 字段.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">state</strong>
+									</td>
+									<td class="description last">
+										<p>要评估的当前状态.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="ReferenceNode.html#updateReference">ReferenceNode#updateReference</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对 <code>userData</code> 字段的引用.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/nodes/accessors/UserDataNode.js" translate="no" target="_blank" rel="noopener"> src/nodes/accessors/UserDataNode.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

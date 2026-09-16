@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>MorphAnimMesh - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → <a href="Mesh.html">Mesh</a> → </p>
+	<h1 translate="no">MorphAnimMesh</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>具有简单界面的特殊类型的动画网格
+用于动画播放。它允许只播放一个动画
+动画更改之间没有任何过渡或淡入淡出。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">MorphAnimMesh</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { MorphAnimMesh } from 'three/addons/misc/MorphAnimMesh.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="MorphAnimMesh" translate="no">new <a href="#MorphAnimMesh">MorphAnimMesh</a><span class="signature">( geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, material : <span class="param-type"><a href="Material.html">Material</a> | Array.&lt;<a href="Material.html">Material</a>></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的变形动画网格。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">geometry</strong>
+									</td>
+									<td class="description last">
+										<p>网格体几何形状。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">material</strong>
+									</td>
+									<td class="description last">
+										<p>网格材质。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="activeAction" translate="no">.<a href="#activeAction">activeAction</a><span class="type-signature"> : <a href="AnimationAction.html">AnimationAction</a></span> </h3>
+					<div class="description">
+						<p>当前活动的动画动作。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="mixer" translate="no">.<a href="#mixer">mixer</a><span class="type-signature"> : <a href="AnimationMixer.html">AnimationMixer</a></span> </h3>
+					<div class="description">
+						<p>内部动画混合器。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="playAnimation" translate="no">.<a href="#playAnimation">playAnimation</a><span class="signature">( label : <span class="param-type">string</span>, fps : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>播放定义的动画剪辑。实现假设动画
+剪辑存储在 <a href="Object3D.html#animations">Object3D#animations</a> 或几何体中。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">label</strong>
+									</td>
+									<td class="description last">
+										<p>动画剪辑的名称。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">fps</strong>
+									</td>
+									<td class="description last">
+										<p>动画剪辑的 FPS。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setDirectionBackward" translate="no">.<a href="#setDirectionBackward">setDirectionBackward</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将动画播放方向设置为“向后”。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="setDirectionForward" translate="no">.<a href="#setDirectionForward">setDirectionForward</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将动画播放方向设置为“前进”.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="updateAnimation" translate="no">.<a href="#updateAnimation">updateAnimation</a><span class="signature">( delta : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>更新网格体的动画。必须在动画循环内调用。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">delta</strong>
+									</td>
+									<td class="description last">
+										<p>以秒为单位的增量时间。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/misc/MorphAnimMesh.js" translate="no" target="_blank" rel="noopener"> examples/jsm/misc/MorphAnimMesh.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

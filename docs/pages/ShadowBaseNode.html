@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>ShadowBaseNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → </p>
+	<h1 translate="no">ShadowBaseNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>所有阴影节点的基类。</p>
+<p>阴影节点封装阴影相关逻辑，并且始终耦合到照明节点。
+照明节点可能共享相同的阴影节点类型或使用特定的阴影节点类型，具体取决于
+他们的要求。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="ShadowBaseNode" translate="no">new <a href="#ShadowBaseNode">ShadowBaseNode</a><span class="signature">( light : <span class="param-type"><a href="Light.html">Light</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的阴影基础节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">light</strong>
+									</td>
+									<td class="description last">
+										<p>阴影投射光。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isShadowBaseNode" translate="no">.<a href="#isShadowBaseNode">isShadowBaseNode</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="light" translate="no">.<a href="#light">light</a><span class="type-signature"> : <a href="Light.html">Light</a></span> </h3>
+					<div class="description">
+						<p>阴影投射光。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>覆盖，因为默认情况下每次渲染都会更新阴影。</p>
+						<p>默认为<code>'render'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Node.html#updateBeforeType">Node#updateBeforeType</a></dt>
+						</dl>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="disposeShadowMaterial" translate="no">.<a href="#disposeShadowMaterial">disposeShadowMaterial</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>处理阴影投射光的阴影材质source.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="getShadowMaterial" translate="no">.<a href="#getShadowMaterial">getShadowMaterial</a><span class="signature">()</span><span class="type-signature"> : <a href="NodeMaterial.html">NodeMaterial</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检索或创建阴影投射光源的阴影材质。</p>
+<p>此方法检查内部库中是否已存在提供的光源的阴影材质。
+如果没有，它会创建一个新的<code>NodeMaterial</code>，配置用于阴影渲染并存储它以供将来使用。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>与给定灯光关联的阴影材质。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getShadowRenderObjectFunction" translate="no">.<a href="#getShadowRenderObjectFunction">getShadowRenderObjectFunction</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, shadow : <span class="param-type"><a href="LightShadow.html">LightShadow</a></span> )</span><span class="type-signature"> : function</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个函数，用于为给定灯光阴影渲染场景中的阴影对象，并renderer.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shadow</strong>
+									</td>
+									<td class="description last">
+										<p>包含阴影属性的光阴影对象.</p>
+										<p>默认为<code>this.light.shadow</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>渲染阴影的函数对象.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setupShadowPosition" translate="no">.<a href="#setupShadowPosition">setupShadowPosition</a><span class="signature">( object : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置阴影位置节点，默认情况下是预定义的TSL节点对象<code>shadowPositionWorld</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>必须至少保存材质引用的配置对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/nodes/lighting/ShadowBaseNode.js" translate="no" target="_blank" rel="noopener"> src/nodes/lighting/ShadowBaseNode.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

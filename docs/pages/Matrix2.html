@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Matrix2 - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Matrix2</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>表示一个 2x2 矩阵。</p>
+<p>A 关于行主和列主排序的注释：</p>
+<p>构造函数和<a href="Matrix2.html#set">Matrix2#set</a> 方法接受参数
+<a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order" target="_blank" rel="noopener">行优先</a>
+顺序，而在内部它们以列优先顺序存储在 <a href="Matrix2.html#elements">Matrix2#elements</a> 数组中。
+这意味着调用：</p>
+<pre><code class="language-js">const m = new THREE.Matrix2();
+m.set( 11, 12,
+       21, 22 );
+</code></pre>
+<p>将导致元素数组包含：</p>
+<pre><code class="language-js">m.elements = [ 11, 21,
+               12, 22 ];
+</code></pre>
+<p>并且在内部所有计算都使用列优先顺序执行。
+然而，由于实际的排序在数学上没有区别，
+大多数人习惯于按行优先顺序思考矩阵，
+Three.js 文档以行优先顺序显示矩阵。只要忍耐
+请注意，如果您正在阅读源代码，则必须采取
+转置此处概述的任何矩阵以理解计算。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Matrix2" translate="no">new <a href="#Matrix2">Matrix2</a><span class="signature">( n11 : <span class="param-type">number</span>, n12 : <span class="param-type">number</span>, n21 : <span class="param-type">number</span>, n22 : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的 2x2 矩阵。参数应该是
+按行主顺序。如果没有提供参数，则构造函数
+将矩阵初始化为单位矩阵。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">n11</strong>
+									</td>
+									<td class="description last">
+										<p>1-1 矩阵元素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">n12</strong>
+									</td>
+									<td class="description last">
+										<p>1-2 矩阵元素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">n21</strong>
+									</td>
+									<td class="description last">
+										<p>2-1 矩阵元素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">n22</strong>
+									</td>
+									<td class="description last">
+										<p>2-2 矩阵element.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">Classes</h2>
+				<dl>
+					<dt><a href="Matrix2.html">Matrix2</a></dt>
+					<dd></dd>
+				</dl>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="elements" translate="no">.<a href="#elements">elements</a><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="description">
+						<p>以列为主的矩阵值列表。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="fromArray" translate="no">.<a href="#fromArray">fromArray</a><span class="signature">( array : <span class="param-type">Array.&lt;number></span>, offset : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Matrix2.html">Matrix2</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置给定数组中的矩阵元素。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">array</strong>
+									</td>
+									<td class="description last">
+										<p>以列为主的矩阵元素order.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">offset</strong>
+									</td>
+									<td class="description last">
+										<p>数组中第一个元素的索引。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对此矩阵的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="identity" translate="no">.<a href="#identity">identity</a><span class="signature">()</span><span class="type-signature"> : <a href="Matrix2.html">Matrix2</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将此矩阵设置为 2x2 单位矩阵。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对此矩阵的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="set" translate="no">.<a href="#set">set</a><span class="signature">( n11 : <span class="param-type">number</span>, n12 : <span class="param-type">number</span>, n21 : <span class="param-type">number</span>, n22 : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Matrix2.html">Matrix2</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置矩阵的元素。参数应为
+按行优先顺序.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">n11</strong>
+									</td>
+									<td class="description last">
+										<p>1-1 矩阵元素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">n12</strong>
+									</td>
+									<td class="description last">
+										<p>1-2 矩阵元素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">n21</strong>
+									</td>
+									<td class="description last">
+										<p>2-1 矩阵元素.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">n22</strong>
+									</td>
+									<td class="description last">
+										<p>2-2 矩阵element.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 对此矩阵的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/src/math/Matrix2.js" translate="no" target="_blank" rel="noopener"> src/math/Matrix2.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

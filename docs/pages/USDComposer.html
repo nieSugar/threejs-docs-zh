@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>USDComposer - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">USDComposer</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>USDComposer 根据解析的美元数据处理场景合成。
+这包括参考解析、变体选择、变换处理、
+并构建 Three.js 场景图。</p>
+<p>使用 USDCParser 中的 specsByPath 格式。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="USDComposer" translate="no">new <a href="#USDComposer">USDComposer</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="_applyMaterialBinding" translate="no">.<a href="#_applyMaterialBinding">_applyMaterialBinding</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将材质绑定从 prim 路径应用到网格。
+将引用的几何体合并到具有材质绑定的 prim 时使用。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_applyTextureOrValue" translate="no">.<a href="#_applyTextureOrValue">_applyTextureOrValue</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>用于应用着色器属性中的纹理或值的共享助手。
+减少 _applyPreviewSurface 和 _applyOpenPBRSurface 之间的重复。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_buildCamera" translate="no">.<a href="#_buildCamera">_buildCamera</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据相机规格构建相机。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_buildGeomPrimitive" translate="no">.<a href="#_buildGeomPrimitive">_buildGeomPrimitive</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从 USD 几何图元（立方体、球体、圆柱体、圆锥体、胶囊）构建网格。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_buildHierarchy" translate="no">.<a href="#_buildHierarchy">_buildHierarchy</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构建场景层次结构递归地。
+使用childrenByPath索引进行O(1)子查找而不是O(n)迭代。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_buildIndexes" translate="no">.<a href="#_buildIndexes">_buildIndexes</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构建索引以进行高效查找。
+在 compose() 期间调用一次，以避免每次查找 O(n) 次扫描。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_buildLight" translate="no">.<a href="#_buildLight">_buildLight</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据 UsdLux 灯光规格构建灯光。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_buildMesh" translate="no">.<a href="#_buildMesh">_buildMesh</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据网格规格构建网格。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_colorTemperature" translate="no">.<a href="#_colorTemperature">_colorTemperature</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将开尔文色温转换为 RGB 颜色。
+基于 Tanner Helland 的算法。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_computeVertexNormals" translate="no">.<a href="#_computeVertexNormals">_computeVertexNormals</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从索引三角形数据计算每个顶点法线。
+在每个共享顶点处累积面积加权面法线并标准化。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_findSingleMesh" translate="no">.<a href="#_findSingleMesh">_findSingleMesh</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在组的浅层次结构中查找单个网格。
+仅返回深度为 0 或 1 且未深度嵌套的网格。
+这保留了复杂层次结构中的转换，例如厨房套件
+同时支持 USDZExporter 往返（Xform > Xform > 网格图案）。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getAttributes" translate="no">.<a href="#_getAttributes">_getAttributes</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从属性规格中获取路径的属性。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getBasePath" translate="no">.<a href="#_getBasePath">_getBasePath</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从文件路径中获取基本路径（目录）。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getLocalVariantSelections" translate="no">.<a href="#_getLocalVariantSelections">_getLocalVariantSelections</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从规格中提取变体选择fields.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getMaterialBindingSpec" translate="no">.<a href="#_getMaterialBindingSpec">_getMaterialBindingSpec</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>获取 prim 的材料绑定关系，包括来自的覆盖
+活动变体.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getMaterialBindingTarget" translate="no">.<a href="#_getMaterialBindingTarget">_getMaterialBindingTarget</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>获取 prim 的解析材料结合目标。材料绑定是
+继承，并且标记为 StrongThanDescendants 的祖先优先
+在其后代上创作的绑定。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getMaterialPath" translate="no">.<a href="#_getMaterialPath">_getMaterialPath</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>获取网格体的材质路径，检查各种绑定源。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_getReferences" translate="no">.<a href="#_getReferences">_getReferences</a><span class="signature">()</span><span class="type-signature"> : Array.&lt;string></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从原始规范中获取所有参考值。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>参考字符串数组，例如“@path@”或"@path@&lt;prim>"</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="_getVariantPaths" translate="no">.<a href="#_getVariantPaths">_getVariantPaths</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据变体选择获取父路径的变体路径。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_hasNonIdentityTransform" translate="no">.<a href="#_hasNonIdentityTransform">_hasNonIdentityTransform</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检查对象是否具有非同一局部变换。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_isDirectChild" translate="no">.<a href="#_isDirectChild">_isDirectChild</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>检查路径是否是parentPath的直接子级。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_resolveAttributeValue" translate="no">.<a href="#_resolveAttributeValue">_resolveAttributeValue</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析属性的创作值，使用前遵循连接
+本地后备值。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_resolveFilePath" translate="no">.<a href="#_resolveFilePath">_resolveFilePath</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析相对于basePath的文件路径。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="_resolveReference" translate="no">.<a href="#_resolveReference">_resolveReference</a><span class="signature">( refValue : <span class="param-type">string</span>, localVariants : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Group.html">Group</a> | null</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析美元引用并返回组成的内容。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">refValue</strong>
+									</td>
+									<td class="description last">
+										<p>引用值，例如"@./path/to/file.usdc@"</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">localVariants</strong>
+									</td>
+									<td class="description last">
+										<p>要应用的变体选择</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 组合内容或 null</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="applyTransform" translate="no">.<a href="#applyTransform">applyTransform</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将 USD 转换应用于 Three.js 对象。
+使用适当的矩阵组合处理 xformOpOrder。
+USD 使用行向量约定，Three.js 使用列向量。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="compose" translate="no">.<a href="#compose">compose</a><span class="signature">( parsedData : <span class="param-type">Object</span>, assets : <span class="param-type">Object</span>, variantSelections : <span class="param-type">Object</span>, basePath : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="Group.html">Group</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据解析的 USD 数据构建 Three.js 场景。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parsedData</strong>
+									</td>
+									<td class="description last">
+										<p>来自 USDCParser 或 USDAParser 的数据</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">assets</strong>
+									</td>
+									<td class="description last">
+										<p>引用资产的字典（specsByPath 或 blob） URL)</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">variantSelections</strong>
+									</td>
+									<td class="description last">
+										<p>外部变量选择</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">basePath</strong>
+									</td>
+									<td class="description last">
+										<p>解析相对引用的基本路径</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> Three.js场景图</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/loaders/usd/USDComposer.js" translate="no" target="_blank" rel="noopener"> examples/jsm/loaders/usd/USDComposer.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>RoomEnvironment - Three.js文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → <a href="Scene.html">Scene</a> → </p>
+	<h1 translate="no">RoomEnvironment</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此类表示具有基本房间设置的场景，可用作
+输入 <a href="PMREMGenerator.html#fromScene">PMREMGenerator#fromScene</a>。生成的 PMREM 代表房间的
+照明，可通过将其分配给 <a href="Scene.html#environment">Scene#environment</a> 来用于基于图像的照明
+或者直接作为 PBR 材质的环境贴图。</p>
+<p>实现基于 <a href="https://github.com/google/model-viewer/blob/master/packages/model-viewer/src/three-components/EnvironmentScene.ts" target="_blank" rel="noopener">EnvironmentScene</a>
+来自 <code>model-viewer</code> 项目的组件。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const environment = new RoomEnvironment();
+const pmremGenerator = new THREE.PMREMGenerator( renderer );
+const envMap = pmremGenerator.fromScene( environment ).texture;
+scene.environment = envMap;
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">RoomEnvironment</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="RoomEnvironment" translate="no">new <a href="#RoomEnvironment">RoomEnvironment</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要环境时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Scene.html#dispose">Scene#dispose</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/environments/RoomEnvironment.js" translate="no" target="_blank" rel="noopener"> examples/jsm/environments/RoomEnvironment.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

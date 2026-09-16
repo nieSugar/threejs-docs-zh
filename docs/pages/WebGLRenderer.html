@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>WebGLRenderer - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">WebGLRenderer</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此渲染器使用 WebGL 2 显示场景。</p>
+<p>WebGL 1 不受支持，因为<code>r163</code>.</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="WebGLRenderer" translate="no">new <a href="#WebGLRenderer">WebGLRenderer</a><span class="signature">( parameters : <span class="param-type"><a href="WebGLRenderer.html#~Options">WebGLRenderer~Options</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的WebGL渲染器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>配置参数.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="autoClear" translate="no">.<a href="#autoClear">autoClear</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>渲染器是否应在渲染帧之前自动清除其输出。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="autoClearColor" translate="no">.<a href="#autoClearColor">autoClearColor</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>如果<a href="WebGLRenderer.html#autoClear">WebGLRenderer#autoClear</a>设置为<code>true</code>，渲染器是否应清除
+颜色缓冲区是否。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="autoClearDepth" translate="no">.<a href="#autoClearDepth">autoClearDepth</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>如果 <a href="WebGLRenderer.html#autoClear">WebGLRenderer#autoClear</a> 设置为 <code>true</code>，渲染器是否应清除
+深度缓冲区是否。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="autoClearStencil" translate="no">.<a href="#autoClearStencil">autoClearStencil</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>如果 <a href="WebGLRenderer.html#autoClear">WebGLRenderer#autoClear</a> 设置为 <code>true</code>，渲染器是否应清除
+是否使用模板缓冲区。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="capabilities" translate="no">.<a href="#capabilities">capabilities</a><span class="type-signature"> : <a href="WebGLRenderer.html#~Capabilities">WebGLRenderer~Capabilities</a></span> </h3>
+					<div class="description">
+						<p>保存有关当前渲染上下文功能的详细信息。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="clippingPlanes" translate="no">.<a href="#clippingPlanes">clippingPlanes</a><span class="type-signature"> : Array.&lt;<a href="Plane.html">Plane</a>></span> </h3>
+					<div class="description">
+						<p>在世界空间中指定的用户定义的剪切平面。这些飞机适用于全球。
+空间中与平面的点积为负的点将被切除。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="coordinateSystem" translate="no">.<a href="#coordinateSystem">coordinateSystem</a><span class="type-signature"> : <a href="global.html#WebGLCoordinateSystem">WebGLCoordinateSystem</a> | <a href="global.html#WebGPUCoordinateSystem">WebGPUCoordinateSystem</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>定义渲染器的坐标系。</p>
+<p>在<code>WebGLRenderer</code>中，该值始终为<code>WebGLCoordinateSystem</code>.</p>
+						<p>默认为<code>WebGLCoordinateSystem</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="debug" translate="no">.<a href="#debug">debug</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>具有调试配置设置的对象。</p>
+<ul>
+<li><code>checkShaderErrors</code>：如果是 <code>true</code>，定义在编译和链接过程中是否检查材质着色器程序的错误。在生产环境中，为了提高性能，可能会禁用此检查。强烈建议在开发过程中保持这些检查启用。如果着色器未能编译和链接，它将无法工作，相关材质也将无法渲染。</li>
+<li><code>onShaderError(gl, program, glVertexShader,glFragmentShader)</code>：一个可以用于自定义错误报告的回调函数。该回调接收 WebGL 上下文、一个 WebGLProgram 实例以及两个 WebGLShader 实例，分别表示顶点着色器和片段着色器。分配自定义函数将禁用默认的错误报告。</li>
+</ul>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="domElement" translate="no">.<a href="#domElement">domElement</a><span class="type-signature"> : HTMLCanvasElement | OffscreenCanvas</span> </h3>
+					<div class="description">
+						<p>渲染器在其中绘制输出的画布。这是由渲染器自动创建的
+在构造函数中（如果尚未提供）；您只需将其添加到您的页面，如下所示：</p>
+<pre><code class="language-js">document.body.appendChild( renderer.domElement );
+</code></pre>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="extensions" translate="no">.<a href="#extensions">extensions</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>提供用于检索和测试 WebGL 扩展的方法。</p>
+<ul>
+<li><code>get(extensionName:string)</code>：用于检查 WebGL 扩展是否受支持，并在可用时返回该扩展对象。</li>
+<li><code>has(extensionName:string)</code>: 如果支持该扩展，则返回 <code>true</code>。</li>
+</ul>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="info" translate="no">.<a href="#info">info</a><span class="type-signature"> : <a href="WebGLRenderer.html#~Info">WebGLRenderer~Info</a></span> </h3>
+					<div class="description">
+						<p>保存一系列有关GPU内存的统计信息
+以及渲染过程。对于调试和监视很有用。</p>
+<p>默认情况下，这些数据会在每次渲染调用时重置，但是当有
+每帧多个渲染通道（例如，使用后处理时）
+优先使用自定义模式重置。首先，将 <code>autoReset</code> 设置为
+<code>false</code>.</p>
+<pre><code class="language-js">renderer.info.autoReset = false;
+</code></pre>
+<p>每当完成渲染单帧时调用<code>reset()</code>。</p>
+<pre><code class="language-js">renderer.info.reset();
+</code></pre>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isWebGLRenderer" translate="no">.<a href="#isWebGLRenderer">isWebGLRenderer</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="localClippingEnabled" translate="no">.<a href="#localClippingEnabled">localClippingEnabled</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>渲染器是否尊重对象级剪切平面。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="outputColorSpace" translate="no">.<a href="#outputColorSpace">outputColorSpace</a><span class="type-signature"> : <a href="global.html#SRGBColorSpace">SRGBColorSpace</a> | <a href="global.html#LinearSRGBColorSpace">LinearSRGBColorSpace</a></span> </h3>
+					<div class="description">
+						<p>定义渲染器的输出颜色空间。</p>
+						<p>默认为<code>SRGBColorSpace</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="properties" translate="no">.<a href="#properties">properties</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>用于跟踪其他对象（如本机 WebGL 对象）的属性。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="renderLists" translate="no">.<a href="#renderLists">renderLists</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>管理渲染器的渲染列表。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="shadowMap" translate="no">.<a href="#shadowMap">shadowMap</a><span class="type-signature"> : <a href="WebGLRenderer.html#~ShadowMap">WebGLRenderer~ShadowMap</a></span> </h3>
+					<div class="description">
+						<p>管理阴影的接口。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sortObjects" translate="no">.<a href="#sortObjects">sortObjects</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>渲染器是否应对对象进行排序。</p>
+<p>注意：排序用于尝试正确渲染具有某些
+透明度。根据定义，对对象进行排序可能并不适用于所有情况
+案例。根据应用的需要，可能需要转
+关闭排序并使用其他方法来处理透明度渲染，例如
+手动确定每个对象的渲染顺序。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="state" translate="no">.<a href="#state">state</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>用于管理 WebGL 状态的接口。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="toneMapping" translate="no">.<a href="#toneMapping">toneMapping</a><span class="type-signature"> : <a href="global.html#NoToneMapping">NoToneMapping</a> | <a href="global.html#LinearToneMapping">LinearToneMapping</a> | <a href="global.html#ReinhardToneMapping">ReinhardToneMapping</a> | <a href="global.html#CineonToneMapping">CineonToneMapping</a> | <a href="global.html#ACESFilmicToneMapping">ACESFilmicToneMapping</a> | <a href="global.html#CustomToneMapping">CustomToneMapping</a> | <a href="global.html#AgXToneMapping">AgXToneMapping</a> | <a href="global.html#NeutralToneMapping">NeutralToneMapping</a></span> </h3>
+					<div class="description">
+						<p>渲染器的色调映射技术。</p>
+						<p>默认为<code>NoToneMapping</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="toneMappingExposure" translate="no">.<a href="#toneMappingExposure">toneMappingExposure</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>色调映射的曝光级别。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="transmissionResolutionScale" translate="no">.<a href="#transmissionResolutionScale">transmissionResolutionScale</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>传输渲染目标的归一化分辨率比例，以百分比为单位
+视口尺寸。降低该值可以显着提高性能
+当使用 <a href="MeshPhysicalMaterial.html#transmission">MeshPhysicalMaterial#transmission</a>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="xr" translate="no">.<a href="#xr">xr</a><span class="type-signature"> : <a href="WebXRManager.html">WebXRManager</a></span> </h3>
+					<div class="description">
+						<p>A 对 XR 管理器的引用时。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="clear" translate="no">.<a href="#clear">clear</a><span class="signature">( color : <span class="param-type">boolean</span>, depth : <span class="param-type">boolean</span>, stencil : <span class="param-type">boolean</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>告诉渲染器清除其颜色、深度或模板绘制缓冲区。
+此方法将缓冲区初始化为当前清除颜色值。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">color</strong>
+									</td>
+									<td class="description last">
+										<p>是否颜色缓冲区是否应清除。</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depth</strong>
+									</td>
+									<td class="description last">
+										<p>是否应清除深度缓冲区。</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">stencil</strong>
+									</td>
+									<td class="description last">
+										<p>是否应清除模板缓冲区。</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="clearColor" translate="no">.<a href="#clearColor">clearColor</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>清除颜色缓冲区。相当于调用 <code>renderer.clear( true, false, false )</code>.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="clearDepth" translate="no">.<a href="#clearDepth">clearDepth</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 清除深度缓冲区。相当于调用 <code>renderer.clear( false, true, false )</code>.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="clearStencil" translate="no">.<a href="#clearStencil">clearStencil</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 清除模板缓冲区。相当于调用<code>renderer.clear( false, false, true )</code>.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="compile" translate="no">.<a href="#compile">compile</a><span class="signature">( scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, targetScene : <span class="param-type"><a href="Scene.html">Scene</a></span> )</span><span class="type-signature"> : Set.&lt;<a href="Material.html">Material</a>></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>用相机编译场景中的所有材质。这对于预编译着色器很有用
+在第一次渲染之前。如果要将 3D 对象添加到现有场景，请使用第三个
+应用目标场景的可选参数。</p>
+<p>注意，在调用此方法之前必须配置（目标）场景的光照和环境。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要预编译的场景或其他类型的 3D 对象。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>相机.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">targetScene</strong>
+									</td>
+									<td class="description last">
+										<p>目标场景.</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>预编译的材料.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="compileAsync" translate="no">.<a href="#compileAsync">compileAsync</a><span class="signature">( scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, targetScene : <span class="param-type"><a href="Scene.html">Scene</a></span> )</span><span class="type-signature"> : Promise</span> <span class="type-signature">(async) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>异步版本<a href="WebGLRenderer.html#compile">WebGLRenderer#compile</a>.</p>
+<p>此方法使用<code>KHR_parallel_shader_compile</code> WebGL扩展。因此，
+建议尽可能使用此版本的 <code>compile()</code>。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要预编译的场景或其他类型的 3D 对象。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>相机.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">targetScene</strong>
+									</td>
+									<td class="description last">
+										<p>目标场景.</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 一个 Promise，当可以渲染给定场景时解析，而不会因着色器编译而造成不必要的停顿。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="copyFramebufferToTexture" translate="no">.<a href="#copyFramebufferToTexture">copyFramebufferToTexture</a><span class="signature">( texture : <span class="param-type"><a href="FramebufferTexture.html">FramebufferTexture</a></span>, position : <span class="param-type"><a href="Vector2.html">Vector2</a></span>, level : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将像素从当前绑定的帧缓冲区复制到给定的帧缓冲区纹理.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">position</strong>
+									</td>
+									<td class="description last">
+										<p>复制操作的起始位置.</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">level</strong>
+									</td>
+									<td class="description last">
+										<p>mip级别。默认值表示基本 mip。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="copyTextureToTexture" translate="no">.<a href="#copyTextureToTexture">copyTextureToTexture</a><span class="signature">( srcTexture : <span class="param-type"><a href="Texture.html">Texture</a></span>, dstTexture : <span class="param-type"><a href="Texture.html">Texture</a></span>, srcRegion : <span class="param-type"><a href="Box2.html">Box2</a> | <a href="Box3.html">Box3</a></span>, dstPosition : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a></span>, srcLevel : <span class="param-type">number</span>, dstLevel : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定源纹理的数据复制到目标纹理中。</p>
+<p>当使用渲染目标纹理作为 <code>srcTexture</code> 和 <code>dstTexture</code> 时，必须确保两个渲染目标均已初始化
+<a href="WebGLRenderer.html#initRenderTarget">WebGLRenderer#initRenderTarget</a>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">srcTexture</strong>
+									</td>
+									<td class="description last">
+										<p>源纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">dstTexture</strong>
+									</td>
+									<td class="description last">
+										<p>目标纹理.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">srcRegion</strong>
+									</td>
+									<td class="description last">
+										<p>描述源区域的边界框。可以是二维或三维的。</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">dstPosition</strong>
+									</td>
+									<td class="description last">
+										<p>表示目标区域原点的向量。可以是二维或三维的。</p>
+										<p>默认为<code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">srcLevel</strong>
+									</td>
+									<td class="description last">
+										<p>要复制的源 mipmap 级别。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">dstLevel</strong>
+									</td>
+									<td class="description last">
+										<p>目标 mipmap 级别。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放分配的GPU相关资源通过这个例子。打电话给这个
+每当您的应用程序中不再使用此实例时，方法。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="forceContextLoss" translate="no">.<a href="#forceContextLoss">forceContextLoss</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>模拟 WebGL 上下文的丢失。这需要支持 <code>WEBGL_lose_context</code> 扩展。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="forceContextRestore" translate="no">.<a href="#forceContextRestore">forceContextRestore</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 模拟 WebGL 上下文的恢复。这需要支持 <code>WEBGL_lose_context</code> 扩展。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="getActiveCubeFace" translate="no">.<a href="#getActiveCubeFace">getActiveCubeFace</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动立方体面。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>活动立方体面。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getActiveMipmapLevel" translate="no">.<a href="#getActiveMipmapLevel">getActiveMipmapLevel</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动 mipmap level.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 活动 mipmap 级别。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getClearAlpha" translate="no">.<a href="#getClearAlpha">getClearAlpha</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 返回清晰的 alpha。 <code>[0,1]</code> 内的范围。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>透明alpha.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getClearColor" translate="no">.<a href="#getClearColor">getClearColor</a><span class="signature">( target : <span class="param-type"><a href="Color.html">Color</a></span> )</span><span class="type-signature"> : <a href="Color.html">Color</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回透明颜色.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>该方法将结果写入此目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 清晰的颜色。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getContext" translate="no">.<a href="#getContext">getContext</a><span class="signature">()</span><span class="type-signature"> : WebGL2RenderingContext</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回渲染上下文。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 渲染上下文。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getContextAttributes" translate="no">.<a href="#getContextAttributes">getContextAttributes</a><span class="signature">()</span><span class="type-signature"> : WebGLContextAttributes</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回渲染上下文属性。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 渲染上下文属性。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getCurrentViewport" translate="no">.<a href="#getCurrentViewport">getCurrentViewport</a><span class="signature">( target : <span class="param-type"><a href="Vector2.html">Vector2</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回当前视口定义.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>该方法将结果写入此目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>当前视口定义。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getDrawingBufferSize" translate="no">.<a href="#getDrawingBufferSize">getDrawingBufferSize</a><span class="signature">( target : <span class="param-type"><a href="Vector2.html">Vector2</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回以物理像素为单位的绘图缓冲区大小。此方法遵循像素比率。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>该方法将结果写入此目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 绘图缓冲区大小。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getPixelRatio" translate="no">.<a href="#getPixelRatio">getPixelRatio</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回像素比率。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>像素比率。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getRenderTarget" translate="no">.<a href="#getRenderTarget">getRenderTarget</a><span class="signature">()</span><span class="type-signature"> : <a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动渲染目标。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>活动渲染目标。如果没有渲染目标，则返回 <code>null</code>
+当前已设置。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getScissor" translate="no">.<a href="#getScissor">getScissor</a><span class="signature">( target : <span class="param-type"><a href="Vector4.html">Vector4</a></span> )</span><span class="type-signature"> : <a href="Vector4.html">Vector4</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回剪刀区域。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>该方法将结果写入此目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 剪刀区域。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getScissorTest" translate="no">.<a href="#getScissorTest">getScissorTest</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果剪刀测试为，则返回 <code>true</code>启用.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>是否启用剪刀测试。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getSize" translate="no">.<a href="#getSize">getSize</a><span class="signature">( target : <span class="param-type"><a href="Vector2.html">Vector2</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回渲染器的逻辑像素大小。此方法不支持像素比率。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>该方法将结果写入此目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>渲染器的逻辑像素大小。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getViewport" translate="no">.<a href="#getViewport">getViewport</a><span class="signature">( target : <span class="param-type"><a href="Vector4.html">Vector4</a></span> )</span><span class="type-signature"> : <a href="Vector4.html">Vector4</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回视口定义。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>该方法将结果写入此目标对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>视口</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="initRenderTarget" translate="no">.<a href="#initRenderTarget">initRenderTarget</a><span class="signature">( target : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>初始化给定的WebGLRenderTarget内存。对于初始化渲染目标以便数据很有用
+可以在之前使用 <a href="WebGLRenderer.html#copyTextureToTexture">WebGLRenderer#copyTextureToTexture</a> 复制到其中
+渲染到.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>渲染目标.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="initTexture" translate="no">.<a href="#initTexture">initTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>初始化给定的纹理。对于预加载纹理而不是等到第一次加载很有用
+渲染（由于解码和 GPU 上传开销，可能会导致明显的滞后）。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>纹理.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="readRenderTargetPixels" translate="no">.<a href="#readRenderTargetPixels">readRenderTargetPixels</a><span class="signature">( renderTarget : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span>, x : <span class="param-type">number</span>, y : <span class="param-type">number</span>, width : <span class="param-type">number</span>, height : <span class="param-type">number</span>, buffer : <span class="param-type">TypedArray</span>, activeCubeFaceIndex : <span class="param-type">number</span>, textureIndex : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将像素数据从给定渲染目标读取到给定缓冲区中。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderTarget</strong>
+									</td>
+									<td class="description last">
+										<p>要读取的渲染目标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">x</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域的 <code>x</code> 坐标原点.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">y</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域原点的<code>y</code>坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域的高度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">buffer</strong>
+									</td>
+									<td class="description last">
+										<p>结果缓冲区.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">activeCubeFaceIndex</strong>
+									</td>
+									<td class="description last">
+										<p>活动立方体面索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureIndex</strong>
+									</td>
+									<td class="description last">
+										<p>MRT 渲染的纹理索引target.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="readRenderTargetPixelsAsync" translate="no">.<a href="#readRenderTargetPixelsAsync">readRenderTargetPixelsAsync</a><span class="signature">( renderTarget : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span>, x : <span class="param-type">number</span>, y : <span class="param-type">number</span>, width : <span class="param-type">number</span>, height : <span class="param-type">number</span>, buffer : <span class="param-type">TypedArray</span>, activeCubeFaceIndex : <span class="param-type">number</span>, textureIndex : <span class="param-type">number</span> )</span><span class="type-signature"> : Promise.&lt;TypedArray></span> <span class="type-signature">(async) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>异步、非阻塞版本的<a href="WebGLRenderer.html#readRenderTargetPixels">WebGLRenderer#readRenderTargetPixels</a>.</p>
+<p>建议尽可能使用此版本的<code>readRenderTargetPixels()</code>。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderTarget</strong>
+									</td>
+									<td class="description last">
+										<p>要读取的渲染目标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">x</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域的 <code>x</code> 坐标原点.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">y</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域原点的<code>y</code>坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>复制区域的高度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">buffer</strong>
+									</td>
+									<td class="description last">
+										<p>结果缓冲区.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">activeCubeFaceIndex</strong>
+									</td>
+									<td class="description last">
+										<p>活动立方体面索引。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureIndex</strong>
+									</td>
+									<td class="description last">
+										<p>MRT 渲染的纹理索引target.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 读取完成后解析的 Promise。解析以类型化数组的形式提供读取的数据。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="render" translate="no">.<a href="#render">render</a><span class="signature">( scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>渲染给定场景（或其他类型的场景） 3D 对象）使用给定的相机。</p>
+<p>通过调用 <a href="WebGLRenderer.html#setRenderTarget">WebGLRenderer#setRenderTarget</a> 对先前指定的渲染目标集进行渲染
+或照常到画布。</p>
+<p>默认情况下，渲染缓冲区在渲染前被清除，但您可以防止
+通过将属性 <code>autoClear</code> 设置为 <code>false</code> 来实现此目的。如果你想阻止
+仅清除某些缓冲区，您可以 <code>autoClearColor</code>, <code>autoClearDepth</code>
+或 <code>autoClearStencil</code> 至 <code>false</code>。要强制清除，请使用 <a href="WebGLRenderer.html#clear">WebGLRenderer#clear</a>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要渲染的场景.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>相机.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="resetState" translate="no">.<a href="#resetState">resetState</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 可用于重置内部 WebGL 状态。这种方法大多是
+与共享单个 WebGL 上下文的应用程序相关
+多个 WebGL 库。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="setAnimationLoop" translate="no">.<a href="#setAnimationLoop">setAnimationLoop</a><span class="signature">( callback : <span class="param-type"><a href="global.html#onAnimationCallback">onAnimationCallback</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>建议应用程序始终定义动画循环
+使用此方法而不是手动使用 <code>requestAnimationFrame()</code>
+为了获得最佳兼容性。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">callback</strong>
+									</td>
+									<td class="description last">
+										<p>应用程序的动画循环。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setClearAlpha" translate="no">.<a href="#setClearAlpha">setClearAlpha</a><span class="signature">( alpha : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置清晰 alpha。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">alpha</strong>
+									</td>
+									<td class="description last">
+										<p>清除alpha.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setClearColor" translate="no">.<a href="#setClearColor">setClearColor</a><span class="signature">( color : <span class="param-type"><a href="Color.html">Color</a></span>, alpha : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置清晰颜色和 alpha。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">color</strong>
+									</td>
+									<td class="description last">
+										<p>透明颜色.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">alpha</strong>
+									</td>
+									<td class="description last">
+										<p>清除alpha.</p>
+										<p>默认为<code>1</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setDrawingBufferSize" translate="no">.<a href="#setDrawingBufferSize">setDrawingBufferSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span>, pixelRatio : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法允许通过指定来定义绘图缓冲区大小
+宽度、高度和像素比同时显示。图纸尺寸
+缓冲区使用以下公式计算：</p>
+<pre><code class="language-js">size.x = width * pixelRatio;
+size.y = height * pixelRatio;
+</code></pre>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的宽度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的高度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">pixelRatio</strong>
+									</td>
+									<td class="description last">
+										<p>像素比率。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setEffects" translate="no">.<a href="#setEffects">setEffects</a><span class="signature">( effects : <span class="param-type">Array</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置渲染后要应用的后处理效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">effects</strong>
+									</td>
+									<td class="description last">
+										<p>后处理数组effects.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setNodesHandler" translate="no">.<a href="#setNodesHandler">setNodesHandler</a><span class="signature">( nodesHandler : <span class="param-type"><a href="WebGLNodesHandler.html">WebGLNodesHandler</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置用于使用 WebGLRenderer 渲染节点材质的兼容性节点生成器。
+这使得可以使用 TSL（Three.js Shading Language）节点材质来准备
+用于迁移到 WebGPURenderer。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">nodesHandler</strong>
+									</td>
+									<td class="description last">
+										<p>节点生成器实例。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setOpaqueSort" translate="no">.<a href="#setOpaqueSort">setOpaqueSort</a><span class="signature">( method : <span class="param-type">function</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>为渲染列表设置自定义不透明排序函数。通过<code>null</code>
+使用默认的 <code>painterSortStable</code> 函数。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">method</strong>
+									</td>
+									<td class="description last">
+										<p>不透明排序函数。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setPixelRatio" translate="no">.<a href="#setPixelRatio">setPixelRatio</a><span class="signature">( value : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置给定的像素比率并调整画布大小，如果必要的。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>像素比率。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setRenderTarget" translate="no">.<a href="#setRenderTarget">setRenderTarget</a><span class="signature">( renderTarget : <span class="param-type"><a href="WebGLRenderTarget.html">WebGLRenderTarget</a></span>, activeCubeFace : <span class="param-type">number</span>, activeMipmapLevel : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置活动渲染目标。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderTarget</strong>
+									</td>
+									<td class="description last">
+										<p>要设置的渲染目标。当给出 <code>null</code> 时，
+画布被设置为活动渲染目标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">activeCubeFace</strong>
+									</td>
+									<td class="description last">
+										<p>使用立方体渲染目标时的活动立方体面。
+指示使用 3D 或数组渲染目标时要渲染到的 z 层。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">activeMipmapLevel</strong>
+									</td>
+									<td class="description last">
+										<p> 活动 mipmap 级别。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setScissor" translate="no">.<a href="#setScissor">setScissor</a><span class="signature">( x : <span class="param-type">number | <a href="Vector4.html">Vector4</a></span>, y : <span class="param-type">number</span>, width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置要渲染的剪刀区域，从 <code>(x, y)</code> 到 <code>(x + width, y + height)</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">x</strong>
+									</td>
+									<td class="description last">
+										<p>剪刀左下角的水平坐标以逻辑像素为单位的区域原点。
+或者指定剪刀区域所有参数的四分量向量。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">y</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的剪刀区域原点左下角的垂直坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的剪刀区域的宽度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的剪刀区域的高度。逻辑像素单元中的剪刀区域。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setScissorTest" translate="no">.<a href="#setScissorTest">setScissorTest</a><span class="signature">( boolean : <span class="param-type">boolean</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>启用或禁用剪刀测试。启用此功能后，仅显示像素
+在定义的剪刀区域内将受到进一步渲染器的影响
+actions.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">boolean</strong>
+									</td>
+									<td class="description last">
+										<p>是否启用剪刀测试.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span>, updateStyle : <span class="param-type">boolean</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>根据设备像素比将输出画布大小调整为（宽度，高度）
+考虑在内，并设置视口以适合该大小，从 (0,
+0）。将 <code>updateStyle</code> 设置为 false 可防止对输出画布进行任何样式更改。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的宽度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的高度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">updateStyle</strong>
+									</td>
+									<td class="description last">
+										<p>是否更新画布的<code>style</code>属性.</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setTransparentSort" translate="no">.<a href="#setTransparentSort">setTransparentSort</a><span class="signature">( method : <span class="param-type">function</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 为渲染列表设置自定义透明排序函数。通过<code>null</code>
+使用默认的 <code>reversePainterSortStable</code> 函数。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">method</strong>
+									</td>
+									<td class="description last">
+										<p>不透明排序函数。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setViewport" translate="no">.<a href="#setViewport">setViewport</a><span class="signature">( x : <span class="param-type">number | <a href="Vector4.html">Vector4</a></span>, y : <span class="param-type">number</span>, width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置要渲染的视口从 <code>(x, y)</code> 到 <code>(x + width, y + height)</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">x</strong>
+									</td>
+									<td class="description last">
+										<p>逻辑像素中视口原点左下角的水平坐标单位。
+或者指定视口所有参数的四分量向量。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">y</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的视口原点左下角的垂直坐标。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的视口宽度。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>以逻辑像素为单位的视口高度单位.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">类型定义</h2>
+				<div class="member">
+					<h3 class="name" id="~Capabilities" translate="no">.<a href="#~Capabilities">Capabilities</a> </h3>
+					<div class="description">
+						<p>WebGLRenderer 功能。</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>getMaxAnisotropy</strong>
+						<br>
+<span class="param-type">function</span>
+				</td>
+			<td class="description last">
+				<p>返回最大可用各向异性。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>getMaxPrecision</strong>
+						<br>
+<span class="param-type">function</span>
+				</td>
+			<td class="description last">
+				<p>返回顶点和片段的最大可用精度</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>logarithmicDepthBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p><code>true</code> 如果<code>logarithmicDepthBuffer</code> 在构造函数中设置为<code>true</code>。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxAttributes</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>顶点可以使用的着色器属性的数量着色器.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxCubemapSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>着色器可以使用的立方体贴图纹理的最大高度 * 宽度。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxFragmentUniforms</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>片段着色器可以使用的制服数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxSamples</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>多重采样抗锯齿上下文中的最大样本数(MSAA).</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxTextures</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>着色器可以使用的纹理的最大数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxTextureSize</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>着色器使用的纹理的最大高度 * 宽度。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxVaryings</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>着色器可以使用的变化向量的数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxVertexTextures</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>着色器可以使用的变化向量的数量。可以在顶点着色器中使用的纹理。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>maxVertexUniforms</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>可以在顶点着色器中使用的最大制服数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>precision</strong>
+						<br>
+<span class="param-type">string</span>
+				</td>
+			<td class="description last">
+				<p>渲染器当前使用的着色器精度。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>reversedDepthBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p><code>true</code> if <code>reversedDepthBuffer</code> 在构造函数中设置为 <code>true</code>
+并且渲染上下文支持<code>EXT_clip_control</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="~Info" translate="no">.<a href="#~Info">Info</a> </h3>
+					<div class="description">
+						<p>WebGLRenderer Info</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>autoReset</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否由渲染器自动重置信息</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>memory</strong>
+						<br>
+<span class="param-type"><a href="WebGLRenderer.html#~InfoMemory">WebGLRenderer~InfoMemory</a></span>
+				</td>
+			<td class="description last">
+				<p>有关分配的信息对象.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>render</strong>
+						<br>
+<span class="param-type"><a href="WebGLRenderer.html#~InfoRender">WebGLRenderer~InfoRender</a></span>
+				</td>
+			<td class="description last">
+				<p>有关渲染对象的信息.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>programs</strong>
+						<br>
+<span class="param-type">Array.&lt;WebGLProgram></span>
+				</td>
+			<td class="description last">
+				<p>用于渲染的数组<code>WebGLProgram</code>s.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>reset</strong>
+						<br>
+<span class="param-type">function</span>
+				</td>
+			<td class="description last">
+				<p>重置下一帧的信息对象.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="~InfoMemory" translate="no">.<a href="#~InfoMemory">InfoMemory</a> </h3>
+					<div class="description">
+						<p>WebGL渲染器信息内存</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>geometries</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动属性的数量geometries.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>textures</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>活动存储属性的数量纹理.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="~InfoRender" translate="no">.<a href="#~InfoRender">InfoRender</a> </h3>
+					<div class="description">
+						<p>WebGLRenderer信息渲染</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>frame</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>帧ID.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>calls</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>每帧绘制调用的数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>triangles</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>每帧渲染的三角形图元的数量。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>points</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>每帧渲染的点图元的数量帧.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>lines</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>每帧渲染的线图元数量。</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="~Options" translate="no">.<a href="#~Options">Options</a> </h3>
+					<div class="description">
+						<p>WebGLRenderer 选项.</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>canvas</strong>
+						<br>
+<span class="param-type">HTMLCanvasElement</span>
+|
+<span class="param-type">OffscreenCanvas</span>
+				</td>
+			<td class="description last">
+				<p>渲染器在其中绘制输出的画布元素。如果此处未传入，则渲染器将创建一个新的画布元素。</p>
+						<p>默认为<code>null</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>context</strong>
+						<br>
+<span class="param-type">WebGL2RenderingContext</span>
+				</td>
+			<td class="description last">
+				<p>可用于将现有渲染上下文附加到此渲染器。</p>
+						<p>默认为<code>null</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>precision</strong>
+						<br>
+<span class="param-type">'highp'</span>
+|
+<span class="param-type">'mediump'</span>
+|
+<span class="param-type">'lowp'</span>
+				</td>
+			<td class="description last">
+				<p>默认着色器精度。如果设备支持，则使用 <code>highp</code>。</p>
+						<p>默认为 <code>'highp'</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>alpha</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>控制默认的清除 alpha 值。当设置为<code>true</code>时，值为<code>0</code>。否则为 <code>1</code>.</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>premultipliedAlpha</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>渲染器是否假定颜色已预乘 alpha 或不。</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>antialias</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否使用默认的 MSAA。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>stencil</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>绘图缓冲区的模板缓冲区是否至少为是否为 8 位。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>preserveDrawingBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否保留缓冲区，直到手动清除或覆盖。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>powerPreference</strong>
+						<br>
+<span class="param-type">'default'</span>
+|
+<span class="param-type">'low-power'</span>
+|
+<span class="param-type">'high-performance'</span>
+				</td>
+			<td class="description last">
+				<p>向用户代理提供提示，指示哪种 GPU 配置适合此 WebGL 上下文。</p>
+						<p>默认为 <code>'default'</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>failIfMajorPerformanceCaveat</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>低性能时渲染器创建是否会失败检测到.</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>depth</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>绘图缓冲区是否具有至少16位的深度缓冲区。</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>logarithmicDepthBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否使用对数深度缓冲区。如果处理单个场景中规模的巨大差异，可能有必要使用此功能。
+请注意，此设置使用 <code>gl_FragDepth</code>（如果可用），这会禁用早期片段测试优化并可能导致性能下降。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>reversedDepthBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否使用反向深度缓冲区。需要 <code>EXT_clip_control</code> 扩展名。
+这是比对数深度缓冲区更快、更准确的版本。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>outputBufferType</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>定义输出缓冲区的类型。使用 <code>HalfFloatType</code> 进行 HDR 渲染，并提供色调映射和后处理支持。</p>
+						<p>默认为<code>UnsignedByteType</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<div class="member">
+					<h3 class="name" id="~ShadowMap" translate="no">.<a href="#~ShadowMap">ShadowMap</a> </h3>
+					<div class="description">
+						<p>WebGLRenderer 阴影贴图。</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>enabled</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>如果设置为 <code>true</code>，则在scene.</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>autoUpdate</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>启用场景中阴影的自动更新。
+如果不需要动态光照/阴影，可以将其设置为<code>false</code>.</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>needsUpdate</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>当设置为<code>true</code>时，场景中的阴影贴图
+将在下一次 <code>render</code> 调用中更新。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>type</strong>
+						<br>
+<span class="param-type"><a href="global.html#BasicShadowMap">BasicShadowMap</a></span>
+|
+<span class="param-type"><a href="global.html#PCFShadowMap">PCFShadowMap</a></span>
+|
+<span class="param-type"><a href="global.html#VSMShadowMap">VSMShadowMap</a></span>
+				</td>
+			<td class="description last">
+				<p>定义阴影贴图类型。</p>
+						<p>默认为 <code>PCFShadowMap</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/WebGLRenderer.js" translate="no" target="_blank" rel="noopener"> src/renderers/WebGLRenderer.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

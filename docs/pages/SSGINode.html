@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>SSGINode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → </p>
+	<h1 translate="no">SSGINode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于将屏幕空间全局照明（SSGI）应用到场景的后处理节点。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://github.com/cdrinmatane/SSRT3" target="_blank" rel="noopener">https://github.com/cdrinmatane/SSRT3</a>.</li>
+<li><a href="https://cdrinmatane.github.io/posts/ssaovb-code/" target="_blank" rel="noopener">https://cdrinmatane.github.io/posts/ssaovb-code/</a>.</li>
+<li><a href="https://cdrinmatane.github.io/cgspotlight-slides/ssilvb_slides.pdf" target="_blank" rel="noopener">https://cdrinmatane.github.io/cgspotlight-slides/ssilvb_slides.pdf</a>.</li>
+</ul>
+<p>效果的质量和性能主要取决于 <code>sliceCount</code> 和 <code>stepCount</code>。
+每个像素的总采样次数为 <code>sliceCount</code> * <code>stepCount</code> * <code>2</code>。这里有一些推荐的预设，取决于是否使用时间过滤。</p>
+<p>使用时间过滤（推荐）：</p>
+<ul>
+<li>低：<code>sliceCount</code> 的 <code>1</code>，<code>stepCount</code> 的 <code>12</code>。</li>
+<li>媒介：<code>sliceCount</code>的<code>2</code>，<code>stepCount</code>的<code>8</code>。</li>
+<li>高：<code>sliceCount</code>的<code>3</code>，<code>stepCount</code>的<code>16</code>。</li>
+</ul>
+<p>如果您注意到时间不稳定性（例如闪烁），请使用更高的切片计数。减少样品
+然后计数以减轻性能损失。</p>
+<p>没有时间过滤：</p>
+<ul>
+<li>低：<code>sliceCount</code>的<code>2</code>，<code>stepCount</code>的<code>6</code>。</li>
+<li>介质：<code>sliceCount</code> 的 <code>3</code>，<code>stepCount</code> 的 <code>8</code>。</li>
+<li>高：<code>sliceCount</code> 的 <code>4</code>，<code>stepCount</code> 的 <code>12</code>。</li>
+</ul></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">SSGINode</span>是一个插件，必须显式导入，请参阅<a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { ssgi } from 'three/addons/tsl/display/SSGINode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="SSGINode" translate="no">new <a href="#SSGINode">SSGINode</a><span class="signature">( beautyNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, depthNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, normalNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, camera : <span class="param-type"><a href="PerspectiveCamera.html">PerspectiveCamera</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的SSGI节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">beautyNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表美感或场景通道的纹理节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表场景深度的纹理节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">normalNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表场景法线的纹理节点.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>渲染场景的相机。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="aoIntensity" translate="no">.<a href="#aoIntensity">aoIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>Power应用于 AO 的函数，使其显得更暗/更亮。应在 <code>[0, 4]</code>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="backfaceLighting" translate="no">.<a href="#backfaceLighting">backfaceLighting</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 背面表面发射的光量范围内。
+应在 <code>[0, 1]</code>.</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="beautyNode" translate="no">.<a href="#beautyNode">beautyNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>代表美感或场景通道的纹理节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="depthNode" translate="no">.<a href="#depthNode">depthNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>表示场景深度的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="expFactor" translate="no">.<a href="#expFactor">expFactor</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 范围内控制样本分布。它是在每一步应用的指数，随着距离的增加，步长逐渐增大。
+应在 <code>[1, 3]</code>.</p>
+						<p>默认为<code>2</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="giIntensity" translate="no">.<a href="#giIntensity">giIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 间接漫射光强度范围内。应在 <code>[0, 100]</code>.</p>
+						<p>默认为<code>10</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="normalNode" translate="no">.<a href="#normalNode">normalNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>表示场景法线的节点。如果没有法线传递给
+构造函数（因为MRT不可用），法线可以自动
+根据着色器中的深度值重建。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="radius" translate="no">.<a href="#radius">radius</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 世界空间中的有效采样半径范围内。 AO和GI只能在该半径范围内产生影响。
+应在 <code>[1, 25]</code>.</p>
+						<p>默认为 <code>12</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sliceCount" translate="no">.<a href="#sliceCount">sliceCount</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;uint></span> </h3>
+					<div class="description">
+						<p> 每像素半球切片数范围内。这会产生很大的性能成本，应尽可能保持较低。
+应在 <code>[1, 4]</code>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="stepCount" translate="no">.<a href="#stepCount">stepCount</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;uint></span> </h3>
+					<div class="description">
+						<p> 沿给定半球切片一侧采集的样本数范围内。这会产生很大的性能成本，应该
+保持尽可能低。  应在 <code>[1, 32]</code>.</p>
+						<p>默认为 <code>12</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="thickness" translate="no">.<a href="#thickness">thickness</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 屏幕上对象的恒定厚度值（以世界单位表示）范围内。允许光线穿过超过该厚度值的表面。
+应在 <code>[0.01, 10]</code> 范围内。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>自节点渲染以来，<code>updateBeforeType</code> 设置为 <code>NodeUpdateType.FRAME</code>
+<code>updateBefore()</code>.</p>
+						<p>中每帧效果一次，默认为 <code>'frame'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBeforeType">TempNode#updateBeforeType</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="useLinearThickness" translate="no">.<a href="#useLinearThickness">useLinearThickness</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;bool></span> </h3>
+					<div class="description">
+						<p>是否随距离线性增加厚度（避免随距离丢失细节）。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="useScreenSpaceSampling" translate="no">.<a href="#useScreenSpaceSampling">useScreenSpaceSampling</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;bool></span> </h3>
+					<div class="description">
+						<p>使样本距离在屏幕空间而不是世界空间中（有助于获得更多细节） close).</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="useTemporalFiltering" translate="no">.<a href="#useTemporalFiltering">useTemporalFiltering</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否使用时间过滤。将此属性设置为
+<code>true</code> 需要使用 <code>TRAANode</code>。这将有助于减少噪音
+尽管它引入了典型的 TAA 伪影，例如重影和时间
+不稳定性.</p>
+<p>如果将此属性设置为 <code>false</code>，则通过 <code>DenoiseNode</code> 进行手动降噪
+为必填项。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要效果时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#dispose">TempNode#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getAONode" translate="no">.<a href="#getAONode">getAONode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理节点的形式返回效果的 AO 结果。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 表示效果的 AO 结果的纹理节点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getGINode" translate="no">.<a href="#getGINode">getGINode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理的形式返回效果的 GI 结果节点.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>表示效果的GI结果的纹理节点.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置效果的大小.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>效果的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>效果的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于设置效果的TSL code.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#setup">TempNode#setup</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于每帧渲染一次效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBefore">TempNode#updateBefore</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/display/SSGINode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/display/SSGINode.js</a></p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

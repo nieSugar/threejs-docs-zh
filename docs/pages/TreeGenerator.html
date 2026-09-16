@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>TreeGenerator - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">TreeGenerator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>生长一个程序树骨架 - 树干、树枝和细枝，每个都扫成锥形
+管 - 并将其烘焙到一个索引的 <a href="BufferGeometry.html">BufferGeometry</a> （位置和正常
+仅），准备实例化到森林中。它仅产生<em>分支</em>；添加树叶作为
+单独的层.</p>
+<p>对于给定的<code>seed</code>，分支是确定性的：递归扫描轻轻地放下
+具有平行传输框架的弯曲管（因此它们不会扭曲），由
+管道模型（每个孩子比其父母细得多），沿着管道传播孩子
+每个树枝的上部进行黄金角滚动，然后将它们拉回到
+光。角色中的喇叭形根部、非线性锥度和重力下垂填充。</p>
+<p>参数使用流畅的构建器设置：每个默认值都存在 <code>set&lt;Param&gt;()</code>
+( <code>setSeed</code>, <code>setLevels</code>, <code>setChildren</code>, … ), 每个返回 <code>this</code> 用于链接.</p>
+<p>Each <code>build()</code> 返回调用者拥有的一个新的、独立的网格，因此
+生成器可以重新参数化并重复构建以生长不同的支架：</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const generator = new TreeGenerator( material );
+const oak = generator.setSeed( 1 ).setLevels( 4 ).build();
+const pine = generator.setSeed( 2 ).setLevels( 5 ).build();
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="TreeGenerator" translate="no">new <a href="#TreeGenerator">TreeGenerator</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/generators/TreeGenerator.js" translate="no" target="_blank" rel="noopener"> examples/jsm/generators/TreeGenerator.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

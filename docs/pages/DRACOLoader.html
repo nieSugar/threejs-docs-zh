@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>DRACOLoader - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="Loader.html">Loader</a> → </p>
+	<h1 translate="no">DRACOLoader</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Draco 格式的加载器。</p>
+<p><a href="https://google.github.io/draco/" target="_blank" rel="noopener">Draco</a> 是一个开源库压缩
+以及解压缩 3D 网格和点云。压缩后的几何体可以明显更小，
+以客户端设备上额外的解码时间为代价。</p>
+<p>独立的 Draco 文件具有 <code>.drc</code> 扩展名，并包含顶点位置、法线、颜色、
+和其他属性。 Draco 文件不包含材质、纹理、动画或节点层次结构 –
+要使用这些功能，请将 Draco 几何体嵌入到 glTF 文件中。可以转换普通的glTF文件
+使用 <a href="https://github.com/CesiumGS/gltf-pipeline" target="_blank" rel="noopener">glTF-Pipeline</a> 到 Draco 压缩的 glTF 文件。
+当Draco与glTF一起使用时，<code>DRACOLoader</code>的实例将被<a href="GLTFLoader.html">GLTFLoader</a>内部使用。</p>
+<p>建议创建一个DRACOLoader实例并重复使用，以避免加载和创建
+多个解码器实例。</p>
+<p><code>DRACOLoader</code> 将自动使用 JS 或 WASM 解码库，基于
+浏览器功能。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const loader = new DRACOLoader();
+const geometry = await loader.loadAsync( 'models/draco/bunny.drc' );
+geometry.computeVertexNormals(); // optional
+loader.dispose();
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">DRACOLoader</span> 是一个插件，必须显式导入，请参阅<a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="DRACOLoader" translate="no">new <a href="#DRACOLoader">DRACOLoader</a><span class="signature">( manager : <span class="param-type"><a href="LoadingManager.html">LoadingManager</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的 Draco loader.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">manager</strong>
+									</td>
+									<td class="description last">
+										<p>加载管理器。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( url : <span class="param-type">string</span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>开始从给定的 URL 加载并传递加载的 Draco 资源
+到 <code>onLoad()</code> 回调。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">url</strong>
+									</td>
+									<td class="description last">
+										<p>要加载的文件的路径/URL。这也可以是数据 URI。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onLoad</strong>
+									</td>
+									<td class="description last">
+										<p>加载过程完成时执行。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onProgress</strong>
+									</td>
+									<td class="description last">
+										<p>加载正在进行时执行。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onError</strong>
+									</td>
+									<td class="description last">
+										<p>发生错误时执行。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#load">Loader#load</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">( buffer : <span class="param-type">ArrayBuffer</span>, onLoad : <span class="param-type">function</span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析给定的 Draco 数据。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">buffer</strong>
+									</td>
+									<td class="description last">
+										<p>原始 Draco 数据作为数组缓冲区。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onLoad</strong>
+									</td>
+									<td class="description last">
+										<p>在加载/解析过程完成时执行完成.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onError</strong>
+									</td>
+									<td class="description last">
+										<p>发生错误时执行。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#parse">Loader#parse</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setDecoderConfig" translate="no">.<a href="#setDecoderConfig">setDecoderConfig</a><span class="signature">( config : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="DRACOLoader.html">DRACOLoader</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>提供解码器库的配置。解码开始后无法更改配置。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">config</strong>
+									</td>
+									<td class="description last">
+										<p>解码器配置。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="important tag-deprecated"><strong>已弃用：</strong> 是</dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此加载程序的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setDecoderPath" translate="no">.<a href="#setDecoderPath">setDecoderPath</a><span class="signature">( path : <span class="param-type">string | Object</span> )</span><span class="type-signature"> : <a href="DRACOLoader.html">DRACOLoader</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>提供解码器库的配置。解码开始后无法更改配置。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">path</strong>
+									</td>
+									<td class="description last">
+										<p>解码器路径，或每个解码器具有显式 URL 的配置对象file.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此加载程序的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setWorkerLimit" translate="no">.<a href="#setWorkerLimit">setWorkerLimit</a><span class="signature">( workerLimit : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="DRACOLoader.html">DRACOLoader</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置解码期间要使用的 Web Worker 的最大数量。
+如果工作人员还用于应用程序中的其他任务，则较低的限制可能更好。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">workerLimit</strong>
+									</td>
+									<td class="description last">
+										<p>工作人员限制.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此加载程序的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/loaders/DRACOLoader.js" translate="no" target="_blank" rel="noopener"> examples/jsm/loaders/DRACOLoader.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

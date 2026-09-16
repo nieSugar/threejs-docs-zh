@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>WoodNodeMaterial - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">WoodNodeMaterial</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用 TSL（Three.js 着色语言）的程序木质材质。</p>
+<p>使用示例：</p>
+<p>// 使用预设（推荐用于常见木材类型）
+const Material = WoodNodeMaterial.fromPreset('walnut', 'gloss');</p>
+<p>// 使用自定义参数（用于高级自定义）
+const 材质 = new WoodNodeMaterial({
+中心尺寸：1.2，
+环厚：1/40，
+darkGrainColor：新三色（'#2a1a0a'），
+lightGrainColor: 新的三.Color('#8b4513'),
+清漆：1，
+清漆粗糙度：0.3
+});</p>
+<p>// 将预设与自定义覆盖混合
+const walnutParams = GetWoodPreset('核桃', '原始');
+const 材质 = new WoodNodeMaterial({
+...核桃参数，
+ringThickness: 1/50, // 覆盖特定参数
+透明涂层: 1 // 添加饰面
+});</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="WoodNodeMaterial" translate="no">new <a href="#WoodNodeMaterial">WoodNodeMaterial</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">Classes</h2>
+				<dl>
+					<dt><a href="WoodNodeMaterial.html">WoodNodeMaterial</a></dt>
+					<dd></dd>
+				</dl>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/materials/WoodNodeMaterial.js" translate="no" target="_blank" rel="noopener"> examples/jsm/materials/WoodNodeMaterial.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

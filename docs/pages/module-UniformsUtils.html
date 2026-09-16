@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>UniformsUtils - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">UniformsUtils</h1>
+		<section>
+			<header>
+			</header>
+			<article>
+				<div class="container-overview">
+					<div class="description"><p>提供用于管理制服的实用程序函数。</p></div>
+				</div>
+				<h2 class="subsection-title">静态方法</h2>
+					<h3 class="name name-method" id=".cloneUniforms" translate="no">.<a href="#.cloneUniforms">cloneUniforms</a><span class="signature">( src : <span class="param-type">Object</span> )</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>通过执行深层复制来克隆给定的制服定义。这意味着
+如果uniform的值引用一个像Vector3或Texture这样的对象，
+克隆的制服将引用新的对象引用。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">src</strong>
+									</td>
+									<td class="description last">
+										<p>表示统一定义的对象。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 克隆的统一。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".mergeUniforms" translate="no">.<a href="#.mergeUniforms">mergeUniforms</a><span class="signature">( uniforms : <span class="param-type">Array</span> )</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定的统一定义合并到单个对象中。自从
+方法内部使用cloneUniforms()，它在以下情况下执行深复制：
+生成合并的统一定义。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">uniforms</strong>
+									</td>
+									<td class="description last">
+										<p>包含统一定义的对象数组。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>合并后的制服.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/UniformsUtils.js" translate="no" target="_blank" rel="noopener"> src/renderers/shaders/UniformsUtils.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

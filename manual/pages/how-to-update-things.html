@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>如何更新对象</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – How to update Things">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>如何更新对象</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <div>
+            <p>默认情况下，所有对象如果已添加到场景中，则会自动更新其矩阵</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+const object = new THREE.Object3D();
+scene.add( object );
+</pre>
+            or if they are the child of another object that has been added to the scene:
+<pre class="prettyprint notranslate lang-js" translate="no">
+const object1 = new THREE.Object3D();
+const object2 = new THREE.Object3D();
+
+object1.add( object2 );
+scene.add( object1 ); //object1 and object2 will automatically update their matrices
+</pre>
+          </div>
+
+          <p>但是，如果您知道该对象将是静态的，则可以禁用此功能并在需要时手动更新变换矩阵。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+object.matrixAutoUpdate = false;
+object.updateMatrix();
+</pre>
+
+          <h2 id="buffergeometry">BufferGeometry</h2>
+          <div>
+            <p>
+              BufferGeometry 存储信息（例如顶点位置、面索引、法线、颜色、
+              UV 和任何自定义属性）在属性缓冲区中 - 也就是说，
+              [link:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays typed arrays]。
+              这使得它们通常比标准几何图形更快，但代价是更难
+              与. 一起工作。</p>
+            <p>关于更新 BufferGeometries，最重要的是要理解：
+              你不能调整缓冲区的大小（这是非常昂贵的，基本上相当于创建一个新的几何体）。
+              但是，您可以更新缓冲区的内容。</p>
+            <p>这意味着如果您知道 BufferGeometry 的某个属性将会增长，例如顶点数量，
+              您必须预先分配一个足够大的缓冲区来容纳可能创建的任何新顶点。的
+              当然，这也意味着您的 BufferGeometry 将有一个最大大小 - 有
+              无法创建可以有效无限扩展的 BufferGeometry。</p>
+            <p>我们将使用在渲染时延长的线的示例。我们会分配空间
+              在缓冲区中包含 500 个顶点，但首先使用“BufferGeometry.drawRange”仅绘制两个。</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+const MAX_POINTS = 500;
+
+// geometry
+const geometry = new THREE.BufferGeometry();
+
+// attributes
+const positions = new Float32Array( MAX_POINTS * 3 ); // 3 floats (x, y and z) per point
+geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+
+// draw range
+const drawCount = 2; // draw the first 2 points, only
+geometry.setDrawRange( 0, drawCount );
+
+// material
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// line
+const line = new THREE.Line( geometry, material );
+scene.add( line );
+</pre>
+             <p>接下来，我们将使用如下模式随机向线上添加点：</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+const positionAttribute = line.geometry.getAttribute( 'position' );
+
+let x = 0, y = 0, z = 0;
+
+for ( let i = 0; i &lt; positionAttribute.count; i ++ ) {
+
+    positionAttribute.setXYZ( i, x, y, z );
+
+    x += ( Math.random() - 0.5 ) * 30;
+    y += ( Math.random() - 0.5 ) * 30;
+    z += ( Math.random() - 0.5 ) * 30;
+
+}
+</pre>
+            <p>如果您想更改第一次渲染后渲染的<em>点数</em>，请执行以下操作：</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+line.geometry.setDrawRange( 0, newValue );
+</pre>
+            <p>如果您想在第一次渲染后更改位置数据值，您需要
+              像这样设置 needUpdate 标志：</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+positionAttribute.needsUpdate = true; // required after the first render
+</pre>
+
+            <p>如果在初始渲染后更改位置数据值，则可能需要重新计算
+              包围体，以便引擎的其他功能（例如视锥体剔除或助手）正常工作。</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+line.geometry.computeBoundingBox();
+line.geometry.computeBoundingSphere();
+</pre>
+
+            <p>[link:https://jsfiddle.net/t4m85pLr/1/ Here is a fiddle] 显示一条动画线，您可以根据您的用例进行调整。</p>
+
+            <h3 id="buffergeometry-examples">示例</h3>
+
+            <p>[示例：webgl_custom_attributes WebGL/自定义/属性]<br />
+              [示例：webgl_buffergeometry_custom_attributes_articles WebGL / buffergeometry /自定义/属性/粒子]
+            </p>
+
+          </div>
+
+          <h2 id="materials">材料</h2>
+          <div>
+            <p>所有制服值都可以自由更改（例如颜色、纹理、不透明度等），每帧值都会发送到着色器。</p>
+
+            <p>此外，GLstate 相关参数可以随时更改（深度测试、混合、多边形偏移等）。</p>
+
+            <p>以下属性在运行时无法轻松更改（一旦材质至少渲染一次）：</p>
+            <ul>
+              <li>制服的数量和类型</li>
+              <li>是否存在
+                <ul>
+                  <li>texture</li>
+                  <li>fog</li>
+                  <li>顶点颜色</li>
+                  <li>变形</li>
+                  <li>阴影贴图</li>
+                  <li>alpha测试</li>
+                  <li>透明</li>
+                </ul>
+              </li>
+            </ul>
+
+            <p>这些变化需要构建新的着色器程序。您需要设置</p>
+            <code>material.needsUpdate = true</code>
+
+            <p>请记住，这可能会非常慢并导致帧速率不稳定（尤其是在Windows上，因为DirectX中的着色器编译比OpenGL慢）。</p>
+
+            <p>为了获得更流畅的体验，您可以通过使用“虚拟”值（例如零强度光、白色纹理或零密度）来在某种程度上模拟这些功能的变化folg.</p>
+
+            <p>您可以自由更改用于几何块的材质，但是您无法更改对象划分块的方式（根据面材质）。 </p>
+
+            <h3 id="if-you-need-to-have-different-configurations-of-materials-during-runtime">如果在运行时需要有不同的材质配置：</h3>
+            <p>如果材质/块的数量很少，您可以预先对对象进行预划分（例如，人的头发/脸/身体/上衣/裤子，汽车的前部/侧面/顶部/玻璃/轮胎/内饰）。 </p>
+
+            <p>如果数量很大（例如，每个面可能不同），请考虑不同的解决方案，例如使用属性/纹理来驱动不同的每个面外观。</p>
+
+            <h3 id="materials-examples">示例</h3>
+            <p>
+              [示例：webgl_materials_car WebGL / 材料 / 汽车]<br />
+              [示例：webgl_postprocessing_dof WebGL / webgl_postprocessing / dof]
+            </p>
+          </div>
+
+
+          <h2 id="textures">纹理</h2>
+          <div>
+            <p>图像、画布、视频和数据纹理在更改时需要设置以下标志：</p>
+            <code>
+              texture.needsUpdate = true;
+            </code>
+            <p>渲染目标自动更新。</p>
+
+            <h3 id="textures-examples">示例</h3>
+            <p>
+              [示例：webgl_materials_video WebGL / 材质 / 视频]<br />
+              [示例：webgl_rtt WebGL / rtt]
+            </p>
+
+          </div>
+
+          <h2 id="cameras">Cameras</h2>
+          <div>
+            <p>相机的位置和目标会自动更新。如果你需要改变</p>
+            <ul>
+              <li>视场</li>
+              <li>方面</li>
+              <li>靠近</li>
+              <li>远的</li>
+            </ul>
+            <p>那么你需要重新计算投影矩阵：
+            </p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+</pre>
+          </div>
+
+          <h2 id="instancedmesh">InstancedMesh</h2>
+          <div>
+            <p>`InstancedMesh` 是一个在 ` Three.js` 中方便访问实例化渲染的类。某些库功能，例如视锥体剔除或
+              光线投射依赖于最新的包围体（包围球体和包围盒）。由于“InstancedMesh”的工作方式，该类
+              有自己的“boundingBox”和“boundingSphere”属性，它们取代几何级别上的包围体。</p>
+            <p>与几何图形类似，每当更改基础数据时，您都必须重新计算边界框和球体。在 `InstancedMesh` 的上下文中，
+              当您通过“setMatrixAt()”转换实例时会发生。您可以使用与几何图形相同的图案。</p>
+<pre class="prettyprint notranslate lang-js" translate="no">
+instancedMesh.computeBoundingBox();
+instancedMesh.computeBoundingSphere();
+</pre>
+
+          </div>
+
+          <h2 id="skinnedmesh">蒙皮网格</h2>
+          <div>
+            <p>
+              “SkinnedMesh”遵循与边界体积上下文中的“InstancedMesh”相同的原则。意味着该类有自己的版本
+              `boundingBox` 和 `boundingSphere` 正确包围动画网格。
+              当调用“computeBoundingBox()”和“computeBoundingSphere()”时，该类根据当前的情况计算各自的边界体积
+              骨骼变换（或者换句话说，当前动画状态）。
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

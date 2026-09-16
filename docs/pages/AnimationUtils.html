@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>AnimationUtils - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">AnimationUtils</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>具有各种方法来辅助动画的类。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">静态方法</h2>
+					<h3 class="name name-method" id=".convertArray" translate="no">.<a href="#.convertArray">convertArray</a><span class="signature">( array : <span class="param-type">TypedArray | Array</span>, type : <span class="param-type">TypedArray.constructor</span> )</span><span class="type-signature"> : TypedArray</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将数组转换为特定类型</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">array</strong>
+									</td>
+									<td class="description last">
+										<p>数组转换.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">type</strong>
+									</td>
+									<td class="description last">
+										<p>类型数组的构造函数.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>转换后的数组</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".flattenJSON" translate="no">.<a href="#.flattenJSON">flattenJSON</a><span class="signature">( jsonKeys : <span class="param-type">Array.&lt;number></span>, times : <span class="param-type">Array.&lt;number></span>, values : <span class="param-type">Array.&lt;number></span>, valuePropertyName : <span class="param-type">string</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>用于解析AOS关键帧格式.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">jsonKeys</strong>
+									</td>
+									<td class="description last">
+										<p>JSON列表keyframes.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">times</strong>
+									</td>
+									<td class="description last">
+										<p>此数组将通过此方法填充关键帧时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">values</strong>
+									</td>
+									<td class="description last">
+										<p>此数组将通过此方法填充关键帧值。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">valuePropertyName</strong>
+									</td>
+									<td class="description last">
+										<p>要使用的属性的名称。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id=".getKeyframeOrder" translate="no">.<a href="#.getKeyframeOrder">getKeyframeOrder</a><span class="signature">( times : <span class="param-type">Array.&lt;number></span> )</span><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个数组，通过该数组可以指定时间和值排序.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">times</strong>
+									</td>
+									<td class="description last">
+										<p>关键帧时间值.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>数组.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".hasTangents" translate="no">.<a href="#.hasTangents">hasTangents</a><span class="signature">( settings : <span class="param-type">Object</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果给定关键帧轨道设置保持贝塞尔曲线切线，则返回<code>true</code> data.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">settings</strong>
+									</td>
+									<td class="description last">
+										<p>关键帧轨迹的设置。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>是否定义了两个切线数组。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".isTypedArray" translate="no">.<a href="#.isTypedArray">isTypedArray</a><span class="signature">( object : <span class="param-type"><a href="global.html#any">any</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果给定对象是类型化的，则返回<code>true</code>数组.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">object</strong>
+									</td>
+									<td class="description last">
+										<p>要检查的对象.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>给定的对象是否是类型化数组。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".makeClipAdditive" translate="no">.<a href="#.makeClipAdditive">makeClipAdditive</a><span class="signature">( targetClip : <span class="param-type"><a href="AnimationClip.html">AnimationClip</a></span>, referenceFrame : <span class="param-type">number</span>, referenceClip : <span class="param-type"><a href="AnimationClip.html">AnimationClip</a></span>, fps : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定动画剪辑的关键帧转换为附加格式。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">targetClip</strong>
+									</td>
+									<td class="description last">
+										<p>要制作的剪辑附加.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">referenceFrame</strong>
+									</td>
+									<td class="description last">
+										<p>参考框架.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">referenceClip</strong>
+									</td>
+									<td class="description last">
+										<p>参考剪辑.</p>
+										<p>默认为<code>targetClip</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">fps</strong>
+									</td>
+									<td class="description last">
+										<p>The FPS.</p>
+										<p>默认为 <code>30</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 现在可累加的更新剪辑。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".sortedArray" translate="no">.<a href="#.sortedArray">sortedArray</a><span class="signature">( values : <span class="param-type">Array.&lt;number></span>, stride : <span class="param-type">number</span>, order : <span class="param-type">Array.&lt;number></span> )</span><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>按之前计算的顺序对给定数组进行排序<code>getKeyframeOrder()</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">values</strong>
+									</td>
+									<td class="description last">
+										<p>要排序的值.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">stride</strong>
+									</td>
+									<td class="description last">
+										<p>步幅.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">order</strong>
+									</td>
+									<td class="description last">
+										<p>排序顺序.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>排序后的值值.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".subclip" translate="no">.<a href="#.subclip">subclip</a><span class="signature">( sourceClip : <span class="param-type"><a href="AnimationClip.html">AnimationClip</a></span>, name : <span class="param-type">string</span>, startFrame : <span class="param-type">number</span>, endFrame : <span class="param-type">number</span>, fps : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建一个新剪辑，仅包含给定帧之间原始剪辑的片段。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sourceClip</strong>
+									</td>
+									<td class="description last">
+										<p>要排序的值.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>剪辑的名称。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">startFrame</strong>
+									</td>
+									<td class="description last">
+										<p>起始帧.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">endFrame</strong>
+									</td>
+									<td class="description last">
+										<p>结束帧.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">fps</strong>
+									</td>
+									<td class="description last">
+										<p>The FPS.</p>
+										<p>默认为 <code>30</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 新的子剪辑.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/animation/AnimationUtils.js" translate="no" target="_blank" rel="noopener"> src/animation/AnimationUtils.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>PointsNodeMaterial - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Material.html">Material</a> → <a href="NodeMaterial.html">NodeMaterial</a> → <a href="SpriteNodeMaterial.html">SpriteNodeMaterial</a> → </p>
+	<h1 translate="no">PointsNodeMaterial</h1>
+		<section>
+			<header>
+				<div class="class-description"><p><a href="PointsMaterial.html">PointsMaterial</a>的节点材质版本__.</p>
+<p>此材质可以通过两种方式使用：</p>
+<ul>
+<li>通过使用 <a href="Points.html">Points</a> 来渲染点基元。由于 WebGPU 仅支持像素大小为 <code>1</code> 的点基元，因此无法定义大小。</li>
+</ul>
+<pre><code class="language-js">const pointCloud = new THREE.Points( geometry, new THREE.PointsNodeMaterial() );
+</code></pre>
+<ul>
+<li>通过使用精灵渲染点原语。在这种情况下，会遵守大小设置，参见 <a href="PointsNodeMaterial.html#sizeNode">PointsNodeMaterial#sizeNode</a>.</li>
+</ul>
+<pre><code class="language-js">const instancedPoints = new THREE.Sprite( new THREE.PointsNodeMaterial( { positionNode: instancedBufferAttribute( positionAttribute ) } ) );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="PointsNodeMaterial" translate="no">new <a href="#PointsNodeMaterial">PointsNodeMaterial</a><span class="signature">( parameters : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的点节点材质。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>配置参数.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="alphaToCoverage" translate="no">.<a href="#alphaToCoverage">alphaToCoverage</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否应使用覆盖范围的 Alpha。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="SpriteNodeMaterial.html#alphaToCoverage">SpriteNodeMaterial#alphaToCoverage</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isPointsNodeMaterial" translate="no">.<a href="#isPointsNodeMaterial">isPointsNodeMaterial</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sizeNode" translate="no">.<a href="#sizeNode">sizeNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
+					<div class="description">
+						<p>此节点属性提供了另一种设置点大小的方法。</p>
+<p>请注意，WebGPU 仅支持具有 1 像素大小的点基元。因此，
+当材质与 <a href="Points.html">Points</a> 和 WebGPU 一起使用时，此节点无效
+后端。如果应用程序想要渲染大小大于 1 像素的点，
+该材质应与 <a href="Sprite.html">Sprite</a> 和实例一起使用。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+				<a href="https://github.com/mrdoob/three.js/blob/master/src/materials/nodes/PointsNodeMaterial.js" translate="no" target="_blank" rel="noopener"> src/materials/nodes/PointsNodeMaterial.js</a>
+			</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

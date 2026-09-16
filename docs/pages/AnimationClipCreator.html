@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>AnimationClipCreator - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">AnimationClipCreator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>具有用于创建基本动画剪辑的工厂方法的实用程序类。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">AnimationClipCreator</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { AnimationClipCreator } from 'three/addons/animation/AnimationClipCreator.js';</code></pre>
+				<div class="container-overview">
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">静态方法</h2>
+					<h3 class="name name-method" id=".CreateMaterialColorAnimation" translate="no">.<a href="#.CreateMaterialColorAnimation">CreateMaterialColorAnimation</a><span class="signature">( duration : <span class="param-type">number</span>, colors : <span class="param-type">Array.&lt;<a href="Color.html">Color</a>></span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建一个动画剪辑，对 3D 对象的 <code>color</code> 属性进行动画处理
+材质.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">duration</strong>
+									</td>
+									<td class="description last">
+										<p>动画的持续时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">colors</strong>
+									</td>
+									<td class="description last">
+										<p>应按顺序进行动画处理的颜色数组。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>创建的动画剪辑。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".CreatePulsationAnimation" translate="no">.<a href="#.CreatePulsationAnimation">CreatePulsationAnimation</a><span class="signature">( duration : <span class="param-type">number</span>, pulseScale : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建一个以缩放方式缩放 3D 对象的动画剪辑脉冲模式
+在给定的时间段内.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">duration</strong>
+									</td>
+									<td class="description last">
+										<p>动画的持续时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">pulseScale</strong>
+									</td>
+									<td class="description last">
+										<p>脉冲的比例.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>创建的动画剪辑。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".CreateRotationAnimation" translate="no">.<a href="#.CreateRotationAnimation">CreateRotationAnimation</a><span class="signature">( period : <span class="param-type">number</span>, axis : <span class="param-type">'x' | 'y' | 'z'</span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建将3D对象旋转360度的动画剪辑
+在给定时间内围绕给定轴。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">period</strong>
+									</td>
+									<td class="description last">
+										<p>动画的持续时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">axis</strong>
+									</td>
+									<td class="description last">
+										<p>旋转轴。</p>
+										<p>默认为 <code>'x'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>创建的动画剪辑。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".CreateScaleAxisAnimation" translate="no">.<a href="#.CreateScaleAxisAnimation">CreateScaleAxisAnimation</a><span class="signature">( period : <span class="param-type">number</span>, axis : <span class="param-type">'x' | 'y' | 'z'</span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建一个缩放 3D 对象的动画剪辑<code>0</code> 至 <code>1</code>
+在给定时间段内沿着给定轴。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">period</strong>
+									</td>
+									<td class="description last">
+										<p>动画的持续时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">axis</strong>
+									</td>
+									<td class="description last">
+										<p>沿轴缩放 3D 对象。</p>
+										<p>默认为 <code>'x'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>创建的动画剪辑。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".CreateShakeAnimation" translate="no">.<a href="#.CreateShakeAnimation">CreateShakeAnimation</a><span class="signature">( duration : <span class="param-type">number</span>, shakeScale : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建一个以抖动模式平移 3D 对象的动画剪辑
+在给定的时间段内.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">duration</strong>
+									</td>
+									<td class="description last">
+										<p>动画的持续时间。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shakeScale</strong>
+									</td>
+									<td class="description last">
+										<p>震动的规模.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>创建的动画剪辑。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".CreateVisibilityAnimation" translate="no">.<a href="#.CreateVisibilityAnimation">CreateVisibilityAnimation</a><span class="signature">( duration : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="AnimationClip.html">AnimationClip</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>创建一个切换3D对象可见性的动画剪辑.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">duration</strong>
+									</td>
+									<td class="description last">
+										<p>动画的持续时间。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>创建的动画剪辑。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/animation/AnimationClipCreator.js" translate="no" target="_blank" rel="noopener"> examples/jsm/animation/AnimationClipCreator.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

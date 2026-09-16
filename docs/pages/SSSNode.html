@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>SSSNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → </p>
+	<h1 translate="no">SSSNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于将屏幕空间阴影 (SSS) 应用到scene.</p>
+<p>屏幕空间阴影（也称为接触阴影）理想情况下应用于补充
+传统的阴影贴图。它们最适合渲染较小的细节阴影
+更接近尺度的物体，例如高度详细的模型上的复杂阴影。换句话说：
+使用阴影贴图作为基础，使用屏幕空间阴影作为细节。</p>
+<p>对于某些用例，此实现生成的阴影可能具有太硬的边缘。
+使用框、高斯或散列模糊来柔化边缘，然后再使用
+美丽通道。代码示例：</p>
+<p>限制：</p>
+<ul>
+<li>理想情况下，最大阴影长度不应超过 <code>1</code> 米。否则，由于在光线行进过程中评估的样本增多，效果在计算上会变得非常昂贵。你可以通过减少 <code>quality</code> 参数来缓解这个问题。</li>
+<li>该效果只能与单向光源一起使用，即场景的主光源。主光通常代表太阳或日光。</li>
+<li>像其他屏幕空间技术一样，SSS 只能计算当前在相机视野中可见的对象的阴影。</li>
+</ul>
+<p>参考：</p>
+<ul>
+<li><a href="https://panoskarabelas.com/posts/screen_space_shadows/" target="_blank" rel="noopener">https://panoskarabelas.com/posts/screen_space_shadows/</a>.</li>
+<li><a href="https://www.bendstudio.com/blog/inside-bend-screen-space-shadows/" target="_blank" rel="noopener">https://www.bendstudio.com/blog/inside-bend-screen-space-shadows/</a>.</li>
+</ul></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const sssPass = sss( scenePassDepth, camera, mainLight );
+const sssBlur = boxBlur( sssPass.r, { size: 2, separation: 1 } ); // optional blur
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">SSSNode</span>是一个插件，必须显式导入，参见<a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { sss } from 'three/addons/tsl/display/SSSNode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="SSSNode" translate="no">new <a href="#SSSNode">SSSNode</a><span class="signature">( depthNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, mainLight : <span class="param-type"><a href="DirectionalLight.html">DirectionalLight</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的SSS节点.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表场景深度的纹理节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>渲染场景的相机。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">mainLight</strong>
+									</td>
+									<td class="description last">
+										<p>场景的主要方向光.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="depthNode" translate="no">.<a href="#depthNode">depthNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>代表美丽通道深度的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxDistance" translate="no">.<a href="#maxDistance">maxDistance</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>世界单位的最大阴影长度。较长的阴影会导致更多的计算
+开销.</p>
+						<p>默认为<code>0.1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="quality" translate="no">.<a href="#quality">quality</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>此参数控制光线行进过程的详细程度。
+值范围为 <code>[0,1]</code>，其中 <code>1</code> 表示最佳质量（最大数量
+raymarching 迭代/样本）和 <code>0</code> 意味着根本没有样本。</p>
+<p><code>0.5</code> 的质量通常足以满足大多数用例。尝试保留
+这个参数越低越好。值越大，效果越显着
+</p>
+						<p>默认为<code>0.5</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="resolutionScale" translate="no">.<a href="#resolutionScale">resolutionScale</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>分辨率比例。有效值范围为 <code>[0,1]</code>。<code>1</code> 表示最佳质量，但也会导致更多的计算开销。设置为 <code>0.5</code> 表示效果以半分辨率计算。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="shadowIntensity" translate="no">.<a href="#shadowIntensity">shadowIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>阴影强度。必须在<code>[0, 1]</code>.</p>
+						<p>默认为<code>1.0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="thickness" translate="no">.<a href="#thickness">thickness</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>深度测试厚度范围内。</p>
+						<p>默认为<code>0.01</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>自节点渲染以来，<code>updateBeforeType</code> 设置为 <code>NodeUpdateType.FRAME</code>
+<code>updateBefore()</code>.</p>
+						<p>中每帧效果一次，默认为 <code>'frame'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBeforeType">TempNode#updateBeforeType</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="useTemporalFiltering" translate="no">.<a href="#useTemporalFiltering">useTemporalFiltering</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否使用时间过滤。将此属性设置为
+<code>true</code> 需要使用 <code>TRAANode</code>。这将有助于减少噪音
+尽管它引入了典型的 TAA 伪影，例如重影和时间
+不稳定性.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要效果时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#dispose">TempNode#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTextureNode" translate="no">.<a href="#getTextureNode">getTextureNode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理节点的形式返回效果的结果。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>表示以下结果的纹理节点效果.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置效果的大小.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>效果的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>效果的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于设置效果的TSL code.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#setup">TempNode#setup</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于每帧渲染一次效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBefore">TempNode#updateBefore</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+		<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/display/SSSNode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/display/SSSNode.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>OITPassNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → <a href="PassNode.html">PassNode</a> → </p>
+	<h1 translate="no">OITPassNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用顺序无关透明度渲染场景的渲染通道节点
+基于 McGuire 和 Bavoil 的加权混合 OIT 技术。</p>
+<p>透明对象在单独的通道中渲染为两个累积
+目标（加权颜色和和像素的显示）是
+然后合成场景的其余部分。因为结果不依赖于
+在绘制顺序上，来自基于排序的透明度的伪像，例如弹出或
+避免错误解析相交几何体。</p>
+<p>仅使用 <code>NormalBlending</code> 的透明材质且不符合传输条件
+对于 OIT。所有其他对象均照常渲染。</p>
+<p>MSAA 仅支持 WebGPU 后端。</p>
+<p>通过 <code>setMRT()</code> 分配的 MRT 配置仅适用于默认通道。
+OIT 合格的对象有助于颜色输出，但不利于自定义
+MRT 输出，因为一个像素可能会累积多个透明表面。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://jcgt.org/published/0002/02/09/" target="_blank" rel="noopener">https://jcgt.org/published/0002/02/09/</a></li>
+<li><a href="https://casual-effects.blogspot.com/2014/03/weighted-blended-order-independent.html" target="_blank" rel="noopener">https://casual-effects.blogspot.com/2014/03/weighted-blended-order-independent.html</a></li>
+</ul></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const renderPipeline = new THREE.RenderPipeline( renderer );
+renderPipeline.outputNode = oitPass( scene, camera );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">OITPassNode</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { oitPass } from 'three/addons/tsl/display/OITPassNode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="OITPassNode" translate="no">new <a href="#OITPassNode">OITPassNode</a><span class="signature">( scene : <span class="param-type"><a href="Scene.html">Scene</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, options : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的OIT pass节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要渲染的场景.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>用于渲染场景的相机。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>内部渲染目标的选项。</p>
+										<p>默认为 <code>{}</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isOITPassNode" translate="no">.<a href="#isOITPassNode">isOITPassNode</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="weightNode" translate="no">.<a href="#weightNode">weightNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>透明片段基于深度的权重，参见等式(7)至(9)
+在报纸上。当<code>null</code>时，使用等式(9)。必须先分配
+第一次渲染.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/display/OITPassNode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/display/OITPassNode.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

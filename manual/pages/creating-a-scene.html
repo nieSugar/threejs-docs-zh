@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>创建场景</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Creating a scene">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>创建场景</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>本节的目标是简要介绍 Three.js。我们将首先设置一个带有旋转立方体的场景。页面底部提供了一个工作示例，以防您遇到困难并需要帮助。</p>
+
+		<h2 id="before-we-start">在我们开始之前</h2>
+
+		<p>
+			如果您还没有，请阅读“安装”指南。我们假设您已经设置了相同的项目结构（包括 <i>index.html</i> 和 <i>main.js</i>），安装了 Three.js，并且正在运行构建工具，或者使用具有 CDN 和导入映射的本地服务器。
+		</p>
+
+		<h2 id="creating-the-scene">创建场景</h2>
+
+		<p>要真正能够使用 Three.js 显示任何内容，我们需要三样东西：场景、相机和渲染器，以便我们可以使用相机渲染场景。</p>
+
+		<p><i>main.js —</i></p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import * as THREE from 'three';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+</pre>
+
+		<p>让我们花点时间解释一下这里发生了什么。我们现在已经设置了场景、相机和渲染器。</p>
+
+		<p> Three.js 中有一些不同的相机。现在，我们使用“PerspectiveCamera”。</p>
+
+		<p>第一个属性是“视野”。 FOV 是在任何给定时刻在显示器上看到的场景的范围。该值以度为单位。</p>
+
+		<p>第二个是“纵横比”。您几乎总是希望使用元素的宽度除以高度，否则您将得到与在宽屏电视上播放老电影时相同的结果 - 图像看起来被压扁。</p>
+
+		<p>接下来的两个属性是“近”和“远”剪裁平面。这意味着，距离相机远于“far”值或比“near”更近的对象将不会被渲染。您现在不必担心这一点，但您可能希望在应用程序中使用其他值以获得更好的性能。</p>
+
+		<p>接下来是渲染器。除了创建渲染器实例之外，我们还需要设置渲染应用程序的大小。最好使用我们想要用应用程序填充的区域的宽度和高度 - 在本例中是浏览器窗口的宽度和高度。对于性能密集型应用程序，您还可以为“setSize”指定较小的值，例如“window.innerWidth/2”和“window.innerHeight/2”，这将使应用程序以四分之一大小渲染。</p>
+
+		<p>如果您希望保持应用程序的大小，但以较低的分辨率渲染它，您可以通过调用“setSize”并将“updateStyle”（第三个参数）设置为 false 来实现。例如，假设您的 &lt;canvas&gt; 具有 100% 的宽度和高度，`setSize(window.innerWidth/2, window.innerHeight/2, false)` 将以一半分辨率渲染您的应用程序。</p>
+
+		<p>最后但并非最不重要的一点是，我们将 `renderer` 元素添加到 HTML 文档中。这是渲染器用来向我们显示场景的 &lt;canvas&gt; 元素。</p>
+
+		<p><em>“这一切都很好，但是你承诺的那个立方体在哪里？”</em>现在让我们添加它。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+camera.position.z = 5;
+</pre>
+
+		<p>要创建一个立方体，我们需要一个 `BoxGeometry`。这是一个包含立方体的所有点（“顶点”）和填充（“面”）的对象。我们将来会对此进行更多探索。</p>
+
+		<p>除了几何体之外，我们还需要一种材质来为其着色。 Three.js 附带了多种材质，但我们现在将坚持使用“MeshBasicMaterial”。所有材料都具有将应用于它们的属性对象。为了让事情变得非常简单，我们只提供颜色属性“0x00ff00”，即绿色。这与 CSS 或 Photoshop 中颜色的工作方式相同（“十六进制颜色”）。</p>
+
+		<p>我们需要的第三件事是“Mesh”。网格是一个接受几何体并向其应用材质的对象，然后我们可以将其插入到场景中，并自由移动。</p>
+
+		<p>默认情况下，当我们调用`scene.add()`时，我们添加的东西将被添加到坐标`(0,0,0)`。这将导致相机和立方体位于彼此内部。为了避免这种情况，我们只需将相机移出一点。</p>
+
+		<h2 id="rendering-the-scene">渲染场景</h2>
+
+		<p>如果将上面的代码复制到我们之前创建的 main.js 文件中，您将看不到任何内容。这是因为我们实际上还没有渲染任何东西。为此，我们需要所谓的渲染或动画循环。</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+function animate( time ) {
+  renderer.render( scene, camera );
+}
+renderer.setAnimationLoop( animate );
+</pre>
+
+		<p>这将创建一个循环，使渲染器在每次屏幕刷新时绘制场景（在典型的屏幕上，这意味着每秒 60 次）。如果您是在浏览器中编写游戏的新手，您可能会说“为什么我们不直接创建一个 setInterval ？”事情是这样的 - 我们可以，但是在 `WebGLRenderer` 内部使用的 `requestAnimationFrame` 有很多优点。也许最重要的是，当用户导航到另一个浏览器选项卡时，它会暂停，因此不会浪费宝贵的处理能力和电池寿命。</p>
+
+		<h2 id="animating-the-cube">动画立方体</h2>
+
+		<p>如果将上面的所有代码插入到我们开始之前创建的文件中，您应该看到一个绿色框。让我们通过旋转它来让它变得更有趣。</p>
+
+		<p>在“animate”函数中的“renderer.render”调用上方添加以下代码：</p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+cube.rotation.x = time / 2000;
+cube.rotation.y = time / 1000;
+</pre>
+
+		<p>这将每帧运行（通常每秒 60 次），并为立方体提供漂亮的旋转动画。基本上，在应用程序运行时您想要移动或更改的任何内容都必须经过动画循环。您当然可以从那里调用其他函数，这样您就不会得到数百行的“animate”函数。</p>
+
+		<h2 id="the-result">结果</h2>
+		<p>恭喜！您现在已经完成了第一个 Three.js 应用程序。这很简单，但你必须从某个地方开始。</p>
+
+		<p>下面提供了完整的代码，并且作为可编辑的[link:https://jsfiddle.net/zycqb61k/ live example]。尝试一下它可以更好地理解它是如何工作的。</p>
+
+		<p><i>index.html —</i></p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;My first three.js app&lt;/title&gt;
+    &lt;style&gt;
+      body { margin: 0; }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script type="module" src="/main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+		<p><i>main.js —</i></p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import * as THREE from 'three';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setAnimationLoop( animate );
+document.body.appendChild( renderer.domElement );
+
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+camera.position.z = 5;
+
+function animate( time ) {
+
+  cube.rotation.x = time / 2000;
+  cube.rotation.y = time / 1000;
+
+  renderer.render( scene, camera );
+
+}
+</pre>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>PersonGenerator - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">PersonGenerator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>低多边形行人人群，具有成形的头部、夹克和高高的四肢。
+两个共同的姿势站立或行走，袖子和裤子掠过
+他们的关节。每个位置都有确定的比例和一个小的
+在两次抽签中，其肤色、发型和服装的种子属性。</p>
+<p>该材料将图形分割为烘焙的 <code>partId</code> 和散列上的区域
+每个区域的种子，从小调色板中绘制衣服、皮肤和头发。
+局部 UV 使面部特征、袖口和鞋底附着在其部件上
+如图所示。</p>
+<p>规范人物站在 <code>y = 0</code> 上，以 X / Z 为中心，高约 1.75 m，
+面向<code>+Z</code>，因此放置将其转向面向道路。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const people = new PersonGenerator();
+scene.add( people.build( placements ) ); // placements: Matrix4[]
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="PersonGenerator" translate="no">new <a href="#PersonGenerator">PersonGenerator</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+				<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/generators/city/PersonGenerator.js" translate="no" target="_blank" rel="noopener"> examples/jsm/generators/city/PersonGenerator.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

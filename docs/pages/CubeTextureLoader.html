@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>CubeTextureLoader - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="Loader.html">Loader</a> → </p>
+	<h1 translate="no">CubeTextureLoader</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于加载立方体纹理的类。图像通过 <a href="ImageLoader.html">ImageLoader</a>.</p>
+<p> 内部加载。加载程序返回 <a href="CubeTexture.html">CubeTexture</a> 的实例，并期望立方体贴图
+被定义为代表立方体侧面的六个独立图像。其他立方体贴图定义
+像垂直和水平交叉一样，不支持列和行布局。</p>
+<p>请注意，按照惯例，立方体贴图是在坐标系中指定的
+其中，当查找正 z 轴时，正 x 位于右侧 --
+换句话说，使用左手坐标系。由于 Three.js 使用
+右手坐标系，在 Three.js 中使用的环境贴图将
+pos-x 和 neg-x 交换了。</p>
+<p>加载的立方体纹理位于 sRGB 颜色空间中。含义 <a href="Texture.html#colorSpace">Texture#colorSpace</a>
+默认设置为 <code>SRGBColorSpace</code>。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const loader = new THREE.CubeTextureLoader().setPath( 'textures/cubeMaps/' );
+const cubeTexture = await loader.loadAsync( [
+	'px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'
+] );
+scene.background = cubeTexture;
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="CubeTextureLoader" translate="no">new <a href="#CubeTextureLoader">CubeTextureLoader</a><span class="signature">( manager : <span class="param-type"><a href="LoadingManager.html">LoadingManager</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的立方体纹理加载器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">manager</strong>
+									</td>
+									<td class="description last">
+										<p>加载管理器。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( urls : <span class="param-type">Array.&lt;string></span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span><span class="type-signature"> : <a href="CubeTexture.html">CubeTexture</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>开始从给定的 URL 加载并传递完全加载的立方体纹理
+到 <code>onLoad()</code> 回调。该方法还返回一个新的立方体纹理对象，该对象可以
+直接用于材质创作。如果你这样做，立方体纹理
+相应的加载过程完成后，可能会在场景中弹出。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">urls</strong>
+									</td>
+									<td class="description last">
+										<p>6 个图像 URL 的数组，每侧一个
+立方体纹理。 url 应按以下顺序指定：pos-x，
+负 x、正 y、负 y、正 z、负 z。也允许使用数据 URI 数组。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onLoad</strong>
+									</td>
+									<td class="description last">
+										<p>加载过程完成时执行。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onProgress</strong>
+									</td>
+									<td class="description last">
+										<p> 此加载程序不支持。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">onError</strong>
+									</td>
+									<td class="description last">
+										<p>发生错误时执行。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Loader.html#load">Loader#load</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 立方体纹理。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/loaders/CubeTextureLoader.js" translate="no" target="_blank" rel="noopener"> src/loaders/CubeTextureLoader.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

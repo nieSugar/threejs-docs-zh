@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>HydrantGenerator - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">HydrantGenerator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>经典的铸铁消防栓：一个位于喇叭形底座上的粗桶，顶部有一个
+圆顶阀盖和六角操作螺母，带有两个侧出口喷嘴和一个更大的
+前泵喷嘴。构建一次并在展示位置列表中实例化，穿着
+用一种廉价的材料在烘烤的 <code>partId</code> （风化的红铁，
+裸金属盖).</p>
+<p>规范模型位于 <code>y = 0</code> 上，以 X / Z 为中心，带有泵喷嘴
+面向 <code>+Z</code>，因此本地 <code>+Z</code> 面向道路的放置会将其呈现给交通。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const hydrants = new HydrantGenerator();
+scene.add( hydrants.build( placements ) ); // placements: Matrix4[]
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="HydrantGenerator" translate="no">new <a href="#HydrantGenerator">HydrantGenerator</a><span class="signature">()</span> </h3>
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/generators/city/HydrantGenerator.js" translate="no" target="_blank" rel="noopener"> examples/jsm/generators/city/HydrantGenerator.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

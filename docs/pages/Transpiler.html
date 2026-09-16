@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Transpiler - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Transpiler</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>将着色器代码从一种语言转换为另一种语言的类。</p>
+<p><code>Transpiler</code> 目前只能用于将 GLSL 转换为 TSL。其目的是
+当开发人员想要从
+当前新的基于节点的材质系统。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">Transpiler</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import Transpiler from 'three/addons/transpiler/Transpiler.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Transpiler" translate="no">new <a href="#Transpiler">Transpiler</a><span class="signature">( decoder : <span class="param-type">GLSLDecoder</span>, encoder : <span class="param-type">TSLEncoder</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的转译器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">decoder</strong>
+									</td>
+									<td class="description last">
+										<p>GLSL 解码器。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">encoder</strong>
+									</td>
+									<td class="description last">
+										<p>TSL 编码器。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="decoder" translate="no">.<a href="#decoder">decoder</a><span class="type-signature"> : GLSLDecoder</span> </h3>
+					<div class="description">
+						<p>GLSL 解码器。该组件解析 GLSL 并生成
+用于进一步处理的独立于语言的 AST。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="encoder" translate="no">.<a href="#encoder">encoder</a><span class="type-signature"> : TSLEncoder</span> </h3>
+					<div class="description">
+						<p>TSL 编码器。它接受 AST 并发出 TSL 代码。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="linker" translate="no">.<a href="#linker">linker</a><span class="type-signature"> : Linker</span> </h3>
+					<div class="description">
+						<p>链接器。它处理 AST 并解析
+变量和函数引用，确保所有
+依赖项已正确链接。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">( source : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>解析给定的 GLSL 源并返回 TSL 语法。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">source</strong>
+									</td>
+									<td class="description last">
+										<p>GLSL 源代码.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> TSL 代码。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p><a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/transpiler/Transpiler.js" translate="no" target="_blank" rel="noopener"> examples/jsm/transpiler/Transpiler.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

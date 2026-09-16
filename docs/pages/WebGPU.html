@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>WebGPU - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">WebGPU</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>具有基本 WebGPU 功能测试的实用程序模块。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">WebGPU</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import WebGPU from 'three/addons/capabilities/WebGPU.js';</code></pre>
+				<div class="container-overview">
+					<div class="method">
+					</div>
+				</div>
+				<h2 class="subsection-title">静态方法</h2>
+					<h3 class="name name-method" id=".getErrorMessage" translate="no">.<a href="#.getErrorMessage">getErrorMessage</a><span class="signature">()</span><span class="type-signature"> : HTMLDivElement</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回一个 <code>div</code> 元素，表示可以附加到的格式化错误消息
+如果不支持 WebGPU，则为网站。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> <code>div</code> 元素，表示不支持 WebGPU 的格式化错误消息。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id=".isAvailable" translate="no">.<a href="#.isAvailable">isAvailable</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果支持 WebGPU，则返回 <code>true</code> available.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> WebGPU是否可用.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/capabilities/WebGPU.js" translate="no" target="_blank" rel="noopener"> examples/jsm/capabilities/WebGPU.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

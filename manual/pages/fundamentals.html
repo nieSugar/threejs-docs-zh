@@ -1,0 +1,430 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>基础知识</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Fundamentals">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>基础知识</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>这是有关 Three.js 的系列文章中的第一篇文章。
+<a href="https://threejs.org">Three.js</a> 是一个 3D 库，试图使
+尽可能轻松地在网页上获取 3D 内容。</p>
+<p>Three.js 经常与 WebGL 混淆，因为更常见的情况是
+不是，但也不总是， Three.js 使用 WebGL 来绘制 3D。
+<a href="https://webglfundamentals.org">WebGL 是一个非常低级的系统，仅绘制点、线和三角形</a>。
+要使用 WebGL 做任何有用的事情通常需要相当多的
+代码，这就是 Three.js 的用武之地。它处理一些东西
+例如场景、灯光、阴影、材质、纹理、3D 数学，以及您需要的所有内容
+如果您要直接使用 WebGL，则必须自己编写。</p>
+<p>这些教程假设您已经了解 JavaScript，并且，对于
+大部分他们会使用 ES6 风格。 <a href="prerequisites.html">请参阅此处
+您应该已经知道的事情的简短列表</a>。
+大多数支持 Three.js 的浏览器都会自动更新，因此大多数用户应该
+能够运行这段代码。如果您想让这段代码运行
+在非常旧的浏览器上，请查看像 <a href="https://babeljs.io">Babel</a> 这样的转译器。
+当然，运行非常旧的浏览器的用户可能拥有机器
+无法运行 Three.js.</p>
+<p>学习大多数编程语言时，人们首先要做的就是
+要做的就是让计算机打印<code class="notranslate" translate="no">"Hello World!"</code>。对于 3D 的
+最常见的第一件事就是制作 3D 立方体。
+因此，让我们从“Hello Cube！”开始</p>
+<p>在开始之前，让我们尝试让您了解该结构
+一个three.js 应用程序的。一个 Three.js 应用程序需要你创建一堆
+对象并将它们连接在一起。这是代表的图表
+一个小型的 Three.js 应用</p>
+<div class="threejs_center"><img src="../resources/images/threejs-structure.svg" style="width: 768px;"></div>
+
+<p>上图需要注意的事项。</p>
+<ul>
+<li><p>有一个 <a href="/threejs-docs-zh/docs/#api/en/constants/Renderer"><code class="notranslate" translate="no">Renderer</code></a>。这可以说是 Three.js 的主要对象。你通过一个
+<a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a> 和 <a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a> 到 <a href="/threejs-docs-zh/docs/#api/en/constants/Renderer"><code class="notranslate" translate="no">Renderer</code></a> 并渲染（绘制）
+位于相机<em>视锥体</em>内的 3D 场景作为 2D 图像转换为
+canvas.</p>
+</li>
+<li><p>有一个<a href="scenegraph.html">scenegraph</a>，它是一棵像树一样的树
+结构，由各种对象组成，例如 <a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a> 对象，多个
+<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a> 对象、<a href="/threejs-docs-zh/docs/#api/en/lights/Light"><code class="notranslate" translate="no">Light</code></a> 对象、<a href="/threejs-docs-zh/docs/#api/en/objects/Group"><code class="notranslate" translate="no">Group</code></a>、<a href="/threejs-docs-zh/docs/#api/en/core/Object3D"><code class="notranslate" translate="no">Object3D</code></a> 和 <a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a> 对象。一个
+<a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a> 对象定义场景图的根并包含以下属性
+背景颜色和雾。这些对象定义了分层的父/子
+树状结构并表示对象出现的位置以及它们的状态
+面向。孩子的位置和方向是相对于他们的父母的。对于
+例如，汽车上的轮子可能是汽车的子级，因此移动和
+确定汽车物体的方向会自动移动车轮。您可以阅读更多内容
+关于这一点，请参阅<a href="scenegraph.html">关于场景图的文章</a>。</p>
+<p>图中的注意事项<a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a>是场景图的一半。这是为了
+表示在 Three.js 中，与其他对象不同， <a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a> 没有
+在场景图中发挥作用。就像其他对象一样， <a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a> 作为
+其他某个对象的子对象将相对于其父对象移动和定向。
+有一个将多个 <a href="/threejs-docs-zh/docs/#api/en/cameras/Camera"><code class="notranslate" translate="no">Camera</code></a> 对象放入场景图中的示例，位于
+<a href="scenegraph.html">关于场景图的文章</a>的末尾。</p>
+</li>
+<li><p><a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>对象表示绘制一个特定的<code class="notranslate" translate="no">Geometry</code>与一个特定的<a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a>. 两者<a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a>对象和 <code class="notranslate" translate="no">Geometry</code> 对象可以被多个使用<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>对象。例如，要在不同位置绘制两个蓝色立方体，我们可能需要两个<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>用对象来表示每个立方体的位置和方向。我们只需要一个 <code class="notranslate" translate="no">Geometry</code> 来保存立方体的顶点数据，并且我们只需要一个<a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a>指定颜色为蓝色。两者<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>对象可能引用同一个 <code class="notranslate" translate="no">Geometry</code> 对象和同一个<a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a>物体。</p>
+</li>
+<li><p><code class="notranslate" translate="no">Geometry</code> 对象表示某些几何体的顶点数据，例如
+ 球体、立方体、平面、狗、猫、人、树、建筑物等......
+ Three.js提供了多种内置的
+ <a href="primitives.html">几何基元</a>。您还可以
+ <a href="custom-buffergeometry.html">创建自定义几何图形</a>以及
+ <a href="load-obj.html">从文件加载几何图形</a>。</p>
+</li>
+<li><p><a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a> 对象代表
+<a href="materials.html">用于绘制几何图形的表面属性</a>
+包括使用的颜色以及光泽度等内容。 <a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a> 也可以
+引用一个或多个可以使用的 <a href="/threejs-docs-zh/docs/#api/en/textures/Texture"><code class="notranslate" translate="no">Texture</code></a> 对象，例如，
+将图像包裹到几何图形的表面上。</p>
+</li>
+<li><p><a href="/threejs-docs-zh/docs/#api/en/textures/Texture"><code class="notranslate" translate="no">Texture</code></a> 对象通常表示<a href="textures.html">从图像文件加载</a>的图像，
+<a href="canvas-textures.html">从画布生成</a>或<a href="rendertargets.html">从另一个场景渲染</a>.</p>
+</li>
+<li><p><a href="/threejs-docs-zh/docs/#api/en/lights/Light"><code class="notranslate" translate="no">Light</code></a>对象代表<a href="lights.html">不同类型的灯</a>.</p>
+</li>
+</ul>
+<p>鉴于所有这些，我们将制作最小的<em>“Hello Cube”</em>设置
+看起来像这样</p>
+<div class="threejs_center"><img src="../resources/images/threejs-1cube-no-light-scene.svg" style="width: 500px;"></div>
+
+<p>首先让我们加载three.js</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;script type="module"&gt;
+import * as THREE from 'three';
+&lt;/script&gt;
+</pre>
+<p>重要的是你把<code class="notranslate" translate="no">type="module"</code>放在脚本标签中。这使得
+我们使用 <code class="notranslate" translate="no">import</code> 关键字来加载 Three.js。从 r147 开始，这是
+正确加载 Three.js 的唯一方法。模块的优点是可以轻松导入其他模块
+他们需要。这使我们不必手动加载额外的脚本
+它们依赖于.</p>
+<p>接下来我们需要一个<code class="notranslate" translate="no">&lt;canvas&gt;</code>标签，所以...</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;body&gt;
+  &lt;canvas id="c"&gt;&lt;/canvas&gt;
+&lt;/body&gt;
+</pre>
+<p>我们将要求 Three.js 绘制到该画布中，因此我们需要查找它。</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;script type="module"&gt;
+import * as THREE from 'three';
+
++function main() {
++  const canvas = document.querySelector('#c');
++  const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
++  ...
+&lt;/script&gt;
+</pre>
+<p>查找画布后，我们创建一个 <a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderer"><code class="notranslate" translate="no">WebGLRenderer</code></a>。渲染器
+是负责实际获取您提供的所有数据的人
+并将其渲染到画布上。</p>
+<p>注意，这里有一些深奥的细节。如果你没有传递画布
+到 Three.js 中，它会为你创建一个，但你必须添加它
+到您的文档。添加位置可能会根据您的用例而变化
+你必须更改你的代码，所以我发现传递画布
+到 Three.js 感觉更灵活一些。我可以把画布放在任何地方
+代码会找到它，而如果我有代码来插入画布
+如果我的用例我可能需要更改该代码到文档中
+改变了.</p>
+<p>接下来我们需要一个相机。我们将创建一个 <a href="/threejs-docs-zh/docs/#api/en/cameras/PerspectiveCamera"><code class="notranslate" translate="no">PerspectiveCamera</code></a>.</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const fov = 75;
+const aspect = 2;  // the canvas default
+const near = 0.1;
+const far = 5;
+const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+</pre>
+<p><code class="notranslate" translate="no">fov</code> 是 <code class="notranslate" translate="no">field of view</code> 的缩写。在本例中，垂直方向为 75 度
+维度。请注意， Three.js 中的大多数角度都以弧度为单位，但对于某些角度
+透视相机采用度数的原因。</p>
+<p><code class="notranslate" translate="no">aspect</code> 是画布的显示方面。我们将详细讨论细节
+<a href="responsive.html">在另一篇文章</a>中，但默认情况下画布是
+ 300x150 像素，使宽高比为 300/150 或 2.</p>
+<p><code class="notranslate" translate="no">near</code> 和 <code class="notranslate" translate="no">far</code> 表示相机前面的空间
+将被渲染。该范围之前或之后的任何内容
+将被剪裁（不绘制）。</p>
+<p>这四个设置定义了一个“截头体”。 <em>平截头体</em>是以下名称
+类似于金字塔尖的 3D 形状，但尖端被切掉。在其他方面
+Words 将“frustum”这个词视为另一种 3D 形状，如球体，
+立方体、棱柱、平截头体。</p>
+<p><img src="../resources/frustum-3d.svg" width="500" class="threejs_center"></p>
+<p>近平面和远平面的高度由视场决定。
+两个平面的宽度均由视野和方位决定。</p>
+<p>定义的截锥体内的任何内容都将被绘制。外面的任何东西
+不会。</p>
+<p>相机默认向下看 -Z 轴，+Y 向上。我们将把我们的立方体
+在原点，所以我们需要将相机从原点向后移动一点
+为了看到任何东西.</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">camera.position.z = 2;
+</pre>
+<p>这就是我们的目标.</p>
+<p><img src="../resources/scene-down.svg" width="500" class="threejs_center"></p>
+<p>在上图中我们可以看到我们的相机位于<code class="notranslate" translate="no">z = 2</code>。它正在寻找
+沿 -Z 轴向下。我们的视锥体从距相机前端 0.1 个单位的位置开始
+并转到摄像机前的 5 个单位。因为在这张图中我们是向下看的，
+视野受方位影响。我们的画布是两倍宽
+因为它很高，所以在画布上视野会比
+我们指定的 75 度，即垂直视野。</p>
+<p>接下来我们制作一个 <a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a>。 Three.js 中的 <a href="/threejs-docs-zh/docs/#api/en/scenes/Scene"><code class="notranslate" translate="no">Scene</code></a> 是场景图形式的根。
+您想要 Three.js 绘制的任何内容都需要添加到场景中。我们会
+详细介绍<a href="scenegraph.html">场景如何工作</a>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const scene = new THREE.Scene();
+</pre>
+<p>接下来我们创建一个<a href="/threejs-docs-zh/docs/#api/en/geometries/BoxGeometry"><code class="notranslate" translate="no">BoxGeometry</code></a>，其中包含盒子的数据。
+几乎所有我们想要在 Three.js 中显示的东西都需要几何体，它定义了
+构成 3D 对象的顶点。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const boxWidth = 1;
+const boxHeight = 1;
+const boxDepth = 1;
+const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+</pre>
+<p>然后我们创建一个基本材质并设置其颜色。颜色可以
+使用标准CSS样式6位十六进制颜色值指定。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const material = new THREE.MeshBasicMaterial({color: 0x44aa88});
+</pre>
+<p>然后我们创建一个<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>。 Three.js 中的 <a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a> 表示组合
+三件事</p>
+<ol>
+<li>A <code class="notranslate" translate="no">Geometry</code>（物体的形状）</li>
+<li>A <a href="/threejs-docs-zh/docs/#api/en/materials/Material"><code class="notranslate" translate="no">Material</code></a>（如何绘制物体，闪亮或平坦，什么颜色，什么要应用的纹理等。）</li>
+<li>场景中该对象相对于其父对象的位置、方向和比例。在下面的代码中，父级是场景。</li>
+</ol>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const cube = new THREE.Mesh(geometry, material);
+</pre>
+<p>最后我们将该网格添加到场景中</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">scene.add(cube);
+</pre>
+<p>然后我们可以通过调用渲染器的渲染函数来渲染场景
+并将其传递给场景和相机</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">renderer.render(scene, camera);
+</pre>
+<p>这是一个工作示例</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/fundamentals.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/fundamentals.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>由于我们正在查看，因此很难判断这是一个3D立方体
+它直接沿着 -Z 轴向下并且立方体本身是轴对齐的
+所以我们只看到一张脸。</p>
+<p>让我们为其旋转设置动画，希望这将使
+很明显它是用 3D 绘制的。为了使其动画化，我们将使用以下命令在渲染循环内进行渲染
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame"><code class="notranslate" translate="no">requestAnimationFrame</code></a>.</p>
+<p>这是我们的循环</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render(time) {
+  time *= 0.001;  // convert time to seconds
+
+  cube.rotation.x = time;
+  cube.rotation.y = time;
+
+  renderer.render(scene, camera);
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</pre>
+<p><code class="notranslate" translate="no">requestAnimationFrame</code>是对浏览器的请求你想要动画化一些东西。
+您向它传递一个要调用的函数。在我们的例子中，该函数是 <code class="notranslate" translate="no">render</code>。浏览器
+将调用您的函数，如果您更新与显示相关的任何内容
+页面浏览器将重新呈现页面。在我们的例子中，我们调用三
+<code class="notranslate" translate="no">renderer.render</code> 函数将绘制我们的场景。</p>
+<p><code class="notranslate" translate="no">requestAnimationFrame</code> 传递自页面加载以来的时间
+我们的职能。时间以毫秒为单位流逝。我发现很多
+使用秒更容易，所以在这里我们将其转换为秒。</p>
+<p>然后我们将立方体的 X 和 Y 旋转设置为当前时间。这些轮换
+以<a href="https://en.wikipedia.org/wiki/Radian">弧度</a>为单位。有 2 个 pi 弧度
+绕一圈，所以我们的立方体应该在每个轴上旋转一圈，时间约为 6.28
+秒.</p>
+<p>然后我们渲染场景并请求另一个动画帧继续
+我们的循环.</p>
+<p>在循环之外我们调用<code class="notranslate" translate="no">requestAnimationFrame</code>一次来启动循环.</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/fundamentals-with-animation.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/fundamentals-with-animation.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>它好一点了，但仍然很难看到3d。有什么帮助的是
+添加一些照明所以让我们添加一盏灯。里面的灯有很多种
+我们将在<a href="lights.html">以后的文章</a>中介绍 Three.js。现在让我们创建一个定向光。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const color = 0xFFFFFF;
+const intensity = 3;
+const light = new THREE.DirectionalLight(color, intensity);
+light.position.set(-1, 2, 4);
+scene.add(light);
+</pre>
+<p>定向光有一个位置和一个目标。两者都默认为 0, 0, 0。在我们的
+在这种情况下，我们将灯光的位置设置为 -1, 2, 4，因此它稍微位于左侧，
+在我们相机的上方和后面。目标仍然是 0, 0, 0 所以它会发光
+朝向原点。</p>
+<p>我们还需要更改材质。 <a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a> 不受
+灯。让我们将其更改为受灯光影响的<a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-const material = new THREE.MeshBasicMaterial({color: 0x44aa88});  // greenish blue
++const material = new THREE.MeshPhongMaterial({color: 0x44aa88});  // greenish blue
+</pre>
+<p>这是我们的新程序结构</p>
+<div class="threejs_center"><img src="../resources/images/threejs-1cube-with-directionallight.svg" style="width: 500px;"></div>
+
+<p>这是工作中.</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/fundamentals-with-light.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/fundamentals-with-light.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>现在应该是非常清晰的3D了.</p>
+<p>只是为了好玩，让我们再添加2个立方体。</p>
+<p>我们将为每个立方体使用相同的几何形状，但制作不同的几何形状
+材质，因此每个立方体可以是不同的颜色。</p>
+<p>首先我们将创建一个创建新材质的函数
+与指定的颜色。然后它使用创建一个网格
+指定的几何体并将其添加到场景中并且
+设置其 X 位置。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function makeInstance(geometry, color, x) {
+  const material = new THREE.MeshPhongMaterial({color});
+
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+
+  cube.position.x = x;
+
+  return cube;
+}
+</pre>
+<p>然后我们将使用 3 种不同的颜色和 X 位置调用它 3 次
+将 <a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a> 实例保存在数组中。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const cubes = [
+  makeInstance(geometry, 0x44aa88,  0),
+  makeInstance(geometry, 0x8844aa, -2),
+  makeInstance(geometry, 0xaa8844,  2),
+];
+</pre>
+<p>最后，我们将在渲染函数中旋转所有 3 个立方体。我们
+为每个计算稍微不同的旋转.</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">function render(time) {
+  time *= 0.001;  // convert time to seconds
+
+  cubes.forEach((cube, ndx) =&gt; {
+    const speed = 1 + ndx * .1;
+    const rot = time * speed;
+    cube.rotation.x = rot;
+    cube.rotation.y = rot;
+  });
+
+  ...
+</pre>
+<p>这是那个.</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/fundamentals-3-cubes.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/fundamentals-3-cubes.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>如果将其与上面的自上而下的图进行比较，您可以看到
+它符合我们的期望。立方体位于 X = -2 和 X = +2
+它们部分位于我们的视锥体之外。他们也是
+由于视野有些夸张地扭曲
+整个画布是如此极端。</p>
+<p>我们的程序现在具有这样的结构</p>
+<div class="threejs_center"><img src="../resources/images/threejs-3cubes-scene.svg" style="width: 610px;"></div>
+
+<p>如您所见，我们有3个<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>对象，每个对象引用相同的<a href="/threejs-docs-zh/docs/#api/en/geometries/BoxGeometry"><code class="notranslate" translate="no">BoxGeometry</code></a>。
+每个<a href="/threejs-docs-zh/docs/#api/en/objects/Mesh"><code class="notranslate" translate="no">Mesh</code></a>引用一个唯一的<a href="/threejs-docs-zh/docs/#api/en/materials/MeshPhongMaterial"><code class="notranslate" translate="no">MeshPhongMaterial</code></a>，这样每个立方体都可以有
+不同的颜色。</p>
+<p>我希望这个简短的介绍有助于开始。 <a href="responsive.html">接下来我们将介绍
+使我们的代码具有响应能力，以便适应多种情况</a>.</p>
+<div id="es6" class="threejs_bottombar">
+<h3 id="es6-modules-threejs-and-folder-structure">es6 模块、 Three.js 和文件夹结构</h3>
+<p>从版本 r147 开始，使用 Three.js 的首选方法是通过 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">es6模块</a>并导入地图。</p>
+<p>es6 模块可以通过脚本中的 <code class="notranslate" translate="no">import</code> 关键字加载
+或通过 <code class="notranslate" translate="no">&lt;script type="module"&gt;</code> 标签内联。这是一个例子</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;script type="module"&gt;
+import * as THREE from 'three';
+
+...
+
+&lt;/script&gt;
+</pre>
+<p>请注意那里的 <code class="notranslate" translate="no">'three'</code> 说明符。如果保持原样，可能会产生错误。应该使用<i>导入映射</i>来告诉浏览器在哪里可以找到 Three.js</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "three": "./path/to/three.module.js"
+  }
+}
+&lt;/script&gt;
+</pre>
+<p>请注意，路径说明符只能以 <code class="notranslate" translate="no">./</code> 或 <code class="notranslate" translate="no">../</code> 开头。</p>
+<p>要导入诸如 <a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/OrbitControls.js"><code class="notranslate" translate="no">OrbitControls.js</code></a> 之类的插件，请使用以下命令</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+</pre>
+<p>不要忘记像这样将插件添加到导入映射中</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "three": "./path/to/three.module.js",
+    "three/addons/": "./different/path/to/examples/jsm/"
+  }
+}
+&lt;/script&gt;
+</pre>
+<p>您还可以使用 CDN</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@&lt;version&gt;/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@&lt;version&gt;/examples/jsm/"
+  }
+}
+&lt;/script&gt;
+</pre>
+<p>总而言之，推荐使用 Three.js 的方式是
+</p>
+<pre class="prettyprint showlinemods notranslate lang-html" translate="no">
+&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "three": "./path/to/three.module.js",
+    "three/addons/": "./different/path/to/examples/jsm/"
+  }
+}
+&lt;/script&gt;
+
+&lt;script type="module"&gt;
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+...
+
+&lt;/script&gt;
+</pre>
+</div>
+
+<!-- needed in English only to prevent warning from outdated translations -->
+<p><a href="geometry.html"></a>
+<a href="Geometry"></a></p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

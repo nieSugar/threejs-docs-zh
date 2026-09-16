@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>音频 - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → </p>
+	<h1 translate="no">Audio</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>表示非位置（全局）音频对象。</p>
+<p>此和相关音频模块使用 <a href="https://www.w3.org/TR/webaudio-1.1/" target="_blank" rel="noopener">Web Audio API</a>.</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">// create an AudioListener and add it to the camera
+const listener = new THREE.AudioListener();
+camera.add( listener );
+// create a global audio source
+const sound = new THREE.Audio( listener );
+// load a sound and set it as the Audio object's buffer
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load( 'sounds/ambient.ogg', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.5 );
+	sound.play();
+});
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Audio" translate="no">new <a href="#Audio">Audio</a><span class="signature">( listener : <span class="param-type"><a href="AudioListener.html">AudioListener</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造新音频.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">listener</strong>
+									</td>
+									<td class="description last">
+										<p>全局音频监听器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="autoplay" translate="no">.<a href="#autoplay">autoplay</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否自动开始播放.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="buffer" translate="no">.<a href="#buffer">buffer</a><span class="type-signature"> : AudioBuffer</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>对音频的引用buffer.</p>
+<p>通过<a href="Audio.html#setBuffer">Audio#setBuffer</a>定义。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="context" translate="no">.<a href="#context">context</a><span class="type-signature"> : <a href="AudioContext.html">AudioContext</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>音频上下文.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="detune" translate="no">.<a href="#detune">detune</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>修改音调，以音分为单位。 +/- 100 是一个半音。
++/- 1200 是一个八度音程。</p>
+<p>通过 <a href="Audio.html#setDetune">Audio#setDetune</a> 定义。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="duration" translate="no">.<a href="#duration">duration</a><span class="type-signature"> : undefined | number</span> </h3>
+					<div class="description">
+						<p>覆盖音频的默认持续时间。</p>
+						<p>默认为<code>undefined</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="filters" translate="no">.<a href="#filters">filters</a><span class="type-signature"> : Array.&lt;AudioNode></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>可用于应用各种低阶滤波器来创建
+更复杂的音效，例如via <code>BiquadFilterNode</code>.</p>
+<p>该属性由<a href="Audio.html#setFilters">Audio#setFilters</a>自动设置。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="gain" translate="no">.<a href="#gain">gain</a><span class="type-signature"> : GainNode</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>用于音量控制的增益节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="hasPlaybackControl" translate="no">.<a href="#hasPlaybackControl">hasPlaybackControl</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>表示是否可以控制音频播放
+使用类似 <a href="Audio.html#play">Audio#play</a> 或 <a href="Audio.html#pause">Audio#pause</a>.</p>
+<p> 的方法，当音频源为
+定义.</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isPlaying" translate="no">.<a href="#isPlaying">isPlaying</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>指示音频是否正在播放.</p>
+<p>使用<a href="Audio.html#play">Audio#play</a>时会自动设置该标志，
+<a href="Audio.html#pause">Audio#pause</a>, <a href="Audio.html#stop">Audio#stop</a>.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="listener" translate="no">.<a href="#listener">listener</a><span class="type-signature"> : <a href="AudioListener.html">AudioListener</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>全局音频监听器.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="loop" translate="no">.<a href="#loop">loop</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>音频是否循环.</p>
+<p>通过定义<a href="Audio.html#setLoop">Audio#setLoop</a>.</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="loopEnd" translate="no">.<a href="#loopEnd">loopEnd</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>定义重播应在音频缓冲区中的位置
+停止，以秒为单位。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="loopStart" translate="no">.<a href="#loopStart">loopStart</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>定义重播应在音频缓冲区中的位置
+开始，以秒为单位。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="offset" translate="no">.<a href="#offset">offset</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>音频缓冲区内播放时间的偏移量
+应该开始，以秒为单位。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="playbackRate" translate="no">.<a href="#playbackRate">playbackRate</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>播放速度。</p>
+<p>通过<a href="Audio.html#setPlaybackRate">Audio#setPlaybackRate</a>定义。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="source" translate="no">.<a href="#source">source</a><span class="type-signature"> : AudioNode</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>保存对当前音频源的引用。</p>
+<p>该属性自动加一<code>set*()</code> 方法的之一。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="sourceType" translate="no">.<a href="#sourceType">sourceType</a><span class="type-signature"> : 'empty' | 'audioNode' | 'mediaNode' | 'mediaStreamNode' | 'buffer'</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>定义源类型。</p>
+<p>该属性由 <code>set*()</code> 方法之一自动设置。</p>
+						<p>默认为<code>'empty'</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="connect" translate="no">.<a href="#connect">connect</a><span class="signature">()</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>连接到音频源。这是内部使用的
+初始化以及设置/删除过滤器时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="disconnect" translate="no">.<a href="#disconnect">disconnect</a><span class="signature">()</span><span class="type-signature"> : <a href="Audio.html">Audio</a> | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>断开与音频源的连接。这是内部使用的
+初始化以及设置/删除滤波器时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getDetune" translate="no">.<a href="#getDetune">getDetune</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回以分为单位的振荡失谐。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>以分为单位的振荡失谐。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFilter" translate="no">.<a href="#getFilter">getFilter</a><span class="signature">()</span><span class="type-signature"> : AudioNode | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回列表中的第一个滤波器过滤器.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 过滤器列表中的第一个过滤器。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getFilters" translate="no">.<a href="#getFilters">getFilters</a><span class="signature">()</span><span class="type-signature"> : Array.&lt;AudioNode></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回当前设置的过滤器。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 过滤器列表。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getLoop" translate="no">.<a href="#getLoop">getLoop</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回循环flag.</p>
+<p>只能与允许播放控制的兼容音频源一起使用。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>音频是否应该循环播放。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getOutput" translate="no">.<a href="#getOutput">getOutput</a><span class="signature">()</span><span class="type-signature"> : GainNode</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回输出音频节点.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 输出节点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getPlaybackRate" translate="no">.<a href="#getPlaybackRate">getPlaybackRate</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回当前播放速率。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>播放速率。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getVolume" translate="no">.<a href="#getVolume">getVolume</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回音量.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 音量.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="onEnded" translate="no">.<a href="#onEnded">onEnded</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>播放完成时自动调用。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="pause" translate="no">.<a href="#pause">pause</a><span class="signature">()</span><span class="type-signature"> : <a href="Audio.html">Audio</a> | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>暂停音频播放。</p>
+<p>只能与允许播放控制的兼容音频源一起使用。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="play" translate="no">.<a href="#play">play</a><span class="signature">( delay : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a> | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>开始播放音频音频.</p>
+<p>只能与允许播放控制的兼容音频源一起使用。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">delay</strong>
+									</td>
+									<td class="description last">
+										<p>音频应开始播放的延迟（以秒为单位）。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setBuffer" translate="no">.<a href="#setBuffer">setBuffer</a><span class="signature">( audioBuffer : <span class="param-type">AudioBuffer</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定的音频缓冲区设置为此实例的源。</p>
+<p><a href="Audio.html#sourceType">Audio#sourceType</a> 设置为 <code>buffer</code> 并且<a href="Audio.html#hasPlaybackControl">Audio#hasPlaybackControl</a> 到 <code>true</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">audioBuffer</strong>
+									</td>
+									<td class="description last">
+										<p>音频缓冲区。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setDetune" translate="no">.<a href="#setDetune">setDetune</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>定义以分为单位的振荡失谐。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>以分为单位的振荡失谐cents.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setFilter" translate="no">.<a href="#setFilter">setFilter</a><span class="signature">( filter : <span class="param-type">AudioNode</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>对音频应用单个过滤器节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">filter</strong>
+									</td>
+									<td class="description last">
+										<p>要设置的过滤器。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setFilters" translate="no">.<a href="#setFilters">setFilters</a><span class="signature">( value : <span class="param-type">Array.&lt;AudioNode></span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置过滤器数组并将它们与音频源连接。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>A 列表过滤器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setLoop" translate="no">.<a href="#setLoop">setLoop</a><span class="signature">( value : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a> | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置循环标志.</p>
+<p>只能与允许播放控制的兼容音频源一起使用。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>音频是否循环.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setLoopEnd" translate="no">.<a href="#setLoopEnd">setLoopEnd</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置循环结束值，该值定义重播应在音频缓冲区中的位置
+停止，以秒为单位。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>循环结束值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setLoopStart" translate="no">.<a href="#setLoopStart">setLoopStart</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置循环起始值，该值定义重播应在音频缓冲区中的位置
+开始，以秒为单位。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>循环起始值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setMediaElementSource" translate="no">.<a href="#setMediaElementSource">setMediaElementSource</a><span class="signature">( mediaElement : <span class="param-type">HTMLMediaElement</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定媒体元素设置为此实例的源。</p>
+<p><a href="Audio.html#sourceType">Audio#sourceType</a> 设置为 <code>mediaNode</code> 并且<a href="Audio.html#hasPlaybackControl">Audio#hasPlaybackControl</a> 到 <code>false</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">mediaElement</strong>
+									</td>
+									<td class="description last">
+										<p>媒体元素.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setMediaStreamSource" translate="no">.<a href="#setMediaStreamSource">setMediaStreamSource</a><span class="signature">( mediaStream : <span class="param-type">MediaStream</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定媒体流设置为此媒体流的源实例.</p>
+<p><a href="Audio.html#sourceType">Audio#sourceType</a> 设置为 <code>mediaStreamNode</code> 并将 <a href="Audio.html#hasPlaybackControl">Audio#hasPlaybackControl</a> 设置为 <code>false</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">mediaStream</strong>
+									</td>
+									<td class="description last">
+										<p> 媒体Stream.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setNodeSource" translate="no">.<a href="#setNodeSource">setNodeSource</a><span class="signature">( audioNode : <span class="param-type">AudioNode</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将给定音频节点设置为此实例的源。</p>
+<p><a href="Audio.html#sourceType">Audio#sourceType</a> 设置为 <code>audioNode</code> 并将 <a href="Audio.html#hasPlaybackControl">Audio#hasPlaybackControl</a> 设置为<code>false</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">audioNode</strong>
+									</td>
+									<td class="description last">
+										<p>音频节点，如<code>OscillatorNode</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setPlaybackRate" translate="no">.<a href="#setPlaybackRate">setPlaybackRate</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a> | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置播放速率。</p>
+<p>只能与允许播放控制的兼容音频源一起使用。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>播放速率为set.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setVolume" translate="no">.<a href="#setVolume">setVolume</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置音量。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>要设置的音量。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="stop" translate="no">.<a href="#stop">stop</a><span class="signature">( delay : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Audio.html">Audio</a> | undefined</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>停止音频播放。</p>
+<p>只能与允许播放控制的兼容音频源一起使用。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">delay</strong>
+									</td>
+									<td class="description last">
+										<p>音频应停止的延迟（以秒为单位）正在播放.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此实例的引用。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/src/audio/Audio.js" translate="no" target="_blank" rel="noopener"> src/audio/Audio.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

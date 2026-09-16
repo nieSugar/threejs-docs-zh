@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>MeshBasicMaterial - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Material.html">Material</a> → </p>
+	<h1 translate="no">MeshBasicMaterial</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于以简单的阴影（平面或线框）方式绘制几何图形的材质。</p>
+<p>此材质不受灯光影响。</p></div>
+				<iframe id="viewer" src="../scenes/material-browser.html#MeshBasicMaterial"></iframe>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="MeshBasicMaterial" translate="no">new <a href="#MeshBasicMaterial">MeshBasicMaterial</a><span class="signature">( parameters : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的网格基本材质。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>具有一个或多个属性的对象
+定义材料的外观。材料的任何属性
+（包括继承材料的任何财产）可以通过
+在这里。颜色值可以传递任何接受的类型的值
+by <a href="Color.html#set">Color#set</a>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="alphaMap" translate="no">.<a href="#alphaMap">alphaMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>Alpha 贴图是一个灰度纹理，用于控制整个网格的不透明度
+表面（黑色：完全透明；白色：完全不透明）.</p>
+<p>仅使用纹理的颜色，如果有则忽略 alpha 通道
+存在。对于 RGB 和 RGBA 纹理，渲染器将使用绿色通道
+当采样该纹理时，由于提供了额外的精度
+DXT 压缩和未压缩 RGB 565 格式中为绿色。仅亮度和
+亮度/alpha 纹理也仍将按预期工作。</p>
+<p><code>alphaMap</code> 表示非颜色数据。分配的任何纹理都必须具有
+<code>texture.colorSpace = NoColorSpace</code>（默认）.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="aoMap" translate="no">.<a href="#aoMap">aoMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>此纹理的红色通道用作环境光遮挡贴图。
+需要第二组 UV。</p>
+<p><code>aoMap</code> 表示非颜色数据。分配的任何纹理都必须具有
+<code>texture.colorSpace = NoColorSpace</code>（默认）.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="aoMapIntensity" translate="no">.<a href="#aoMapIntensity">aoMapIntensity</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>环境光遮挡效果的强度。范围为 <code>[0,1]</code>，其中 <code>0</code>
+禁用环境光遮挡。其中强度为 <code>1</code> 且 AO 贴图的
+红色通道也是<code>1</code>，环境光在表面上被完全遮挡。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="color" translate="no">.<a href="#color">color</a><span class="type-signature"> : <a href="Color.html">Color</a></span> </h3>
+					<div class="description">
+						<p>材质的颜色。</p>
+						<p>默认为<code>(1,1,1)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="combine" translate="no">.<a href="#combine">combine</a><span class="type-signature"> : <a href="global.html#MultiplyOperation">MultiplyOperation</a> | <a href="global.html#MixOperation">MixOperation</a> | <a href="global.html#AddOperation">AddOperation</a></span> </h3>
+					<div class="description">
+						<p>如何将表面颜色的结果与环境贴图（如果有）结合起来。</p>
+<p>当设置为<code>MixOperation</code>时， <a href="MeshBasicMaterial.html#reflectivity">MeshBasicMaterial#reflectivity</a> 用于
+两种颜色之间的混合。</p>
+						<p>默认为<code>MultiplyOperation</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="envMap" translate="no">.<a href="#envMap">envMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>环境贴图。</p>
+<p><code>envMap</code>表示亮度数据，必须分配纹理
+<a href="Texture.html#colorSpace">Texture#colorSpace</a>。大多数 <code>envMap</code> 纹理集
+<code>texture.colorSpace = LinearSRGBColorSpace</code> 并使用浮点型格式
+例如<code>.exr</code>或<code>.hdr</code>.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="envMapRotation" translate="no">.<a href="#envMapRotation">envMapRotation</a><span class="type-signature"> : <a href="Euler.html">Euler</a></span> </h3>
+					<div class="description">
+						<p>环境贴图的旋转弧度。</p>
+						<p>默认为<code>(0,0,0)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="fog" translate="no">.<a href="#fog">fog</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>材质是否受雾影响。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isMeshBasicMaterial" translate="no">.<a href="#isMeshBasicMaterial">isMeshBasicMaterial</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lightMap" translate="no">.<a href="#lightMap">lightMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>光照贴图。需要第二组UV。</p>
+<p><code>lightMap</code>表示预烘焙的照度数据，必须指定纹理
+<a href="Texture.html#colorSpace">Texture#colorSpace</a>。大多数 <code>lightMap</code> 纹理集
+<code>texture.colorSpace = LinearSRGBColorSpace</code> 并使用浮点类型格式
+例如 <code>.exr</code> 或 <code>.hdr</code>.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lightMapIntensity" translate="no">.<a href="#lightMapIntensity">lightMapIntensity</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p> 烘焙光强度。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="map" translate="no">.<a href="#map">map</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p> 颜色图。可以选择包含 alpha 通道，通常是组合的
+与 <a href="Material.html#transparent">Material#transparent</a> 或 <a href="Material.html#alphaTest">Material#alphaTest</a>。纹理贴图
+颜色由漫反射<code>color</code>.</p>
+<p><code>map</code> 表示颜色数据，并且必须为纹理分配一个
+<a href="Texture.html#colorSpace">Texture#colorSpace</a>。大多数 <code>map</code> 纹理设置
+<code>texture.colorSpace = SRGBColorSpace</code>。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="reflectivity" translate="no">.<a href="#reflectivity">reflectivity</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>环境贴图对表面的影响程度进行调制。
+有效范围介于<code>0</code>（无反射）和<code>1</code>（全反射）之间。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="refractionRatio" translate="no">.<a href="#refractionRatio">refractionRatio</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>空气的折射率 (IOR)（大约为 1）除以
+材料的折射率。它与环境映射一起使用
+模式 <a href="global.html#CubeRefractionMapping">CubeRefractionMapping</a> 和 <a href="global.html#EquirectangularRefractionMapping">EquirectangularRefractionMapping</a>。
+折射率不应超过<code>1</code>.</p>
+						<p>默认为<code>0.98</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="specularMap" translate="no">.<a href="#specularMap">specularMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="description">
+						<p>使用的高光贴图material.</p>
+<p><code>specularMap</code> 表示颜色数据，并且纹理必须分配一个 <a href="Texture.html#colorSpace">Texture#colorSpace</a>。大多数 <code>specularMap</code> 纹理设置 <code>texture.colorSpace = SRGBColorSpace</code>。</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="wireframe" translate="no">.<a href="#wireframe">wireframe</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>将几何体渲染为线框。</p>
+						<p>默认为 <code>false</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="wireframeLinecap" translate="no">.<a href="#wireframeLinecap">wireframeLinecap</a><span class="type-signature"> : 'round' | 'bevel' | 'miter'</span> </h3>
+					<div class="description">
+						<p>定义线框末端的外观。</p>
+<p>只能与<a href="SVGRenderer.html">SVGRenderer</a>.</p>
+						<p>默认为 <code>'round'</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="wireframeLinejoin" translate="no">.<a href="#wireframeLinejoin">wireframeLinejoin</a><span class="type-signature"> : 'round' | 'bevel' | 'miter'</span> </h3>
+					<div class="description">
+						<p>定义线框接头的外观。</p>
+<p>只能与<a href="SVGRenderer.html">SVGRenderer</a>.</p>
+						<p>默认为 <code>'round'</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="wireframeLinewidth" translate="no">.<a href="#wireframeLinewidth">wireframeLinewidth</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>控制厚度线框的.</p>
+<p>只能与<a href="SVGRenderer.html">SVGRenderer</a>.</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p> <a href="https://github.com/mrdoob/three.js/blob/master/src/materials/MeshBasicMaterial.js" translate="no" target="_blank" rel="noopener"> src/materials/MeshBasicMaterial.js</a> </p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

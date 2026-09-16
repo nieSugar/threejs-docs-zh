@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>GaussianSplat - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → <a href="Mesh.html">Mesh</a> → </p>
+	<h1 translate="no">GaussianSplat</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>3D 高斯splat 几何图形的最小渲染器。</p>
+<p>请注意，此类只能与<a href="WebGPURenderer.html">WebGPURenderer</a> 一起使用。的
+支持 <code>forceWebGL</code> 后备 <a href="WebGPURenderer.html">WebGPURenderer</a>，但是
+<a href="WebGLRenderer.html">WebGLRenderer</a> 不是。导入地图或包导出必须解决
+<code>three/webgpu</code> 和 <code>three/tsl</code>.</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const splats = new GaussianSplat( geometry );
+scene.add( splats );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">GaussianSplat</span> 都是插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { GaussianSplat } from 'three/addons/objects/GaussianSplat.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="GaussianSplat" translate="no">new <a href="#GaussianSplat">GaussianSplat</a><span class="signature">( splatGeometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, options : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的高斯splat网格。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">splatGeometry</strong>
+									</td>
+									<td class="description last">
+										<p>要渲染的splat几何体。高阶球面谐波属性必须使用 <a href="global.html#createGaussianSplatGeometry">createGaussianSplatGeometry</a> 中的打包 <code>Uint32Array</code> 字（每个 splat <code>SH_BAND_WORDS[ degree ]</code> 字，每个 4 个钳位字节系数） word).</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>Options.</p>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">autoSort</strong>
+									</td>
+									<td class="description last">
+										<p>是否在<code>onBeforeRender</code>中自动排序.</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="autoSort" translate="no">.<a href="#autoSort">autoSort</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否在<code>onBeforeRender</code>中自动排序.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="boundingBox" translate="no">.<a href="#boundingBox">boundingBox</a><span class="type-signature"> : <a href="Box3.html">Box3</a></span> </h3>
+					<div class="description">
+						<p>splats的边界框。可以通过<a href="GaussianSplat.html#computeBoundingBox">GaussianSplat#computeBoundingBox</a>.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="boundingSphere" translate="no">.<a href="#boundingSphere">boundingSphere</a><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
+					<div class="description">
+						<p>计算板的边界球体。可以通过 <a href="GaussianSplat.html#computeBoundingSphere">GaussianSplat#computeBoundingSphere</a>.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isGaussianSplat" translate="no">.<a href="#isGaussianSplat">isGaussianSplat</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="splatGeometry" translate="no">.<a href="#splatGeometry">splatGeometry</a><span class="type-signature"> : <a href="BufferGeometry.html">BufferGeometry</a></span> </h3>
+					<div class="description">
+						<p>源 splat 几何图形进行计算。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="computeBoundingBox" translate="no">.<a href="#computeBoundingBox">computeBoundingBox</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算 splats 的边界框，更新 <a href="GaussianSplat.html#boundingBox">GaussianSplat#boundingBox</a>.</p>
+<p>Each splat 按其自身范围扩展，而不是视为一个点，因此边界覆盖
+绘制的内容.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="computeBoundingSphere" translate="no">.<a href="#computeBoundingSphere">computeBoundingSphere</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算splats的边界球体，更新<a href="GaussianSplat.html#boundingSphere">GaussianSplat#boundingSphere</a>.</p>
+<p>Each splat 按其自身范围扩展，而不是视为一个点，因此边界覆盖
+绘制的内容.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="raycast" translate="no">.<a href="#raycast">raycast</a><span class="signature">( raycaster : <span class="param-type"><a href="Raycaster.html">Raycaster</a></span>, intersects : <span class="param-type">Array.&lt;Object></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>计算投射光线和splats之间的交点.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">raycaster</strong>
+									</td>
+									<td class="description last">
+										<p>The raycaster.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">intersects</strong>
+									</td>
+									<td class="description last">
+										<p>保存交点的目标数组。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Mesh.html#raycast">Mesh#raycast</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateSort" translate="no">.<a href="#updateSort">updateSort</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果相机或网格方向发生足够的变化，则更新绘制顺序
+需要一个新的排序。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>用于渲染的相机。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>此调用是否调度了排序。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateSphericalHarmonics" translate="no">.<a href="#updateSphericalHarmonics">updateSphericalHarmonics</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>如果相机或
+网格变换已更改。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>渲染器.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>用于渲染的相机。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 此调用是否调度计算通道。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+			<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/objects/GaussianSplat.js" translate="no" target="_blank" rel="noopener"> examples/jsm/objects/GaussianSplat.js</a>
+		</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

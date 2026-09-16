@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>动画系统</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Animation System">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>动画系统</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <h2 id="overview">概述</h2>
+
+		<p class="desc">
+			在 Three.js 动画系统中，您可以为模型的各种属性设置动画：
+			蒙皮和装备模型的骨骼、变形目标、不同的材料属性
+			（颜色、不透明度、布尔值）、可见性和变换。动画属性可以淡入，
+			淡出、交叉淡入淡出和扭曲。不同同步的权重和时间尺度
+			可以更改同一对象以及不同对象上的动画
+			独立。可以在相同和不同的对象上进行各种动画
+			已同步。<br /><br />
+
+			为了在一个同质系统中实现这一切，我们使用了 Three.js 动画系统
+			[link:https://github.com/mrdoob/three.js/issues/6881 has completely changed in 2015]
+			（谨防过时的信息！），它现在的架构类似于
+			Unity/Unreal Engine 4。本页简要概述了 Unity/Unreal Engine 4 的主要组件
+			系统以及它们如何协同工作。
+
+		</p>
+
+		<h3 id="animation-clips">动画剪辑</h3>
+
+		<p class="desc">
+
+			如果您已成功导入动画 3D 对象（无论它是否具有
+			骨骼或变形目标或两者） - 例如使用 Blender 将其导出
+			[link:https://github.com/KhronosGroup/glTF-Blender-IO glTF Blender exporter] 和
+			使用响应字段之一“GLTFLoader”将其加载到 Three.js 场景中
+			应该是一个名为“animations”的数组，包含动画剪辑
+			对于此模型（请参阅下面可能的加载器列表）。<br /><br />
+
+			每个“AnimationClip”通常保存对象的某个活动的数据。如果
+			mesh 是一个角色，例如，一个步行循环可能有一个AnimationClip，第二个
+			第三个用于跳跃，第三个用于回避等等。
+
+		</p>
+
+		<h3 id="keyframe-tracks">关键帧轨道</h3>
+
+		<p class="desc">
+
+			在这样的“AnimationClip”内部，每个动画属性的数据都存储在
+			单独的“KeyframeTrack”。假设角色对象有骨架，
+			一个关键帧轨道可以存储下臂骨位置变化的数据
+			随着时间的推移，不同的跟踪数据用于同一骨骼的旋转变化，第三个
+			另一个骨骼的轨道位置、旋转或缩放等。应该清楚的是，
+			一个动画剪辑可以由很多这样的轨道组成。<br /><br />
+
+			假设模型有变形目标（例如一个变形
+			目标显示出友好的面孔，另一个显示出愤怒的面孔），每个轨道都包含
+			有关特定变形目标的影响在表演过程中如何变化的信息
+			剪辑的。
+
+		</p>
+
+		<h3 id="animation-mixer">动画混合器</h3>
+
+		<p class="desc">
+
+			存储的数据仅构成动画的基础 - 实际播放由
+			“动画混合器”。你可以想象这不仅是一个动画播放器，而且
+			作为硬件的模拟，如真正的混音器控制台，可以控制多个动画
+			同时，将它们混合并融合。
+
+		</p>
+
+		<h3 id="animation-actions">动画动作</h3>
+
+		<p class="desc">`AnimationMixer` 本身只有很少的（通用）属性和方法，因为它
+			可以通过动画动作来控制。通过配置一个
+			`AnimationAction` 你可以确定何时播放、暂停某个特定的 `AnimationClip`
+			或停止在其中一台混音器上，是否需要重复该剪辑以及多久重复一次，是否
+			应使用淡入淡出或时间缩放以及一些其他操作（例如交叉淡入淡出）来执行
+			或同步。
+
+		</p>
+
+		<h3 id="animation-object-groups">动画对象组</h3>
+
+		<p class="desc">
+
+			如果您希望一组对象接收共享动画状态，您可以使用
+			`动画对象组`。
+
+		</p>
+
+		<h3 id="supported-formats-and-loaders">支持的格式和加载器</h3>
+
+		<p class="desc">
+			请注意，并非所有模型格式都包含动画（尤其是 OBJ 不包含动画），并且只有某些模型格式包含动画。
+			Three.js 加载器支持“AnimationClip”序列。有几个<i>做</i>
+			支持这种动画类型：</p>
+
+			<ul>
+				<li>THREE.ObjectLoader</li>
+				<li>THREE.BVHLoader</li>
+				<li>THREE.ColladaLoader</li>
+				<li>THREE.FBXLoader</li>
+				<li>THREE.GLTFLoader</li>
+			</ul>
+
+		<p class="desc">请注意，3ds max 和 Maya 目前无法导出多个动画（这意味着不能导出的动画）
+			在同一时间线上）直接复制到单个文件。
+		</p>
+
+		<h2 id="example">示例</h2>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+let mesh;
+
+// Create an AnimationMixer, and get the list of AnimationClip instances
+const mixer = new THREE.AnimationMixer( mesh );
+const clips = mesh.animations;
+
+// Update the mixer on each frame
+function update () {
+  mixer.update( deltaSeconds );
+}
+
+// Play a specific animation
+const clip = THREE.AnimationClip.findByName( clips, 'dance' );
+const action = mixer.clipAction( clip );
+action.play();
+
+// Play all animations
+clips.forEach( function ( clip ) {
+  mixer.clipAction( clip ).play();
+} );
+</pre>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

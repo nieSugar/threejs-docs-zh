@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>WebGPURenderer - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="Renderer.html">Renderer</a> → </p>
+	<h1 translate="no">WebGPURenderer</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此渲染器是 <code>WebGLRenderer</code> 的新替代品。 <code>WebGPURenderer</code> 有能力
+针对不同的后端。默认情况下，如果满足以下条件，渲染器会尝试使用 WebGPU 后端：
+浏览器支持 WebGPU。如果没有，<code>WebGPURenderer</code> 会退回到 WebGL 2 后端。</p></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="WebGPURenderer" translate="no">new <a href="#WebGPURenderer">WebGPURenderer</a><span class="signature">( parameters : <span class="param-type"><a href="WebGPURenderer.html#~Options">WebGPURenderer~Options</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的 WebGPU 渲染器。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">parameters</strong>
+									</td>
+									<td class="description last">
+										<p>配置参数.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="isWebGPURenderer" translate="no">.<a href="#isWebGPURenderer">isWebGPURenderer</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="library" translate="no">.<a href="#library">library</a><span class="type-signature"> : <a href="StandardNodeLibrary.html">StandardNodeLibrary</a></span> </h3>
+					<div class="description">
+						<p>通用默认值将被覆盖
+用于类型映射的标准节点库。</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="Renderer.html#library">Renderer#library</a></dt>
+						</dl>
+				</div>
+				<h2 class="subsection-title">类型定义</h2>
+				<div class="member">
+					<h3 class="name" id="~Options" translate="no">.<a href="#~Options">Options</a> </h3>
+					<div class="description">
+						<p>WebGPURenderer 选项.</p>
+					</div>
+<table class="props">
+	<tbody>
+		<tr>
+				<td class="name">
+					<strong>logarithmicDepthBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否启用对数深度缓冲区。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>reversedDepthBuffer</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否启用反向深度缓冲区。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>alpha</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>默认帧缓冲区（表示画布的最终内容）是否应该透明或不透明。</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>depth</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>默认帧缓冲区是否应具有深度缓冲区。</p>
+						<p>默认为<code>true</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>stencil</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>默认帧缓冲区是否应该有模板缓冲区。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>antialias</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>是否应启用 MSAA 作为默认抗锯齿功能。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>samples</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>当 <code>antialias</code> 为默认使用 <code>true</code>、<code>4</code> 样本。将此参数设置为 0 以外的任何其他整数值以覆盖默认值。</p>
+						<p>默认为<code>0</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>forceWebGL</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>如果设置为 <code>true</code>，渲染器将使用 WebGL 2 后端，无论是否支持 WebGPU。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>multiview</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>如果设置为 <code>true</code>，渲染器将在 WebXR 渲染期间使用多视图（如果支持）。</p>
+						<p>默认为 <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>outputType</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>输出到画布的纹理类型。默认情况下，使用设备的首选格式；其他格式可能会产生开销。</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>outputBufferType</strong>
+						<br>
+<span class="param-type">number</span>
+				</td>
+			<td class="description last">
+				<p>定义输出缓冲区的类型。建议使用默认的 <code>HalfFloatType</code> 以获得最佳效果
+质量。为了节省内存和带宽，可以使用<code>UnsignedByteType</code>。但这会降低渲染质量。</p>
+						<p>默认为<code>HalfFloatType</code>.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/webgpu/WebGPURenderer.js" translate="no" target="_blank" rel="noopener"> src/renderers/webgpu/WebGPURenderer.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

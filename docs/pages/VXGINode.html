@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>VXGINode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → </p>
+	<h1 translate="no">VXGINode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>基于体素的全局照明的后处理节点。场景被体素化为
+<a href="VXGIVolume.html">VXGIVolume</a> 和间接漫射光和环境光遮挡按每个收集
+具有近似体素锥体追踪的像素。</p>
+<p>该节点是SSGI和Light Probe Grids之间的中间路径：</p>
+<ul>
+<li>与 <code>SSGINode</code> 相比，它没有屏幕空间伪影，并且提供了明显更一致的光照，因为屏幕外的表面和薄的遮挡物也会产生贡献。 但是，它的动态性较低：对象应保持静止，因为几何体的变化需要重新体素化 (<code>needsUpdate = true</code>)，这对于每帧动画来说代价过高。</li>
+<li>与 <code>LightProbeGrid</code> 相比，它支持动态照明而无需新的烘焙过程，并且产生更好的整体照明质量，同时光泄漏更少。然而，它成本更高，因此对于性能受限的使用场景不太适合。</li>
+</ul>
+<p>效果的质量/性能主要取决于体素分辨率、锥体数量
+跟踪每个像素以及锥体的孔径。</p>
+<p>灯光及其阴影贴图会自动拾取。仅注入直射光。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://research.nvidia.com/publication/2011-09_interactive-indirect-illumination-using-voxel-cone-tracing" target="_blank" rel="noopener">https://research.nvidia.com/publication/2011-09_interactive-indirect-illumination-using-voxel-cone-tracing</a>：Crassin 等人，使用体素锥追踪的交互式间接光照，Pacific Graphics 2011。</li>
+</ul>
+<p>注意：此节点只能与 <code>WebGPURenderer</code> 和 WebGPU 后端一起使用。</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">VXGINode</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { vxgi } from 'three/addons/lighting/vxgi/VXGINode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="VXGINode" translate="no">new <a href="#VXGINode">VXGINode</a><span class="signature">( depthNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, normalNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, scene : <span class="param-type"><a href="Scene.html">Scene</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, resolution : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的体素GI节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">depthNode</strong>
+									</td>
+									<td class="description last">
+										<p>代表场景深度的纹理节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">normalNode</strong>
+									</td>
+									<td class="description last">
+										<p>表示场景视图空间的纹理节点法线.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>要体素化的场景.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>渲染场景的相机。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">resolution</strong>
+									</td>
+									<td class="description last">
+										<p>沿体积最长轴的体素数。不应超过 <code>256</code>，较高的值超过体素分析器的最大存储缓冲区大小。</p>
+										<p>默认为<code>128</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="aoDistance" translate="no">.<a href="#aoDistance">aoDistance</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>遮挡由AO的<code>1 / ( 1 + distance / aoDistance )</code>加权，所以遮挡物在此
+世界空间距离占一半。 <code>0</code> 禁用衰减。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="aoIntensity" translate="no">.<a href="#aoIntensity">aoIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>应用于 AO 的幂函数，使其显得更暗/更亮。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="aoMinVisibility" translate="no">.<a href="#aoMinVisibility">aoMinVisibility</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>环境光遮挡可以达到的最暗值。消除折痕和接触区域
+纯黑色，体素追踪遮挡往往会高估其分辨率
+一个体素。 <code>0</code> 保持完整的遮挡范围。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bounces" translate="no">.<a href="#bounces">bounces</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p> 缓存的间接反弹数量。请参阅<a href="VXGIVolume.html#bounces">VXGIVolume#bounces</a>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
+					<div class="description">
+						<p>渲染场景的相机。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="coneAngle" translate="no">.<a href="#coneAngle">coneAngle</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>漫反射锥体的孔径（以度为单位）。较宽的锥体速度更快（步数更少），但会泄漏
+过度遮挡越多，窄锥体越精确，但噪音更大，并且需要更多步骤。
+与 <a href="VXGINode.html#coneCount">VXGINode#coneCount</a> 一起选择。应在 <code>[10, 90]</code>.</p>
+						<p>默认为<code>40</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="coneCount" translate="no">.<a href="#coneCount">coneCount</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;uint></span> </h3>
+					<div class="description">
+						<p> 每个像素跟踪的锥体数量范围内。应在<code>[2, 8]</code>范围内。</p>
+<p>主要定义体素锥追踪的质量和精度。值为
+<code>2</code> - <code>4</code> 是推荐设置。将 <code>2</code> 用于性能受限的用例。</p>
+						<p>默认为<code>3</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="debug" translate="no">.<a href="#debug">debug</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;int></span> </h3>
+					<div class="description">
+						<p>调试体积可视化：<code>0</code> = 关闭，<code>1</code> = 辐射体素，<code>2</code> = 每轴不透明度体素。
+可视化替换了 GI 输出。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="debugLevel" translate="no">.<a href="#debugLevel">debugLevel</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>调试可视化显示的 mip 级别。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="depthNode" translate="no">.<a href="#depthNode">depthNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>表示场景深度的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="directionalRadiance" translate="no">.<a href="#directionalRadiance">directionalRadiance</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否定向过滤较粗糙的辐射级别以减少光溢出
+穿过薄薄的墙壁和地板。默认情况下关闭，因为它会消耗内存和性能。
+请参见<a href="VXGIVolume.html#directionalRadiance">VXGIVolume#directionalRadiance</a>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="giIntensity" translate="no">.<a href="#giIntensity">giIntensity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>间接漫射辐照度的强度。</p>
+						<p>默认为<code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lightingNeedsUpdate" translate="no">.<a href="#lightingNeedsUpdate">lightingNeedsUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>设置为<code>true</code>以在下一帧中重新注入照明。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>设置为<code>true</code> 在下一帧中重新体素化场景。</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#needsUpdate">TempNode#needsUpdate</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="normalNode" translate="no">.<a href="#normalNode">normalNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>表示场景法线的节点。如果 <code>null</code>，则从深度重建法线。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="normalOffset" translate="no">.<a href="#normalOffset">normalOffset</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p> 锥体原点沿体素中表面法线的偏移。表面自己的体素
+可以延伸至表面上方半个体素和样品的三线性足迹
+跨越另一半体素，因此 1.5 体素在每种情况下都避免自遮挡。</p>
+						<p>默认为<code>1.5</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="scene" translate="no">.<a href="#scene">scene</a><span class="type-signature"> : <a href="Scene.html">Scene</a></span> </h3>
+					<div class="description">
+						<p>要体素化的场景.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>自节点渲染以来，<code>updateBeforeType</code> 设置为 <code>NodeUpdateType.FRAME</code>
+<code>updateBefore()</code>.</p>
+						<p>中每帧效果一次，默认为 <code>'frame'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBeforeType">TempNode#updateBeforeType</a></dt>
+						</dl>
+				</div>
+				<div class="member">
+					<h3 class="name" id="useTemporalFiltering" translate="no">.<a href="#useTemporalFiltering">useTemporalFiltering</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否使用时间过滤。将此属性设置为 <code>true</code> 需要
+<code>TRAANode</code> 的用法。然后每帧旋转锥体方向以收敛噪声。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="volume" translate="no">.<a href="#volume">volume</a><span class="type-signature"> : <a href="VXGIVolume.html">VXGIVolume</a></span> </h3>
+					<div class="description">
+						<p>体素体积。用它来配置边界、图层和反弹。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要效果时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#dispose">TempNode#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getAONode" translate="no">.<a href="#getAONode">getAONode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理节点的形式返回效果的 AO 结果。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 表示效果的 AO 结果的纹理节点。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getGINode" translate="no">.<a href="#getGINode">getGINode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理节点的形式返回效果的GI结果。纹理持有间接
+漫射辐照度，准备通过 <code>builtinGIContext()</code>.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>表示效果的GI结果的纹理节点.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置效果的大小.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>效果的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>效果的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于设置效果的TSL code.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#setup">TempNode#setup</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于每帧渲染一次效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBefore">TempNode#updateBefore</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+		<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/lighting/vxgi/VXGINode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/lighting/vxgi/VXGINode.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

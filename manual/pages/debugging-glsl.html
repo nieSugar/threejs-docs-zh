@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>调试 - GLSL</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Debugging - GLSL">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>调试 - GLSL</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p>这个网站到目前为止不教授 GLSL，就像不教授 JavaScript 一样。
+这些都是非常大的话题。如果你想学习 GLSL，请考虑查看
+<a href="https://webglfundamentals.org">这些文章</a>作为起点。</p>
+<p>如果您已经了解 GLSL，那么这里有一些调试技巧。</p>
+<p>当我制作新的 GLSL 着色器时，通常不会出现任何内容
+我做的第一件事是更改片段着色器以返回实体
+颜色。例如，在着色器的最底部，我可能会放置</p>
+<pre class="prettyprint showlinemods notranslate lang-glsl" translate="no">void main() {
+
+  ...
+
+  gl_FragColor = vec4(1, 0, 0, 1);  // red
+}
+</pre>
+<p>如果我看到我试图绘制的对象，那么我知道问题是
+与我的片段着色器有关。它可能是任何东西，比如糟糕的纹理，
+未初始化的制服，具有错误值的制服，但至少
+我有一个看的方向。</p>
+<p>为了测试其中一些，我可能会开始尝试绘制一些输入。
+例如，如果我在片段着色器中使用法线，那么我可能会
+add</p>
+<pre class="prettyprint showlinemods notranslate lang-glsl" translate="no">gl_FragColor = vec4(vNormal * 0.5 + 0.5, 1);
+</pre>
+<p>法线从 -1 到 +1，因此乘以 0.5 再加上 0.5 我们得到
+值从 0.0 到 1.0，这使得它们对颜色很有用。</p>
+<p>用一些你知道有效的东西尝试一下，你就会开始有了想法
+正常情况下的样子。如果你的法线看起来不正常
+那么你就有了一些线索去哪里寻找。如果你正在操纵法线
+在片段着色器中，您可以使用相同的技术来绘制
+该操作的结果。</p>
+<div class="threejs_center"><img src="../resources/images/standard-primitive-normals.jpg" style="width: 650px;"></div>
+
+<p>同样，如果我们使用纹理，则会有纹理坐标，我们
+可以用类似 </p>
+<pre class="prettyprint showlinemods notranslate lang-glsl" translate="no">gl_FragColor = vec4(fract(vUv), 0, 1);
+</pre>
+<p> 的东西来绘制它们 <code class="notranslate" translate="no">fract</code> 是存在的，以防我们使用向外的纹理坐标
+0 到 1 范围。如果 <code class="notranslate" translate="no">texture.repeat</code> 设置为更大的值，则这种情况很常见
+比 1.</p>
+<div class="threejs_center"><img src="../resources/images/standard-primitive-uvs.jpg" style="width: 650px;"></div>
+
+<p>您可以对片段着色器中的所有值执行类似的操作。弄清楚
+他们的范围可能是什么，添加一些代码来设置 <code class="notranslate" translate="no">gl_FragColor</code>
+该范围缩放为 0.0 到 1.0</p>
+<p>要检查纹理，请尝试 <a href="/threejs-docs-zh/docs/#api/en/textures/CanvasTexture"><code class="notranslate" translate="no">CanvasTexture</code></a> 或 <a href="/threejs-docs-zh/docs/#api/en/textures/DataTexture"><code class="notranslate" translate="no">DataTexture</code></a> 您
+知道有效。</p>
+<p>相反，如果将 <code class="notranslate" translate="no">gl_FragColor</code> 设置为红色后我仍然什么也看不到
+然后我有一个暗示我的问题可能是事情的方向
+与顶点着色器有关。有些矩阵可能是错误的或者是我的
+属性可能有错误的数据或设置不正确。</p>
+<p>我首先看一下矩阵。我可能会在之后放置一个断点
+我调用 <code class="notranslate" translate="no">renderer.render(scene, camera)</code> 然后开始扩展
+检查器中的东西。是相机的世界矩阵和投影
+矩阵至少没有充满<code class="notranslate" translate="no">NaN</code>s？扩大场景并寻找
+在其 <code class="notranslate" translate="no">children</code> 我会检查世界矩阵看起来是否合理（没有 <code class="notranslate" translate="no">NaN</code>s）
+每个矩阵的最后 4 个值对于我的场景来说看起来是合理的。如果我
+期望我的场景为 50x50x50 单位，一些矩阵显示 552352623.123
+显然那里出了问题。</p>
+<div class="threejs_center"><img src="../resources/images/inspect-matrices.gif"></div>
+
+<p>就像我们对片段着色器所做的那样，我们也可以从
+顶点着色器，将它们传递给片段着色器。声明一个变化的
+在两者中传递您不确定是否正确的值。事实上如果我的
+使用法线着色器使用我将更改片段着色器以显示它们
+就像上面提到的，然后只需将 <code class="notranslate" translate="no">vNormal</code> 设置为我想要的值
+显示但缩放，使值从 0.0 到 1.0。然后我看
+结果并看看它们是否符合我的期望。</p>
+<p>另一件好事是使用更简单的着色器。你能画出你的数据吗
+与<a href="/threejs-docs-zh/docs/#api/en/materials/MeshBasicMaterial"><code class="notranslate" translate="no">MeshBasicMaterial</code></a>？如果您可以尝试一下并确保它显示
+按预期上升。</p>
+<p>如果不是，最简单的顶点着色器是什么，可以让您可视化您的
+几何？通常它很简单</p>
+<pre class="prettyprint showlinemods notranslate lang-glsl" translate="no">gl_Position = projection * modelView * vec4(position.xyz, 1);
+</pre>
+<p>如果有效，开始一次添加一点更改。</p>
+<p>您可以做的另一件事是使用
+<a href="https://chrome.google.com/webstore/detail/shader-editor/ggeaidddejpbakgafapihjbgdlbbbpob?hl=en">适用于 Chrome 的着色器编辑器扩展程序</a>
+或其他浏览器的类似操作。这是了解其他着色器的好方法
+正在工作。这也很好，因为您可以进行上面建议的一些更改
+在代码运行时实时运行。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

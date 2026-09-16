@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>后期处理</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Post Processing">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>后期处理</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+          <p><em>后期处理</em>通常是指对二维图像应用某种效果或滤镜。在 THREE.js 的情况下，我们有一个包含许多网格的场景。我们将该场景渲染成二维图像。通常情况下，该图像会直接渲染到画布上并在浏览器中显示，但我们可以<a href="rendertargets.html">将其渲染到渲染目标</a>，然后在绘制到画布之前对结果应用一些<em>后期处理</em>效果。之所以称为后期处理，是因为它发生在主场景处理之后（post）。</p>
+<p>后期处理的例子有类似 Instagram 的滤镜、Photoshop 滤镜等。</p>
+<p>THREE.js 有一些示例类可以帮助设置后期处理管线。它的工作方式是你创建一个 <code class="notranslate" translate="no">EffectComposer</code>，然后向其中添加多个 <code class="notranslate" translate="no">Pass</code> 对象。然后你调用 <code class="notranslate" translate="no">EffectComposer.render</code>，它会将你的场景渲染到 <a href="rendertargets.html">render target</a>，并随后应用每个 <code class="notranslate" translate="no">Pass</code>。</p>
+<p>每个 <code class="notranslate" translate="no">Pass</code> 可以是一些后期处理效果，比如添加暗角、模糊、应用泛光、加上胶片颗粒、调整色相、饱和度、对比度等……最后将结果渲染到画布上。</p>
+<p>了解 <code class="notranslate" translate="no">EffectComposer</code> 的功能有点重要。它会创建两个 <a href="rendertargets.html">渲染目标</a>。我们称它们为 <strong>rtA</strong> 和 <strong>rtB</strong>。</p>
+<p>然后，你调用 <code class="notranslate" translate="no">EffectComposer.addPass</code> 按照你想应用的顺序添加每个通道。通道随后会以 <em>类似这样的</em>方式应用。</p>
+<div class="threejs_center"><img src="../resources/images/threejs-postprocessing.svg" style="width: 600px"></div>
+
+<p>首先，你传入 <code class="notranslate" translate="no">RenderPass</code> 的场景被渲染到 <strong>rtA</strong>，然后 <strong>rtA</strong> 被传递到下一个通道，无论它是什么。那个通道使用 <strong>rtA</strong> 作为输入来执行它要做的操作，并将结果写入 <strong>rtB</strong>。然后 <strong>rtB</strong> 被传递到下一个通道，该通道使用 <strong>rtB</strong> 作为输入并写回 <strong>rtA</strong>。这一过程在所有通道中继续。</p>
+<p>每个 <code class="notranslate" translate="no">Pass</code> 有 4 个基本选项</p>
+<h2 id="-enabled-"><code class="notranslate" translate="no">enabled</code></h2>
+<p>是否使用此通道</p>
+<h2 id="-needsswap-"><code class="notranslate" translate="no">needsSwap</code></h2>
+<p>完成此通道后是否交换 <code class="notranslate" translate="no">rtA</code> 和 <code class="notranslate" translate="no">rtB</code></p>
+<h2 id="-clear-"><code class="notranslate" translate="no">clear</code></h2>
+<p>渲染此通道之前是否清除</p>
+<h2 id="-rendertoscreen-"><code class="notranslate" translate="no">renderToScreen</code></h2>
+<p>是否渲染到画布而不是当前目标渲染目标。在大多数用例中，您不需要显式设置此标志，因为通道链中的最后一次通道会自动渲染到屏幕。</p>
+<p>让我们组合一个基本示例。我们将从 <a href="responsive.html">响应性文章</a> 中的示例开始。</p>
+<p>首先，我们创建一个 <code class="notranslate" translate="no">EffectComposer</code>。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const composer = new EffectComposer(renderer);
+</pre>
+<p>然后作为第一次处理，我们添加一个 <code class="notranslate" translate="no">RenderPass</code>，它会使用我们的相机将场景渲染到第一个渲染目标中。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">composer.addPass(new RenderPass(scene, camera));
+</pre>
+<p>接下来我们添加一个 <code class="notranslate" translate="no">BloomPass</code>。一个 <code class="notranslate" translate="no">BloomPass</code> 会将其输入渲染到通常较小的渲染目标中并对结果进行模糊处理。然后它将模糊后的结果叠加到原始输入上。这会使场景产生<em>辉光</em></p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const bloomPass = new BloomPass(
+    1,    // strength
+    25,   // kernel size
+    4,    // sigma ?
+    256,  // blur render target resolution
+);
+composer.addPass(bloomPass);
+</pre>
+<p>接下来我们添加一个 <code class="notranslate" translate="no">FilmPass</code>，它会在其输入上绘制噪点和扫描线。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const filmPass = new FilmPass(
+    0.5,   // intensity
+    false,  // grayscale
+);
+composer.addPass(filmPass);
+</pre>
+<p>最后我们添加一个 <code class="notranslate" translate="no">OutputPass</code>，它执行颜色空间转换为 sRGB 并可选地进行色调映射。这一步通常是处理链的最后一步。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const outputPass = new OutputPass();
+composer.addPass(outputPass);
+</pre>
+<p>要使用这些类，我们需要导入一堆脚本。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {BloomPass} from 'three/addons/postprocessing/BloomPass.js';
+import {FilmPass} from 'three/addons/postprocessing/FilmPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+</pre>
+<p>对于几乎任何后期处理，<code class="notranslate" translate="no">EffectComposer.js</code>、<code class="notranslate" translate="no">RenderPass.js</code> 和 <code class="notranslate" translate="no">OutputPass.js</code> 都是必需的。</p>
+<p>我们最后需要做的是使用 <code class="notranslate" translate="no">EffectComposer.render</code> 代替 <a href="/threejs-docs-zh/docs/#api/en/renderers/WebGLRenderer.render"><code class="notranslate" translate="no">WebGLRenderer.render</code></a> <em>并且</em> 告诉 <code class="notranslate" translate="no">EffectComposer</code> 匹配画布的大小。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">-function render(now) {
+-  time *= 0.001;
++let then = 0;
++function render(now) {
++  now *= 0.001;  // convert to seconds
++  const deltaTime = now - then;
++  then = now;
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
++    composer.setSize(canvas.width, canvas.height);
+  }
+
+  cubes.forEach((cube, ndx) =&gt; {
+    const speed = 1 + ndx * .1;
+-    const rot = time * speed;
++    const rot = now * speed;
+    cube.rotation.x = rot;
+    cube.rotation.y = rot;
+  });
+
+-  renderer.render(scene, camera);
++  composer.render(deltaTime);
+
+  requestAnimationFrame(render);
+}
+</pre>
+<p> <code class="notranslate" translate="no">EffectComposer.render</code> 接收一个 <code class="notranslate" translate="no">deltaTime</code>，它是自上一帧渲染以来的秒数。它将这个值传递给各种效果，以防其中任何一个是动画。在这种情况下，<code class="notranslate" translate="no">FilmPass</code> 是动画的。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/postprocessing.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/postprocessing.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>在运行时更改效果参数通常需要设置 uniform 值。让我们添加一个 GUI 来调整一些参数。要弄清楚哪些值可以轻松调整以及如何调整它们，需要深入查看该效果的代码。</p>
+<p>查看 <a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/postprocessing/BloomPass.js"><code class="notranslate" translate="no">BloomPass.js</code></a> 我发现了这一行：</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">this.combineUniforms[ 'strength' ].value = strength;
+</pre>
+<p>所以我们可以通过设置</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">bloomPass.combineUniforms.strength.value = someValue;
+</pre>
+<p>来设置强度。同样地，在查看 <a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/postprocessing/FilmPass.js"><code class="notranslate" translate="no">FilmPass.js</code></a> 时，我发现了这些行：</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">this.uniforms.intensity.value = intensity;
+this.uniforms.grayscale.value = grayscale;
+</pre>
+<p>这就很清楚地说明了如何设置它们。</p>
+<p>让我们快速制作一个GUI来设置这些值</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
+</pre>
+<p>和</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const gui = new GUI();
+{
+  const folder = gui.addFolder('BloomPass');
+  folder.add(bloomPass.combineUniforms.strength, 'value', 0, 2).name('strength');
+  folder.open();
+}
+{
+  const folder = gui.addFolder('FilmPass');
+  folder.add(filmPass.uniforms.grayscale, 'value').name('grayscale');
+  folder.add(filmPass.uniforms.intensity, 'value', 0, 1).name('intensity');
+  folder.open();
+}
+</pre>
+<p>，现在我们可以调整这些设置</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/postprocessing-gui.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/postprocessing-gui.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>。这是制作我们自己效果的一个小步骤。</p>
+<p>后处理效果使用着色器。着色器是用一种叫做<a href="https://www.khronos.org/files/opengles_shading_language.pdf">GLSL（图形库着色语言）</a>的语言编写的。全面讲解整个语言对于这些文章来说太庞大了。一些开始的资源可能是<a href="https://webglfundamentals.org/webgl/lessons/webgl-shaders-and-glsl.html">这篇文章</a>，以及<a href="https://thebookofshaders.com/">着色器之书</a>。</p>
+<p>我认为一个示例来帮助你入门会很有用，所以我们来做一个简单的 GLSL 后期处理着色器。我们将创建一个可以让我们将图像与颜色相乘的着色器。</p>
+<p>对于后期处理，THREE.js 提供了一个有用的助手，叫做 <code class="notranslate" translate="no">ShaderPass</code>。它接收一个对象，其中包含定义顶点着色器、片段着色器以及默认输入的信息。它会处理设置从哪个纹理读取以获取前一帧结果，以及渲染到哪里，可以是 <code class="notranslate" translate="no">EffectComposer</code> 的渲染目标之一或画布。</p>
+<p>这是一个简单的后期处理着色器，它将前一帧的结果与一个颜色相乘。</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const colorShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    color:    { value: new THREE.Color(0x88CCFF) },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1);
+    }
+  `,
+  fragmentShader: `
+    varying vec2 vUv;
+    uniform sampler2D tDiffuse;
+    uniform vec3 color;
+    void main() {
+      vec4 previousPassColor = texture2D(tDiffuse, vUv);
+      gl_FragColor = vec4(
+          previousPassColor.rgb * color,
+          previousPassColor.a);
+    }
+  `,
+};
+</pre>
+<p>在 <code class="notranslate" translate="no">tDiffuse</code> 之上是 <code class="notranslate" translate="no">ShaderPass</code> 用来传入上一个渲染通道结果纹理的名称，所以我们几乎总是需要它。然后我们声明 <code class="notranslate" translate="no">color</code> 为 THREE.js 的 <a href="/threejs-docs-zh/docs/#api/en/math/Color"><code class="notranslate" translate="no">Color</code></a>.</p>
+<p> 接下来我们需要一个顶点着色器。对于后期处理，这里显示的顶点着色器基本上是标准的，很少需要更改。不深入太多细节（参见上面链接的文章），变量 <code class="notranslate" translate="no">uv</code>、<code class="notranslate" translate="no">projectionMatrix</code>、<code class="notranslate" translate="no">modelViewMatrix</code> 和 <code class="notranslate" translate="no">position</code> 都是由 THREE.js 神奇地添加的。</p>
+<p> 最后我们创建一个片段着色器。在它里面，我们通过这一行从上一个渲染通道获取像素颜色</p>
+<pre class="prettyprint showlinemods notranslate lang-glsl" translate="no">vec4 previousPassColor = texture2D(tDiffuse, vUv);
+</pre>
+<p>我们将其乘以我们的颜色，并将结果设置为 <code class="notranslate" translate="no">gl_FragColor</code></p>
+<pre class="prettyprint showlinemods notranslate lang-glsl" translate="no">gl_FragColor = vec4(
+    previousPassColor.rgb * color,
+    previousPassColor.a);
+</pre>
+<p> 添加一些简单的 GUI 来设置颜色的 3 个数值</p>
+<pre class="prettyprint showlinemods notranslate lang-js" translate="no">const gui = new GUI();
+gui.add(colorPass.uniforms.color.value, 'r', 0, 4).name('red');
+gui.add(colorPass.uniforms.color.value, 'g', 0, 4).name('green');
+gui.add(colorPass.uniforms.color.value, 'b', 0, 4).name('blue');
+</pre>
+<p> 给我们一个简单的后处理效果，将颜色相乘。</p>
+<p></p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs-docs-zh/manual/examples/resources/editor.html?url=/threejs-docs-zh/manual/examples/postprocessing-custom.html"></iframe></div>
+  <a class="threejs_center" href="/threejs-docs-zh/manual/examples/postprocessing-custom.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+<p></p>
+<p>如前所述，关于如何编写 GLSL 和自定义着色器的所有细节对于这些文章来说太多了。如果你真的想了解 WebGL 本身的工作原理，可以查看 <a href="https://webglfundamentals.org">这些文章</a>。另一个很好的资源就是 <a href="https://github.com/mrdoob/three.js/tree/master/examples/jsm/shaders">浏览 THREE.js 仓库中现有的后处理着色器</a>。有些比其他的更复杂，但如果你从较小的着色器开始，希望你能了解它们是如何工作的。</p>
+<p>不幸的是，THREE.js 仓库中的大多数后期处理效果没有文档，因此要使用它们，你必须<a href="https://github.com/mrdoob/three.js/tree/master/examples">查看示例</a>或<a href="https://github.com/mrdoob/three.js/tree/master/examples/jsm/postprocessing">查看效果本身的代码</a>。希望这些简单的示例以及关于<a href="rendertargets.html">渲染目标</a>的文章提供了足够的上下文来入门。</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

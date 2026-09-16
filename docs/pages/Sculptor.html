@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Sculptor - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">Sculptor</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>使用自适应拓扑雕刻三角形网格。</p>
+<p>用包含位置、法线的焊接几何体替换 <code>mesh.geometry</code>
+和指数。源几何体未更改且未处理。</p>
+<p>网格必须使用一种材质和非零统一世界比例，且不
+剪切。不支持蒙皮、实例化和批处理网格。</p>
+<p>Sculptor 管理边界、绘制范围和备用缓冲区容量。几何和
+属性可能会随着容量的变化而被替换；不要缓存它们。使用
+<a href="Sculptor.html#getGeometry">Sculptor#getGeometry</a> 用于导出或几何处理的紧凑副本。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const sculptor = new Sculptor( mesh, camera )
+	.setTool( 'inflate' )
+	.setSize( 75 )
+	.setStrength( 0.3 );
+sculptor.connect( renderer.domElement );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">Sculptor</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">安装#Addons</a>.</p>
+				<pre><code class="language-js">import { Sculptor } from 'three/addons/misc/Sculptor.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="Sculptor" translate="no">new <a href="#Sculptor">Sculptor</a><span class="signature">( mesh : <span class="param-type"><a href="Mesh.html">Mesh</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<div class="method">
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">mesh</strong>
+									</td>
+									<td class="description last">
+										<p>要雕刻的网格体.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>用于指针拾取的相机.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
+					<div class="description">
+						<p>用于指针拾取的相机.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="domElement" translate="no">.<a href="#domElement">domElement</a><span class="type-signature"> : HTMLElement</span> </h3>
+					<div class="description">
+						<p>接收指针事件的元素，或<code>null</code>已断开.</p>
+						<p>默认为<code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="enabled" translate="no">.<a href="#enabled">enabled</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>是否启用指针输入。不影响编程笔划。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="mesh" translate="no">.<a href="#mesh">mesh</a><span class="type-signature"> : <a href="Mesh.html">Mesh</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>正在雕刻的网格。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="beginStroke" translate="no">.<a href="#beginStroke">beginStroke</a><span class="signature">()</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>开始笔划并触发<code>start</code>。中风发生时什么也不做。
+通过指针输入或第一个成功的光线标记自动调用。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="connect" translate="no">.<a href="#connect">connect</a><span class="signature">( element : <span class="param-type">HTMLElement</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将指针输入连接到 DOM 元素。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">element</strong>
+									</td>
+									<td class="description last">
+										<p>接收指针事件的元素。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="disconnect" translate="no">.<a href="#disconnect">disconnect</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>断开指针输入并完成活动笔画。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>断开雕刻器。网格及其几何体未处理。</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="endStroke" translate="no">.<a href="#endStroke">endStroke</a><span class="signature">()</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放指针捕获，平衡八叉树并更新精确边界，
+然后触发 <code>end</code>。闲置时什么都不做。当出现以下情况时自动调用
+指针行程结束或取消。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getDetail" translate="no">.<a href="#getDetail">getDetail</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回自适应拓扑详细信息。 <code>0</code> 冻结拓扑。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 详细级别。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getGeometry" translate="no">.<a href="#getGeometry">getGeometry</a><span class="signature">()</span><span class="type-signature"> : <a href="BufferGeometry.html">BufferGeometry</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动顶点和三角形的独立副本，不带
+闲置产能。适用于导出或几何处理。调用者拥有它。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>包含活动顶点和三角形的新几何图形。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getHitNormal" translate="no">.<a href="#getHitNormal">getHitNormal</a><span class="signature">( target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将当前局部空间单位表面法线复制到目标向量中。
+没有命中时返回零向量。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>接收表面法线的向量。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>目标向量.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getHitPoint" translate="no">.<a href="#getHitPoint">getHitPoint</a><span class="signature">( target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>将当前局部空间命中位置复制到目标向量中。
+没有命中时返回零向量。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">target</strong>
+									</td>
+									<td class="description last">
+										<p>接收命中位置的向量。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>目标向量.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getNegative" translate="no">.<a href="#getNegative">getNegative</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动工具是否应用其反向效果。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>工具方向是否为反转。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getSize" translate="no">.<a href="#getSize">getSize</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回以 CSS 像素为单位的指针笔刷半径。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 笔刷半径。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getStrength" translate="no">.<a href="#getStrength">getStrength</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动工具的强度。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>工具强度。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTool" translate="no">.<a href="#getTool">getTool</a><span class="signature">()</span><span class="type-signature"> : 'clay' | 'brush' | 'inflate' | 'smooth' | 'flatten' | 'pinch' | 'crease' | 'drag' | 'scale'</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回活动雕刻工具。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 工具名称。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getWorldRadius" translate="no">.<a href="#getWorldRadius">getWorldRadius</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回以世界单位表示的笔刷半径，或 <code>0</code> 不带hit.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 以世界单位表示的笔刷半径。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="hasHit" translate="no">.<a href="#hasHit">hasHit</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回最新的拾取或描边射线是否击中网格。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>最新的射线是否击中网格。网格.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="isSculpting" translate="no">.<a href="#isSculpting">isSculpting</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>返回指针或编程笔划是否处于活动状态。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>笔划是否处于活动状态。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="pickFromPointer" translate="no">.<a href="#pickFromPointer">pickFromPointer</a><span class="signature">( clientX : <span class="param-type">number</span>, clientY : <span class="param-type">number</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从客户端坐标更新当前点击而不进行雕刻。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">clientX</strong>
+									</td>
+									<td class="description last">
+										<p>水平客户端坐标以 CSS 像素为单位。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">clientY</strong>
+									</td>
+									<td class="description last">
+										<p>以 CSS 像素为单位的垂直客户端坐标。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong> 指针射线是否击中网格。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="pickFromRay" translate="no">.<a href="#pickFromRay">pickFromRay</a><span class="signature">( ray : <span class="param-type"><a href="Ray.html">Ray</a></span>, worldRadius : <span class="param-type">number</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>从世界空间射线更新当前击中而不进行雕刻。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">ray</strong>
+									</td>
+									<td class="description last">
+										<p>The世界空间射线，方向非零。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">worldRadius</strong>
+									</td>
+									<td class="description last">
+										<p>以世界单位表示的笔刷半径。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>射线是否击中网格。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setDetail" translate="no">.<a href="#setDetail">setDetail</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置自适应拓扑细节。值越高，边缘越短
+相对于刷子半径； <code>0</code> 冻结拓扑。重新划分长裂痕
+边缘和塌陷短边，甚至可以在零强度下改变表面。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>0 到 1 之间的值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setNegative" translate="no">.<a href="#setNegative">setNegative</a><span class="signature">( value : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置活动工具是否应用其反向效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>工具方向是否为反转。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以 CSS 像素为单位设置指针画笔半径。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>5 到 500 之间的值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setStrength" translate="no">.<a href="#setStrength">setStrength</a><span class="signature">( value : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置活动工具的强度。
+<code>0</code> 的值会禁用变形，但不会禁用自适应重新网格化。
+拖动和缩放使用指针移动而不是此设置。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>0 到 1 之间的值。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setTool" translate="no">.<a href="#setTool">setTool</a><span class="signature">( value : <span class="param-type">'clay' | 'brush' | 'inflate' | 'smooth' | 'flatten' | 'pinch' | 'crease' | 'drag' | 'scale'</span> )</span><span class="type-signature"> : <a href="Sculptor.html">Sculptor</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>选择工具并恢复其大小、强度和负设置。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>工具名称。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此雕刻家的引用。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="strokeFromRay" translate="no">.<a href="#strokeFromRay">strokeFromRay</a><span class="signature">( ray : <span class="param-type"><a href="Ray.html">Ray</a></span>, worldRadius : <span class="param-type">number</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>应用光线图章，在击中时开始描边。致电
+<a href="Sculptor.html#endStroke">Sculptor#endStroke</a> 在最后一个标记之后。</p>
+<p> 返回 <code>false</code>，而不在指针敲击期间更新命中。
+拖动和缩放需要指针输入。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">ray</strong>
+									</td>
+									<td class="description last">
+										<p>The世界空间射线，方向非零。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">worldRadius</strong>
+									</td>
+									<td class="description last">
+										<p>以世界单位表示的笔刷半径。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>射线是否击中网格。</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">Events</h2>
+					<h3 class="name name-method" id="event:change" translate="no">.<a href="#event:change">change</a> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在更新雕刻几何体后触发。</p>
+						</div>
+						<h5>Type:</h5>
+						<ul>
+							<li>
+<span class="param-type">Object</span>
+							</li>
+						</ul>
+					</div>
+					<h3 class="name name-method" id="event:end" translate="no">.<a href="#event:end">end</a> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在活动笔划完成且精确边界更新后触发。</p>
+						</div>
+						<h5>Type:</h5>
+						<ul>
+							<li>
+<span class="param-type">Object</span>
+							</li>
+						</ul>
+					</div>
+					<h3 class="name name-method" id="event:start" translate="no">.<a href="#event:start">start</a> </h3>
+					<div class="method">
+						<div class="description">
+							<p>在指针或编程笔划开始时触发。</p>
+						</div>
+						<h5>Type:</h5>
+						<ul>
+							<li>
+<span class="param-type">Object</span>
+							</li>
+						</ul>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p><a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/misc/Sculptor.js" translate="no" target="_blank" rel="noopener"> examples/jsm/misc/Sculptor.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

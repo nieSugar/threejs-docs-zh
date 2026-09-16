@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>BloomNode - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="TempNode.html">TempNode</a> → </p>
+	<h1 translate="no">BloomNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>用于创建光晕效果的后处理节点。</p>
+<pre><code class="language-js">const renderPipeline = new THREE.RenderPipeline( renderer );
+const scenePass = pass( scene, camera );
+const scenePassColor = scenePass.getTextureNode( 'output' );
+const bloomPass = bloom( scenePassColor );
+renderPipeline.outputNode = scenePassColor.add( bloomPass );
+</code></pre>
+<p>默认情况下，该节点影响整个图像。为了选择性开花，
+使用 <code>emissive</code> 材质属性来控制哪些对象应该
+是否有助于开花。这可以通过 MRT 来实现。</p>
+<pre><code class="language-js">const renderPipeline = new THREE.RenderPipeline( renderer );
+const scenePass = pass( scene, camera );
+scenePass.setMRT( mrt( {
+	output,
+	emissive
+} ) );
+const scenePassColor = scenePass.getTextureNode( 'output' );
+const emissivePass = scenePass.getTextureNode( 'emissive' );
+const bloomPass = bloom( emissivePass );
+renderPipeline.outputNode = scenePassColor.add( bloomPass );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">BloomNode</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { bloom } from 'three/addons/tsl/display/BloomNode.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="BloomNode" translate="no">new <a href="#BloomNode">BloomNode</a><span class="signature">( inputNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec4></span>, strength : <span class="param-type">number</span>, radius : <span class="param-type">number</span>, threshold : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Constructs新的光晕节点。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">inputNode</strong>
+									</td>
+									<td class="description last">
+										<p>表示效果输入的节点。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">strength</strong>
+									</td>
+									<td class="description last">
+										<p>光晕的强度。</p>
+										<p>默认为<code>1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">radius</strong>
+									</td>
+									<td class="description last">
+										<p>光晕的半径。</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">threshold</strong>
+									</td>
+									<td class="description last">
+										<p>亮度阈值限制明亮区域对光晕的贡献effect.</p>
+										<p>默认为<code>0</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="bloomTintColors" translate="no">.<a href="#bloomTintColors">bloomTintColors</a><span class="type-signature"> : Array.&lt;<a href="Vector3.html">Vector3</a>></span> </h3>
+					<div class="description">
+						<p>在复合通道期间应用的绽放的每 MIP 色调颜色。
+每个 mip 默认为白色（无色调）。将向量变异为
+对光晕进行着色（例如，用于温暖或变形外观）。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="highPassFn" translate="no">.<a href="#highPassFn">highPassFn</a><span class="type-signature"> : function</span> </h3>
+					<div class="description">
+						<p>可用于注入自定义高通滤波器（例如，用于变形效果）。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="inputNode" translate="no">.<a href="#inputNode">inputNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> </h3>
+					<div class="description">
+						<p>表示效果输入的节点。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="radius" translate="no">.<a href="#radius">radius</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>光晕的半径。必须在<code>[0,1]</code>范围内。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="smoothWidth" translate="no">.<a href="#smoothWidth">smoothWidth</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>可用于调整从场景中提取的亮度。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="strength" translate="no">.<a href="#strength">strength</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>光晕的强度。</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="threshold" translate="no">.<a href="#threshold">threshold</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>亮度阈值限制明亮区域对光晕的贡献effect.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
+					<div class="description">
+						<p>自节点渲染以来，<code>updateBeforeType</code> 设置为 <code>NodeUpdateType.FRAME</code>
+<code>updateBefore()</code>.</p>
+						<p>中每帧效果一次，默认为 <code>'frame'</code>.</p>
+					</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBeforeType">TempNode#updateBeforeType</a></dt>
+						</dl>
+				</div>
+				<h2 class="subsection-title">方法</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>释放内部资源。这个方法应该被调用
+当不再需要效果时。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#dispose">TempNode#dispose</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getResolutionScale" translate="no">.<a href="#getResolutionScale">getResolutionScale</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>获取通道的当前分辨率比例。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>当前分辨率比例。 <code>1</code> 值表示全分辨率。</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTextureNode" translate="no">.<a href="#getTextureNode">getTextureNode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>以纹理节点的形式返回效果的结果。</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>表示以下结果的纹理节点效果.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setResolutionScale" translate="no">.<a href="#setResolutionScale">setResolutionScale</a><span class="signature">( resolutionScale : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="BloomNode.html">BloomNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p> 设置通道的分辨率比例。
+分辨率比例是与渲染器的宽度和高度相乘的系数。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">resolutionScale</strong>
+									</td>
+									<td class="description last">
+										<p>要设置的分辨率比例。值为 <code>1</code> 表示全分辨率。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>返回：</strong>对此节点的引用.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>设置效果的大小.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">width</strong>
+									</td>
+									<td class="description last">
+										<p>效果的宽度.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>效果的高度.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于设置效果的TSL code.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点构建器.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#setup">TempNode#setup</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>此方法用于每帧渲染一次效果。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>当前节点框架.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>覆盖：</strong> <a href="TempNode.html#updateBefore">TempNode#updateBefore</a></dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/tsl/display/BloomNode.js" translate="no" target="_blank" rel="noopener"> examples/jsm/tsl/display/BloomNode.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

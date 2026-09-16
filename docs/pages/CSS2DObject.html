@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>CSS2DObject - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Object3D.html">Object3D</a> → </p>
+	<h1 translate="no">CSS2DObject</h1>
+		<section>
+			<header>
+				<div class="class-description"><p><a href="CSS2DRenderer.html">CSS2DRenderer</a>.</p></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">CSS2DObject</span> 支持的唯一 3D 对象类型是一个插件，并且必须是显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="CSS2DObject" translate="no">new <a href="#CSS2DObject">CSS2DObject</a><span class="signature">( element : <span class="param-type">HTMLElement</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>构造一个新的 CSS2D 对象。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">element</strong>
+									</td>
+									<td class="description last">
+										<p>DOM 元素。</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="center" translate="no">.<a href="#center">center</a><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
+					<div class="description">
+						<p>对象的锚点，以及对象旋转的点。
+值 <code>(0.5, 0.5)</code> 对应于对象的中点。一个值
+<code>(0, 0)</code> 对应于对象的左上角。</p>
+						<p>默认为 <code>(0.5,0.5)</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="element" translate="no">.<a href="#element">element</a><span class="type-signature"> : HTMLElement</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>定义此 3D 对象外观的 DOM 元素。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isCSS2DObject" translate="no">.<a href="#isCSS2DObject">isCSS2DObject</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>该标志可用于类型测试。</p>
+						<p>默认为<code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="rotation2D" translate="no">.<a href="#rotation2D">rotation2D</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The物体的旋转角度，逆时针，以弧度为单位。</p>
+						<p>默认为<code>0</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/renderers/CSS2DRenderer.js" translate="no" target="_blank" rel="noopener"> examples/jsm/renderers/CSS2DRenderer.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

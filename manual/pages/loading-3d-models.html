@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <title>加载3D模型</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@threejs">
+    <meta name="twitter:title" content="Three.js – Loading 3D Models">
+    <meta property="og:image" content="https://threejs.org/files/share.png">
+    <link rel="shortcut icon" href="../../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" href="../../files/favicon.ico" media="(prefers-color-scheme: light)">
+
+    <link rel="stylesheet" href="../resources/lesson.css">
+    <link rel="stylesheet" href="../resources/lang.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../build/three.module.js"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="lesson-title">
+        <h1>加载3D模型</h1>
+      </div>
+      <div class="lesson">
+        <div class="lesson-main">
+
+          <p>
+3D模型有数百种文件格式，每种都有不同的用途、各种特点和不同的复杂性。虽然<a href="https://github.com/mrdoob/three.js/tree/dev/examples/jsm/loaders" target="_blank" rel="noopener">three.js提供了许多加载器</a>，选择合适的格式和工作流程可以在后期节省时间和避免挫折。有些格式难以处理、在实时体验中效率低，或者目前根本不完全支持。
+</p>
+
+          <p>
+本指南提供了推荐给大多数用户的工作流程，并给出了在出现问题时可尝试的方法建议。</p>
+
+          <h2 id="before-we-start">在我们开始之前</h2>
+
+          <p>如果你是本地服务器的新手，请首先从<a href="installation.html">安装</a>开始。通过正确托管文件，可以避免许多查看3D模型时的常见错误。
+</p>
+
+          <h2 id="recommended-workflow">推荐的工作流程</h2>
+
+          <p>
+在可能的情况下，我们推荐使用glTF（GL传输格式）。该格式的<small>.GLB</small>和<small>.GLTF</small>版本都得到了良好的支持。由于glTF专注于运行时资产传输，它在传输上非常紧凑，加载速度快。其功能包括网格、材质、纹理、蒙皮、骨骼、形态目标、动画、灯光和摄像机。</p>
+
+          <p>公开领域的 glTF 文件可以在像 <a href="https://sketchfab.com/models?features=downloadable&sort_by=-likeCount&type=models" target="_blank" rel="noopener">Sketchfab</a> 这样的网站上找到，或者各种工具也支持 glTF 导出：</p>
+
+          <ul>
+            <li><a href="https://www.blender.org/" target="_blank" rel="noopener">Blender</a>（由 Blender Foundation 开发）</li>
+            <li><a href="https://www.allegorithmic.com/products/substance-painter" target="_blank" rel="noopener">Substance Painter</a>（由 Allegorithmic 开发）</li>
+            <li><a href="https://www.foundry.com/products/modo" target="_blank" rel="noopener">Modo</a>（由 Foundry 开发）</li>
+            <li><a href="https://www.marmoset.co/toolbag/" target="_blank" rel="noopener">Toolbag</a> 由 Marmoset</li>
+            <li><a href="https://www.sidefx.com/products/houdini/" target="_blank" rel="noopener">Houdini</a> 由 SideFX</li>
+            <li><a href="https://labs.maxon.net/?p=3360" target="_blank" rel="noopener">Cinema 4D</a> 由 MAXON</li>
+            <li><a href="https://github.com/KhronosGroup/COLLADA2GLTF" target="_blank" rel="noopener">COLLADA2GLTF</a> 由 Khronos Group</li>
+            <li><a href="https://github.com/facebookincubator/FBX2glTF" target="_blank" rel="noopener">FBX2GLTF</a> 由 Facebook</li>
+            <li><a href="https://github.com/AnalyticalGraphicsInc/obj2gltf" target="_blank" rel="noopener">OBJ2GLTF</a> 由 Analytical Graphics Inc</li>
+            <li>……以及 <a href="http://github.khronos.org/glTF-Project-Explorer/" target="_blank" rel="noopener">更多</a></li>
+          </ul>
+
+          <p>
+            如果您常用的工具不支持 glTF，可以考虑向作者请求 glTF 导出，或在
+            <a href="https://github.com/KhronosGroup/glTF/issues/1051" target="_blank" rel="noopener">glTF 路线图讨论串</a> 上发帖。
+          </p>
+
+          <p>
+            当 glTF 不可行时，FBX、OBJ 或 COLLADA 等流行格式同样可用，且定期维护。
+          </p>
+
+          <h2 id="loading">加载中</h2>
+
+          <p>
+            默认情况下，three.js 只包含少量加载器（例如 `ObjectLoader`）——其他加载器需要你单独添加到你的应用中。
+          </p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+</pre>
+
+          <p>
+            一旦你导入了加载器，就可以将模型添加到场景中。不同加载器的语法各不相同——使用其他格式时，请查阅该加载器的示例和文档。对于 glTF，在使用全局脚本时的用法如下：
+          </p>
+
+<pre class="prettyprint notranslate lang-js" translate="no">
+const loader = new GLTFLoader();
+
+loader.load( 'path/to/model.glb', function ( gltf ) {
+
+  scene.add( gltf.scene );
+
+}, undefined, function ( error ) {
+
+  console.error( error );
+
+} );
+</pre>
+
+          <h2 id="troubleshooting">排查故障</h2>
+
+          <p>
+            你花了几个小时制作了一件精美的工艺杰作，现在将它加载到网页里，结果——哎呀！😭 它要么扭曲，要么颜色不对，甚至完全不显示。
+            从以下故障排查步骤开始：
+          </p>
+
+          <ol>
+            <li>检查 JavaScript 控制台是否有错误，并确保在调用 `.load()` 时使用了 `onError` 回调来记录结果。</li>
+            <li>在其他应用程序中查看模型。对于 glTF，有拖放查看器可用于 <a href="https://gltf-viewer.donmccurdy.com/" target="_blank" rel="noopener">three.js</a> 和 <a href="https://sandbox.babylonjs.com/" target="_blank" rel="noopener">babylon.js</a>。如果模型在一个或多个应用程序中显示正常，<a href="https://github.com/mrdoob/three.js/issues/new" target="_blank" rel="noopener">向 three.js 提交一个错误报告</a>。如果模型无法在任何应用程序中显示，我们强烈建议向用于创建模型的应用程序提交错误报告。</li>
+            <li>尝试将模型按1000倍进行放大或缩小。许多模型的缩放不同，如果摄像机在模型内部，大型模型可能看不到。
+</li>
+            <li>
+尝试添加并定位光源。模型可能会因为黑暗而看不见。
+</li>
+            <li>
+在网络选项卡中查看失败的纹理请求，例如 `"C:\Path\To\Model\texture.jpg"`。请改为使用相对于模型的路径，例如 `images/texture.jpg` — 这可能需要在文本编辑器中编辑模型文件。
+</li>
+          </ol>
+
+          <h2 id="asking-for-help">请求帮助</h2>
+
+          <p>如果你已经按照上述故障排除流程操作过，但你的模型仍然无法正常工作，那么正确的求助方法会让你更快找到解决方案。你可以在 <a href="https://discourse.threejs.org/" target="_blank" rel="noopener">three.js 论坛</a> 上发布问题，并且在可能的情况下，附上你的模型（或带有相同问题的简化模型）以及你拥有的任意格式。提供足够的信息，以便其他人能够快速复现问题 —— 理想情况是提供一个在线演示。
+</p>
+
+        </div>
+      </div>
+    </div>
+
+  <script src="../resources/prettify.js"></script>
+  <script src="../resources/lesson.js"></script>
+
+
+
+
+</body></html>

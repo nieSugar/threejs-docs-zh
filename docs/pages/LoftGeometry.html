@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>LoftGeometry - Three.js 文档</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="BufferGeometry.html">BufferGeometry</a> → </p>
+	<h1 translate="no">LoftGeometry</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>此类可用于通过放样（蒙皮）曲面来生成几何体
+通过一系列的横截面。每个部分都是 3D 中的点数组
+空间和所有部分必须具有相同数量的点。</p>
+<p><code>LoftGeometry</code> 是 <a href="LatheGeometry.html">LatheGeometry</a> 等几何图形的一般情况
+（绕轴旋转固定轮廓）或 <a href="TubeGeometry.html">TubeGeometry</a>
+（沿着路径扫过圆形部分）：这些部分可以有任何
+形状，并且可以改变形状、大小、位置和方向
+剖面到下一个。</p>
+<p>剖面围绕放样，因此生成的面法线指向外侧
+当每个部分从末端看逆时针排序时
+阁楼，回望起点。如果表面翻过来，
+反转每个部分的点顺序。</p></div>
+				<h2>代码示例</h2>
+				<div translate="no"><pre><code class="language-js">const sections = [];
+for ( let i = 0; i &lt;= 10; i ++ ) {
+	const points = [];
+	const radius = 2 + Math.sin( i * 0.8 );
+	for ( let j = 0; j &lt; 32; j ++ ) {
+		const angle = j / 32 * Math.PI * 2;
+		points.push( new THREE.Vector3( Math.sin( angle ) * radius, i, Math.cos( angle ) * radius ) );
+	}
+	sections.push( points );
+}
+const geometry = new LoftGeometry( sections, { capStart: true, capEnd: true } );
+const material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">导入</h2>
+				<p><span translate="no">LoftGeometry</span> 是一个插件，必须显式导入，请参阅 <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { LoftGeometry } from 'three/addons/geometries/LoftGeometry.js';</code></pre>
+				<div class="container-overview">
+					<h2>构造函数</h2>
+					<h3 class="name name-method" id="LoftGeometry" translate="no">new <a href="#LoftGeometry">LoftGeometry</a><span class="signature">( sections : <span class="param-type">Array.&lt;Array.&lt;<a href="Vector3.html">Vector3</a>>></span>, options : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Constructs新的放样几何体。</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">sections</strong>
+									</td>
+									<td class="description last">
+										<p>蒙皮的横截面。至少
+需要两个截面，并且所有截面必须具有相同的点数。</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>放样选项。</p>
+										<p>默认为 <code>{}</code>.</p>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">closed</strong>
+									</td>
+									<td class="description last">
+										<p>是否将每个截面视为一个截面
+闭合环（例如机身）或开放条带（例如丝带）.</p>
+										<p>默认为<code>true</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">capStart</strong>
+									</td>
+									<td class="description last">
+										<p>第一节是否闭合
+是否带帽</p>
+										<p>默认为 <code>false</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">capEnd</strong>
+									</td>
+									<td class="description last">
+										<p>最后一段是否封闭
+有无帽子.</p>
+										<p>默认为 <code>false</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">属性</h2>
+				<div class="member">
+					<h3 class="name" id="parameters" translate="no">.<a href="#parameters">parameters</a><span class="type-signature"> : Object</span> </h3>
+					<div class="description">
+						<p>保存已经被构造的构造函数参数
+用于生成几何图形。任何修改
+实例化后不会更改几何形状。</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">源代码</h2>
+				<p>
+<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/geometries/LoftGeometry.js" translate="no" target="_blank" rel="noopener"> examples/jsm/geometries/LoftGeometry.js</a>
+</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>
