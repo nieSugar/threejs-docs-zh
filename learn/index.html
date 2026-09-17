@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Three.js、Shader、WebGL、WebGPU、TSL 与 React Three Fiber 中文学习路线和精选资源。">
+	<title>学习中心 · Three.js 中文文档</title>
+	<link rel="shortcut icon" href="../files/favicon_white.ico" media="(prefers-color-scheme: dark)">
+	<link rel="shortcut icon" href="../files/favicon.ico" media="(prefers-color-scheme: light)">
+	<link rel="stylesheet" href="./learn.css">
+</head>
+<body>
+	<header class="site-header">
+		<a class="brand" href="../docs/#Object3D" aria-label="返回 Three.js 中文文档">
+			<span>three.js</span><small>中文</small>
+		</a>
+		<nav class="section-tabs" aria-label="文档分区">
+			<a href="../docs/#Object3D">API</a>
+			<a href="../manual/">手册</a>
+			<span aria-current="page">学习</span>
+		</nav>
+	</header>
+
+	<main>
+		<section class="hero" aria-labelledby="hero-title">
+			<div class="hero-copy">
+				<p class="eyebrow">THREE.JS LEARNING HUB</p>
+				<h1 id="hero-title">少收藏，多动手。<br><span>沿着路线把 3D 学明白。</span></h1>
+				<p class="hero-description">从第一个场景到 Shader、WebGPU、TSL 和 React Three Fiber。这里不搬运第三方课程全文，只提供经过核对的中文导读、学习顺序和原站入口。</p>
+				<div class="hero-actions">
+					<a class="button primary" href="#routes">选择学习路线</a>
+					<a class="button secondary" href="#library">浏览全部资源</a>
+				</div>
+			</div>
+			<div class="hero-panel" aria-label="学习中心统计">
+				<div><strong id="resourceCount">0</strong><span>精选资源</span></div>
+				<div><strong id="chineseCount">0</strong><span>含中文内容</span></div>
+				<div><strong id="freeCount">0</strong><span>免费可学</span></div>
+				<div><strong>4</strong><span>推荐路线</span></div>
+			</div>
+		</section>
+
+		<section class="section" id="routes" aria-labelledby="routes-title">
+			<div class="section-heading">
+				<div><p class="eyebrow">ROUTES</p><h2 id="routes-title">先选方向，别上来就乱炖</h2></div>
+				<p>路线不是门槛，而是帮你少走几趟冤枉路。每学完一段，自己重写一个小项目。</p>
+			</div>
+			<div class="route-grid">
+				<article class="route-card route-core">
+					<span class="route-number">01</span><p class="route-label">THREE.JS CORE</p>
+					<h3>从零搭出完整场景</h3>
+					<p>掌握场景、相机、渲染器、光照、材质、纹理、动画和 glTF，先把原生 Three.js 的骨架立稳。</p>
+					<ol><li>Discover Three.js</li><li>中文 Manual</li><li>官方 Examples</li><li>独立重写小项目</li></ol>
+					<button type="button" data-track-link="core">查看核心资源</button>
+				</article>
+				<article class="route-card route-shader">
+					<span class="route-number">02</span><p class="route-label">SHADER & GRAPHICS</p>
+					<h3>看懂 GPU 为什么这样画</h3>
+					<p>从 WebGL、矩阵和光照进入 GLSL，理解噪声、图案、BRDF、后处理与 Ray Marching。</p>
+					<ol><li>WebGL Fundamentals</li><li>The Book of Shaders</li><li>MDN / LearnOpenGL</li><li>Shadertoy 实验</li></ol>
+					<button type="button" data-track-link="shader">查看 Shader 资源</button>
+				</article>
+				<article class="route-card route-webgpu">
+					<span class="route-number">03</span><p class="route-label">WEBGPU & TSL</p>
+					<h3>迈进下一代渲染管线</h3>
+					<p>学习 WGSL、Buffer、Pipeline、Compute Shader，再用 TSL 构建材质、MRT 和后期处理。</p>
+					<ol><li>WebGPU Fundamentals</li><li>TSL 官方规范</li><li>中文 WebGPU 手册</li><li>Compute / RenderPipeline</li></ol>
+					<button type="button" data-track-link="webgpu">查看 WebGPU 资源</button>
+				</article>
+				<article class="route-card route-ecosystem">
+					<span class="route-number">04</span><p class="route-label">PROJECT & ECOSYSTEM</p>
+					<h3>把知识做成能交付的作品</h3>
+					<p>用 Codrops、Three.js Journey 和 R3F 拆真实项目，补上交互、性能、工程化与部署。</p>
+					<ol><li>Codrops 创意案例</li><li>SBCode 工程练习</li><li>Three.js Journey</li><li>React Three Fiber</li></ol>
+					<button type="button" data-track-link="ecosystem">查看实战资源</button>
+				</article>
+			</div>
+		</section>
+
+		<section class="section library-section" id="library" aria-labelledby="library-title">
+			<div class="section-heading">
+				<div><p class="eyebrow">LIBRARY</p><h2 id="library-title">精选学习资源</h2></div>
+				<p>摘要均为中文原创导读。点击卡片前往原站，付费或版权内容不会在本站镜像。</p>
+			</div>
+			<form class="filters" id="filters" aria-label="筛选学习资源">
+				<label class="search-field"><span>搜索</span><input id="searchInput" type="search" placeholder="例如：Shader、WebGPU、动画" autocomplete="off"></label>
+				<label><span>方向</span><select id="trackFilter"><option value="all">全部方向</option><option value="core">Three.js 核心</option><option value="shader">Shader / 图形学</option><option value="webgpu">WebGPU / TSL</option><option value="ecosystem">实战 / 生态</option></select></label>
+				<label><span>语言</span><select id="languageFilter"><option value="all">全部语言</option><option value="zh">中文可用</option><option value="en">英文</option></select></label>
+				<label><span>费用</span><select id="priceFilter"><option value="all">全部</option><option value="free">免费</option><option value="freemium">部分付费</option><option value="paid">付费</option></select></label>
+				<button class="reset-button" id="resetFilters" type="reset">重置</button>
+			</form>
+			<div class="results-meta"><p id="resultsCount" aria-live="polite"></p><p>难度：入门 → 进阶 → 高级</p></div>
+			<div class="resource-grid" id="resourceGrid"></div>
+			<p class="empty-state" id="emptyState" hidden>没搜到。换个关键词，别跟筛选器较劲 😄</p>
+			<noscript><p class="empty-state">需要启用 JavaScript 才能显示和筛选资源卡片。</p></noscript>
+		</section>
+
+		<section class="rights-note" aria-labelledby="rights-title">
+			<div><p class="eyebrow">READ RESPONSIBLY</p><h2 id="rights-title">中文导读，不等于全文搬运</h2></div>
+			<p>本站只翻译资源简介、适用人群和学习建议，并链接原作者页面。课程正文、视频、图片、模型和示例资产仍归各自作者所有；标记为 <strong>仅链接</strong> 的内容不得据此视为可转载。</p>
+		</section>
+	</main>
+
+	<footer><p>Three.js r186 中文文档 · 学习中心</p><p>先做一个会动的，再做一个好看的。</p></footer>
+	<script type="module" src="./learn.js"></script>
+</body>
+</html>
